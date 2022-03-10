@@ -52,7 +52,7 @@ Class ChemicalFlameThrower : REWeapon // "Kill it with fire before it lays eggs!
 			A_TakeInventory("WP6Ammo",2);
 			A_WeaponOffset(random(0,1),random(32,34),WOF_INTERPOLATE);
 			
-			A_SetPitch(Pitch - 1.0);
+			A_SetPitch(Pitch - 1.0, SPF_INTERPOLATE);
 		}
 		"####" A 1 Bright A_WeaponOffset(random(0,1),random(32,33),WOF_INTERPOLATE);
 		//"####" A 0 A_ReFire();
