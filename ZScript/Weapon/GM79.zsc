@@ -30,7 +30,7 @@ Class GM79 : REWeapon
 		WP5P A 2 Bright;
 		Loop;
 	Select:
-		WP5G A 0;
+		WP5G A 0 { If(Invoker.Ammo1.Amount > 0 || CountInv("PowerInfiniteAmmo")) { Invoker.noammo = False; } Else { Invoker.noammo = True; } }
 		Goto Raise;
 	Ready:
 		WP5G A 1 A_WeaponReady(WRF_ALLOWUSER1|WRF_ALLOWUSER2|WRF_ALLOWUSER3);
