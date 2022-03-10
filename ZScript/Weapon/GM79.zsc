@@ -47,7 +47,7 @@ Class GM79 : REWeapon
 			A_AlertMonsters();
 			FireRE2GL();
 			Invoker.noammo = True;
-			A_SetPitch(pitch-0.08); // -8 % = 92 pts of stability
+			A_SetPitch(pitch-0.08, SPF_INTERPOLATE); // -8 % = 92 pts of stability
 		}
 		WP5F BCD 3;
 		TNT1 A 0 A_JumpIf(Invoker.Ammo1.Amount < 1 && !CountInv("PowerInfiniteAmmo"), "Empty"); // || Invoker.Ammo1.Amount < 1 && !sv_infiniteammo
