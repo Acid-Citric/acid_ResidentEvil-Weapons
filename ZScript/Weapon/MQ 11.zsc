@@ -21,15 +21,15 @@ Class MQ11 : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP4Ammo",MAG_MAC11);
 	}
-    Override Bool TryPickup(in out Actor toucher) 
-    {
+	Override Bool TryPickup(in out Actor toucher) 
+    	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("MQ11");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
 			Return Super.TryPickup(toucher);
-    }
+   	}
 	States
 	{
 	Spawn:
@@ -91,7 +91,7 @@ Class MQ11 : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-            While(CountInv("SubmachineGunAmmo") > 0 && CountInv("WP4Ammo") < MAG_MAC11 || CountInv("PowerInfiniteAmmo") && CountInv("WP4Ammo") < MAG_MAC11)
+           		While(CountInv("SubmachineGunAmmo") > 0 && CountInv("WP4Ammo") < MAG_MAC11 || CountInv("PowerInfiniteAmmo") && CountInv("WP4Ammo") < MAG_MAC11)
 			{ // sv_infiniteammo
 				A_TakeInventory("SubmachineGunAmmo", 1, TIF_NOTAKEINFINITE);
 				A_GiveInventory("WP4Ammo", 1);
