@@ -1,0 +1,52 @@
+Class InfiniteBullets : PowerupGiver
+{
+	Default
+	{
+		Tag "Inf. Bullets";
+		Powerup.Type "PowerInfiniteAmmo";
+		Powerup.Duration 0x7FFFFFFF;
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.PickupMessage "Inf. Bullets";
+		+INVENTORY.AUTOACTIVATE
+		+INVENTORY.ALWAYSPICKUP
+		+INVENTORY.BIGPOWERUP
+
+		+INVENTORY.HUBPOWER
+	}
+	States
+	{
+	Spawn:
+		AMMX A 30;
+		AMMX A 2 Bright;
+		Loop;
+	}
+}
+
+Class PowerBlueHerb : PowerProtection
+{
+	Default
+	{
+		Powerup.Duration -60;
+		Powerup.Color '0000FF', 0.05;
+		Inventory.Icon "HERBA0";
+
+		//DamageFactor "Normal", 0.85;
+		DamageFactor "Fire", 0.6;
+		DamageFactor "Ice", 0.6;
+		DamageFactor "Slime", 0.0;
+		DamageFactor "Poison", 0.0;
+		//DamageFactor "Drowning", 0.0; provided by the ironfeet side.
+		DamageFactor "PoisonCloud", 0.0;
+		
+		+NORADIUSDMG
+		+DONTRIP
+		+NOPAIN
+	}
+	Override void AbsorbDamage(int damage, name damageType, out int newdamage)
+	{
+		if(damageType == 'Fire' && (gameinfo.gametype == Game_HERETIC || gameinfo.gametype == Game_HEXEN))
+		{
+			newdamage = 0;
+		}
+	}
+}

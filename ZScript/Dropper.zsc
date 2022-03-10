@@ -1,0 +1,152 @@
+Class ClipDrop : Inventory
+{
+    Override bool SpecialDropAction(Actor dropper)
+    {
+        If(dropper is "Zombieman" || dropper is "ChaingunGuy" || dropper is "WolfensteinSS") { return true; }
+        Else { A_SpawnItemEx("ClipSpawner"); }
+        Return 1; //Destroy the item if it was dropped at all
+    }
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)	{ A_SpawnItemEx("ClipSpawner"); }
+			Else { A_SpawnItemEx("ClipSpawner"); }
+		}
+		Stop;
+	}
+}
+Class ShellDrop : Inventory
+{
+    Override bool SpecialDropAction(Actor dropper)
+    {
+        If(dropper is "ShotgunGuy") { return true; }
+        Else { A_SpawnItemEx("ShellSpawner"); }
+        Return 1; //Destroy the item if it was dropped at all
+    }
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)	{ A_SpawnItemEx("ShellSpawner"); }
+			Else { A_SpawnItemEx("ShellSpawner"); }
+		}
+		Stop;
+	}
+}
+Class RocketAmmoDrop : Inventory
+{
+	Default	{}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)
+				Return ResolveState("Drop.Weapon");
+				Return ResolveState(Null);
+		}
+		TNT1 A 0 A_SpawnItemEx("RocketAmmoSpawner");
+		Stop;
+	Drop.Weapon:
+		TNT1 A 0 A_SpawnItemEx("RocketAmmoSpawner");
+		Stop;
+	}
+}
+
+
+Class CellDrop : Inventory
+{
+	Default	{}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)
+				Return ResolveState("Drop.Weapon");
+				Return ResolveState(Null);
+		}
+		TNT1 A 0 A_SpawnItemEx("CellSpawner");
+		Stop;
+	Drop.Weapon:
+		TNT1 A 0 A_SpawnItemEx("CellSpawner");
+		Stop;
+	}
+}
+
+Class ShotgunDrop : Inventory
+{
+    Override bool SpecialDropAction(Actor dropper)
+    {
+        If(dropper is "ShotgunGuy") { return true; }
+        Else { A_DropItem("W870"); }
+        Return 1; //Destroy the item if it was dropped at all
+    }
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)	{ return; }
+			Else If(Wads.CheckNumForName("MAP01",0)!=-1) { A_SpawnItemEx("W870"); }
+			Else { A_SpawnItemEx("ShotgunSpawner"); }
+		}
+		Stop;
+	}
+}
+
+Class ChaingunDrop : Inventory
+{
+    Override bool SpecialDropAction(Actor dropper)
+    {
+        If(dropper is "ChaingunGuy") { return true; }
+        Else { A_DropItem("MQ11"); }
+        Return 1; //Destroy the item if it was dropped at all
+    }
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)	{ return; }
+			Else { A_SpawnItemEx("MQ11"); }
+		}
+		Stop;
+	}
+}
+
+Class BerserkDrop : Actor
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256, "GreenHerb", "GreenHerb", "GreenHerb", "BlueHerb", "BlueHerb", "RedHerb");
+		Stop;
+	GreenHerb:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("GreenHerb",-10);
+			A_SpawnItemEx("GreenHerb",0);
+			A_SpawnItemEx("GreenHerb",10);
+		}
+		Stop;
+	BlueHerb:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("BlueHerb",-10);
+			A_SpawnItemEx("BlueHerb",0);
+			A_SpawnItemEx("BlueHerb",10);
+		}
+		Stop;
+	RedHerb:
+		TNT1 A 0
+		{
+			A_SpawnItemEx("RedHerb",-5);
+			A_SpawnItemEx("RedHerb",5);
+		}
+		Stop;
+	}
+}

@@ -1,0 +1,127 @@
+Class GreenHerb : Inventory
+{
+	Default
+	{
+		Tag "Green Herb";
+		Inventory.PickupMessage "Green Herb";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "HERGA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.5;
+		+INVENTORY.INVBAR
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.GiveBody(25, -100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		HERG A 30;
+		HERG A 2 Bright;
+		Loop;
+	}
+}
+
+Class RedHerb : Inventory
+{
+	Default
+	{
+		Tag "Red Herb";
+		Inventory.PickupMessage "Red Herb";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "HERRA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.5;
+		+INVENTORY.INVBAR
+		+INVENTORY.KEEPDEPLETED
+	}
+	States
+	{
+	Spawn:
+		HERR A 30;
+		HERR A 2 Bright;
+		Loop;
+	}
+}
+
+Class BlueHerb : Inventory // Remove Poison
+{
+	Default
+	{
+		Tag "Blue Herb";
+		Inventory.PickupMessage "Blue Herb";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "HERBA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.5;
+		+INVENTORY.INVBAR
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Self.Amount > 0)
+		{
+			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
+			If(blood)
+			{
+				blood.BLEEDS = false;
+				blood.bleedbuildup = 0;
+			}
+
+			Owner.A_GiveInventory("PowerBlueHerb");
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		HERB A 30;
+		HERB A 2 Bright;
+		Loop;
+	}
+}
+
+Class YellowHerb : Inventory
+{
+	Default
+	{
+		Tag "Yellow Herb";
+		Inventory.PickupMessage "Yellow Herb";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "HERYA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.5;
+		+INVENTORY.INVBAR
+		+INVENTORY.KEEPDEPLETED
+	}
+	/*override void DoEffect()
+	{
+		Super.DoEffect();
+		Owner.GiveBody(5,-100);
+	}*/
+	States
+	{
+	Spawn:
+		HERY A 30;
+		HERY A 2 Bright;
+		Loop;
+	}
+}

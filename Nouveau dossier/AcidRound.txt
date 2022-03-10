@@ -1,0 +1,50 @@
+ACTOR M79AcidProj
+{
+	Radius 8
+	Height 8
+	Speed 50//30
+	Damage 27
+	Projectile
+	-NOGRAVITY
+	+RANDOMIZE
+	+DEHEXPLOSION
+	+BRIGHT
+	Gravity 0.8
+    DeathSound "Weapons/M79/Acid"
+	Obituary "%k played some hot ball toss at %o."
+	DamageType "PoisonCloud"
+	States
+	{
+	Spawn:
+		GRND A 1
+		Loop
+	Death:
+		TNT1 A 1
+		{
+			If(WaterLevel >= 2) { return; }
+			Else
+			{
+				A_Explode(128,128);
+				A_AlertMonsters;
+				A_SpawnItemEx("AcidBomb");
+			}
+		}
+		Stop
+	}
+}
+
+ACTOR AcidBomb
+{
+	RenderStyle "Add"
+    Alpha 0.8
+    Scale 0.45
+	+NOGRAVITY
+    +FORCEXYBILLBOARD
+    States
+    {
+    Spawn:
+      AEXP A 1 Bright A_StartSound("Grenade/Acid")
+	  AEXP BCDEFGHIJKLMNOPQRS 1 Bright
+      Stop
+    }
+}

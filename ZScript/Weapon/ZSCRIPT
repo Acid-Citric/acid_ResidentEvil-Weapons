@@ -1,0 +1,338 @@
+Class AltarUI : EventHandler
+{   
+	bool showicon;
+	TextureID pic;
+	int w,h;
+	Array<Class<Inventory> > itemcost1;
+	Array<Int> w2;
+	Array<Int> h2;
+	Array<Int> itemcost2;
+	String itemname;
+
+	override void RenderUnderlay(RenderEvent e)
+	{   
+		if(showicon)
+		{
+			int celly = Screen.GetHeight()/50;
+			int cellx = Screen.GetWidth()/110;
+			Screen.DrawTexture(pic, true, 640, 150 + 75/2, DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_DestWidth, w, DTA_DestHeight, h, DTA_Alpha, 0.6, DTA_CenterOffset, 1);
+			Screen.DrawText(CONFONT, Font.CR_DARKRED, 640-itemname.length()*7.5, 230, itemname, DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_Monospace, 1, DTA_Spacing, 15, DTA_CellX, cellx, DTA_CellY, celly);
+			int i;
+			for(i = 0; i < itemcost1.size(); i++)
+			{
+				TextureID pic2 = GetDefaultByType(itemcost1[i]).FindState("Spawn").GetSpriteTexture(0);
+				Screen.DrawTexture(pic2, true, 640-w/2-w2[i], 250+55*i, DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_DestWidth, w2[i], DTA_DestHeight, h2[i], DTA_Alpha, 0.6, DTA_LeftOffset, 0, DTA_TopOffset, 0);
+				Screen.DrawText(CONFONT, Font.CR_DARKRED, 640-w/2 + 60, 250+55*i+25, "x"..itemcost2[i], DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_Monospace, 1, DTA_Spacing, 18, DTA_CellX, cellx, DTA_CellY, celly);
+			}
+		}
+	}
+}
+
+
+Class SpaghettiAltar : Actor
+{
+	Class<Inventory> output;
+	Array<Class<Inventory> > itemcost1;
+	int index;
+	bool done;
+	bool startcount;
+	int countdown;
+	
+	default
+	{
+		Radius 24;
+		Height 32;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1;
+		TNT1 A 0
+		{
+			for (int i = 0; i < itemcost1.size(); i++)
+			{
+				if(self) { self.done = true; }
+			}
+		}
+	Looping:
+		TNT1 A 1
+		{
+			if(done)
+			{
+				A_StopSound(5);
+				A_StartSound("misc/item_use", 6);
+				A_SpawnItemEx(output);
+				done = false;
+				startcount = true;
+				countdown = 18;
+			}
+			if(startcount)
+			{
+				countdown--;
+				if(countdown <= 0)
+					Thing_Remove(0);
+			}
+		}
+		Loop;
+	}
+}
+
+Class AltarWeapon : Weapon
+{
+	Array<Class<Inventory> > itemlist;
+	Array<Class<Inventory> > itemcost1[50];
+	Array<Int> itemcost2[50];
+	int itemindex;
+	int addindex;
+	bool isdoom2;
+
+	default
+	{
+		Weapon.SelectionOrder 9999;
+		Weapon.AmmoUse 0;
+		Weapon.AmmoGive 0;
+		Weapon.SlotNumber 0;
+		Tag "Reloading Tool";
+		//+WEAPON.NOAUTOFIRE
+		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.NOALERT
+		+INVENTORY.UNDROPPABLE
+	}
+	
+	void AddItem(class<Actor> output, string input, string cost)
+	{
+		Array<String> inputarray;
+		Array<String> strcostarray;
+		Array<Int> costarray;
+		input.Split(inputarray, "|");
+		cost.Split(strcostarray, "|");
+		for(int i = 0; i < strcostarray.size(); i++) { costarray.push(strcostarray[i].ToInt(10)); }
+		
+		itemlist.push(output);
+		for(int i = 0; i < inputarray.size(); i++)
+		{
+			class<Actor> temp = inputarray[i];
+			itemcost1[addindex].push(temp);
+			itemcost2[addindex].push(costarray[i]);
+		}
+		addindex++;
+	}
+	
+	override void PostBeginPlay()
+	{
+		if(Wads.CheckNumForName("MAP01",0)!=-1)
+			isdoom2 = true;
+	
+		AddItem("MixedHerb_GG", "GreenHerb", "2");
+		
+		// RE Mixed Herbs
+		AddItem("MixedHerb_GG", "GreenHerb", "2");
+		AddItem("MixedHerb_GGG", "GreenHerb", "3");
+		AddItem("MixedHerb_GB", "GreenHerb|BlueHerb", "1|1");
+		AddItem("MixedHerb_GGB", "GreenHerb|BlueHerb", "2|1");
+		AddItem("MixedHerb_GR", "GreenHerb|RedHerb", "1|1");
+		AddItem("MixedHerb_GRB", "GreenHerb|RedHerb|BlueHerb", "1|1|1");
+		// RE 4 Mixed Herbs
+		AddItem("MixedHerb_GY", "GreenHerb|YellowHerb", "1|1");
+		AddItem("MixedHerb_GRY", "GreenHerb|RedHerb|YellowHerb", "1|1|1");
+		// Mixed Herbs R+B
+		AddItem("MixedHerb_RB", "RedHerb|BlueHerb", "1|1");
+		
+		// GunPowder A // 8 times for Enhanced Handgun Ammo
+		AddItem("GunPowder_AA", "GunPowder_A", "2");
+		AddItem("GunPowder_AAA", "GunPowder_A", "3");
+		AddItem("GunPowder_BBA", "GunPowder_B|GunPowder_A", "2|1");	
+		// HandgunAmmo		
+		AddItem("HandgunAmmo_15", "GunPowder_A", "1");
+		AddItem("HandgunAmmo_35", "GunPowder_AA", "1");
+		AddItem("HandgunAmmo_55", "GunPowder_AAA", "1");
+		AddItem("HandgunAmmo_60", "GunPowder_BBA", "1");
+
+		// GunPowder B // 8 times for Enhanced Shotgun Shells
+		AddItem("GunPowder_BB", "GunPowder_B", "2");
+		AddItem("GunPowder_AAB", "GunPowder_A|GunPowder_B", "2|1");
+		AddItem("GunPowder_BBB", "GunPowder_B", "3");
+		// ShotgunShells		
+		AddItem("ShotgunShells_7", "GunPowder_B", "1");
+		AddItem("ShotgunShells_18", "GunPowder_BB", "1");
+		AddItem("ShotgunShells_22", "GunPowder_AAB", "1");
+		AddItem("ShotgunShells_30", "GunPowder_BBB", "1");
+
+		// GunPowder C
+		AddItem("GunPowder_C", "GunPowder_A|GunPowder_B", "1|1");
+		AddItem("GunPowder_AC", "GunPowder_A|GunPowder_C", "1|1");
+		AddItem("GunPowder_BC", "GunPowder_B|GunPowder_C", "1|1");
+		AddItem("GunPowder_CC", "GunPowder_C", "2");
+		AddItem("GunPowder_CCC", "GunPowder_C", "3");
+		
+		// GunPowder A+B+C
+		AddItem("GunPowder_ABC", "GunPowder_A|GunPowder_B|GunPowder_C", "1|1|1");
+		
+		// Grenade Rounds
+		AddItem("GrenadeRounds_10", "GunPowder_C", "1");
+		AddItem("FlameRounds_10", "GunPowder_AC", "1");
+		AddItem("AcidRounds_10", "GunPowder_BC", "1");
+		AddItem("FreezeRounds_10", "GunPowder_CC", "1");
+		AddItem("FlameRounds_6", "GunPowder_A|GrenadeRounds", "1|6");
+		AddItem("FlameRounds_12", "GunPowder_AA|GrenadeRounds", "1|6");
+		AddItem("FlameRounds_18", "GunPowder_AAA|GrenadeRounds", "1|6");
+		AddItem("AcidRounds_6", "GunPowder_B|GrenadeRounds", "1|6");
+		AddItem("AcidRounds_12", "GunPowder_BB|GrenadeRounds", "1|6");
+		AddItem("AcidRounds_18", "GunPowder_BBB|GrenadeRounds", "1|6");
+		AddItem("FreezeRounds_6", "GunPowder_C|GrenadeRounds", "1|6");
+		AddItem("FreezeRounds_12", "GunPowder_CC|GrenadeRounds", "1|6");
+		AddItem("FreezeRounds_18", "GunPowder_CCC|GrenadeRounds", "1|6");
+
+		// Magnum Rounds
+		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1");
+		
+		// SMG Rounds
+		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1");
+		
+		Super.PostBeginPlay();
+	}
+	
+	override void DetachFromOwner()
+	{
+		AltarUI Event = AltarUI(EventHandler.Find("AltarUI"));
+		if (Event)
+			Event.showicon = false;
+		super.DetachFromOwner();
+	}
+	
+	void SwitchPage(bool reset = false)
+	{
+		if(itemindex >= itemlist.size()-1 || reset)
+			itemindex = 0;
+		else
+			itemindex++;
+		if(!itemlist[itemindex])
+			itemindex = 0;
+			
+		if(itemindex >= 0 && itemindex <= 4)
+		{
+			if(itemindex == 0 && isdoom2) { itemindex++; }
+			while(owner.CountInv(itemlist[itemindex]) > 0 && itemindex <= 4)
+				itemindex++;
+		}
+			
+		AltarUI Event = AltarUI(EventHandler.Find("AltarUI"));
+		if(Event)
+		{
+			if(itemlist[itemindex])
+			{
+				Event.pic = GetDefaultByType(itemlist[itemindex]).FindState("Spawn").GetSpriteTexture(0);
+				Event.itemname = GetDefaultByType(itemlist[itemindex]).GetTag();
+				int w, h;
+				[w, h] = TexMan.GetSize(Event.pic);
+				int nw, nh;
+				if (h > w)
+				{
+					nh = 75;
+					nw = (double(nh)/h) * w;
+				}
+				else
+				{
+					nw = 75;
+					nh = (double(nw)/w) * h;
+				}
+				Event.w = nw;
+				Event.h = nh;
+				int w2, h2;
+				Event.w2.clear();
+				Event.h2.clear();
+				for(int i = 0; i < itemcost1[itemindex].size(); i++)
+				{
+					TextureID pic2 = GetDefaultByType(itemcost1[itemindex][i]).FindState("Spawn").GetSpriteTexture(0);
+					[w2, h2] = TexMan.GetSize(pic2);
+					nh = 50;
+					nw = (double(nh)/h2) * w2;
+					Event.w2.Push(nw);
+					Event.h2.Push(nh);
+				}
+				Event.itemcost1.Copy(itemcost1[itemindex]);
+				Event.itemcost2.Copy(itemcost2[itemindex]);
+			}
+			Event.showicon = true;
+		}
+	}
+
+	void ResetIndex() { SwitchPage(true); }
+	
+	States
+	{
+	Select:
+		TNT1 A 0 { invoker.ResetIndex(); }
+	Select2:
+		TNT1 A 1 A_Raise();
+		Loop;
+	Ready:
+		TNT1 # 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		TNT1 # 0
+		{
+			AltarUI Event = AltarUI(EventHandler.Find("AltarUI"));
+			if(Event) {	Event.showicon = false; }
+		}
+	Deselect2:
+		TNT1 A 1 A_Lower();
+		Loop;
+	AltFire:
+		TNT1 # 0
+		{
+			int buttons = GetPlayerInput(MODINPUT_OLDBUTTONS);
+			if(!(buttons & BT_ALTATTACK))
+			{
+				A_StartSound("Menu/activate", CHAN_WEAPON);
+				invoker.SwitchPage();
+			}
+		}
+		Goto Ready;
+	Fire:
+		TNT1 # 0
+		{
+			bool block = false;
+			for(int i = 0; i < invoker.itemcost1[invoker.itemindex].size(); i++)
+			{
+				if(CountInv(invoker.itemcost1[invoker.itemindex][i]) < invoker.itemcost2[invoker.itemindex][i])
+				{ block = true; }
+			}
+			
+			if(block)
+			{
+				int buttons = GetPlayerInput(MODINPUT_OLDBUTTONS);
+				if(!(buttons & BT_ATTACK))
+					A_StartSound("Menu/clear", CHAN_WEAPON); 
+				return A_Jump(256, "Ready");
+			}
+			else
+				return A_Jump(0,1);
+		}
+		TNT1 A 6;
+	Hold:
+		TNT1 A 5;
+		TNT1 A 0
+		{
+			for(int i = 0; i < invoker.itemcost1[invoker.itemindex].size(); i++)
+			{
+				A_TakeInventory(invoker.itemcost1[invoker.itemindex][i], invoker.itemcost2[invoker.itemindex][i]);
+			}
+			
+			FLineTraceData RemoteRay;
+			LineTrace(angle, 100, 0, TRF_THRUACTORS|TRF_BLOCKSELF, data: RemoteRay);
+			Vector3 spawnpos;
+			spawnpos = pos+(AngleToVector(angle, RemoteRay.distance-25),0);
+			let x = Spawn("SpaghettiAltar", spawnpos);
+			if(x)
+			{
+				x.angle = angle;
+				SpaghettiAltar(x).itemcost1.copy(invoker.itemcost1[invoker.itemindex]);
+				SpaghettiAltar(x).output = invoker.itemlist[invoker.itemindex];			
+			}
+		}
+		TNT1 A 31;	
+		TNT1 A 0;
+		Goto Ready;
+	}
+}

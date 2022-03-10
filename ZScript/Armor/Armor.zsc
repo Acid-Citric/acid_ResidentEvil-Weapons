@@ -1,0 +1,46 @@
+Class ArmorVest : BasicArmorPickup
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+		Tag "Armor Vest";
+		Inventory.PickupMessage "Armor Vest";
+		Inventory.Icon "VESTA0";
+		Armor.SavePercent 75;
+		Armor.SaveAmount 100;
+		Scale 0.7;
+	}
+	States
+	{
+	Spawn:
+		VEST A 30;
+		VEST A 2 Bright;
+		Loop;
+	}
+}
+
+Class PoliceArmor : BasicArmorPickup
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+		Tag "Armor Vest";
+		Inventory.PickupMessage "Armor Vest";
+		Inventory.Icon "VESTA0";
+		Armor.SavePercent 75;
+		Armor.SaveAmount 100;
+		Scale 0.7;
+
+		DamageFactor "Normal", 0.25;
+		Translation "0:255=#[0,64,128]";
+	}
+	States
+	{
+	Spawn:
+		VEST A 30;
+		VEST A 2 Bright;
+		Loop;
+	}
+}

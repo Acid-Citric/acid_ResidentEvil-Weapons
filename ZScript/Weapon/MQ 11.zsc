@@ -1,0 +1,112 @@
+Class MQ11 : REWeapon
+{
+	Default
+	{
+		Inventory.Icon "WP4PA0";
+
+		Weapon.SelectionOrder 700;
+		Weapon.AmmoUse 0;
+		Weapon.AmmoGive2 MAG_MAC11;
+		Weapon.AmmoType "WP4Ammo";
+		Weapon.AmmoType2 "SubmachineGunAmmo";
+		+WEAPON.NOAUTOFIRE
+		+WEAPON.NOALERT
+		Inventory.PickupMessage "MQ 11";
+		Obituary "$OB_MPMACHINEGUN";
+		Tag "MQ 11";
+		Scale 0.3;
+	}
+	Override Void AttachToOwner(Actor other)
+	{
+		Super.AttachToOwner(other);
+		other.A_GiveInventory("WP4Ammo",MAG_MAC11);
+	}
+    Override Bool TryPickup(in out Actor toucher) 
+    {
+		If(toucher)
+		{
+			Let weap = toucher.FindInventory("MQ11");
+			If(!weap) { Self.AmmoGive2 = 0; }
+		}
+			Return Super.TryPickup(toucher);
+    }
+	States
+	{
+	Spawn:
+		WP4P A 30;
+		WP4P A 2 Bright;
+		Loop;
+	Select:
+		WP4G B 0 A_JumpIf(!CountInv("WP4Ammo"), "Raise");
+		WP4G A 0;
+		Goto Raise;
+	Ready:
+		WP4G B 0 A_JumpIf(!CountInv("WP4Ammo"), 2);
+		WP4G A 0;
+		"####" "#" 1 A_WeaponReady(WRF_ALLOWRELOAD);
+		Loop;
+	Deselect:
+		WP4G B 0 A_JumpIf(!CountInv("WP4Ammo"), "Lower");
+		WP4G A 0;
+		Goto Lower;
+	Fire:
+		TNT1 A 0 A_JumpIf(!CountInv("WP4Ammo"), "Reload");
+		WP4F A 1
+		{
+			A_AlertMonsters();
+			A_FireBullets(random(1,2), random(1,2), 1, 5, "BulletPuff");
+			A_StartSound("Weapons/MAC11/Fire", CHAN_WEAPON);
+
+			A_SetPitch(Pitch - 0.36, SPF_INTERPOLATE); // -36 % = 64 pts of stability
+
+			A_TakeInventory("WP4Ammo",1);
+		}
+		WP4F B 1 { A_SetPitch(Pitch - 0.0625, SPF_INTERPOLATE); A_FireProjectile("RE_SMGCasing_Spawner", FRandom(-1,5), False, 1, -1); }
+		WP4F C 1 A_SetPitch(Pitch - 0.0625, SPF_INTERPOLATE);
+		WP4F D 1 A_SetPitch(Pitch - 0.0625, SPF_INTERPOLATE);
+		TNT1 A 0 A_ReFire();
+		Goto Ready;
+	Flash:
+		TNT1 A 0;
+		Goto LightDone;
+
+	Reload:
+		TNT1 A 0 A_JumpIfInventory("WP4Ammo", MAG_MAC11, 2);
+		TNT1 A 0 A_JumpIf(CountInv("SubmachineGunAmmo") > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork");  // sv_infiniteammo
+		TNT1 A 0;
+		Goto Ready;
+	ReloadWork:
+		WP4R AB 2;
+		WP4R C 2 A_StartSound("Weapons/MAC11/Unload", CHAN_WEAPON);
+		WP4R DEFG 2;
+		WP4R H 2 A_StartSound("Weapons/MAC11/Unload", CHAN_WEAPON);
+		WP4R IJ 2;
+		WP4R K 4;
+		WP4R LM 3;
+		WP4R N 3 A_StartSound("Weapons/MAC11/Reload", CHAN_WEAPON);
+		WP4R OPQ 3;
+		WP4R R 3;
+		WP4R STUV 3;
+		WP4G A 3;
+	ReloadLoop:
+		TNT1 A 0
+		{
+            While(CountInv("SubmachineGunAmmo") > 0 && CountInv("WP4Ammo") < MAG_MAC11 || CountInv("PowerInfiniteAmmo") && CountInv("WP4Ammo") < MAG_MAC11)
+			{ // sv_infiniteammo
+				A_TakeInventory("SubmachineGunAmmo", 1, TIF_NOTAKEINFINITE);
+				A_GiveInventory("WP4Ammo", 1);
+			}
+		}
+		TNT1 A 0;
+		Goto Ready;
+	}
+}
+
+Class WP4Ammo : Ammo
+{
+	Default
+	{
+		Inventory.MaxAmount MAG_MAC11;
+		+INVENTORY.IGNORESKILL
+	}
+}

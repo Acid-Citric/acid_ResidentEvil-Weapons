@@ -1,0 +1,297 @@
+CONST MAG_VP70 = 18;
+CONST MAG_DE = 8;
+CONST MAG_W870 = 5;
+CONST MAG_MAC11 = 32;
+CONST MAG_SPARK = 20;
+CONST MAG_FLAME = 400;
+CONST MAG_M202 = 4;
+
+Class RE2Player : PlayerPawn
+{
+	Default
+	{
+		Scale 0.8;
+		Speed 1;
+		Player.JumpZ 9;
+		Health 100;
+		Player.MaxHealth 100;
+		Player.RunHealth 15;
+		Radius 16;
+		Height 56;
+		Mass 100;
+		PainChance 255;
+		Player.DisplayName "Leon";
+		Player.CrouchSprite "PLYC";
+
+		Player.StartItem "Matilda";
+		Player.StartItem "CombatKnife";
+		Player.StartItem "AltarWeapon";
+
+		Player.StartItem "Lighter";
+		Player.StartItem "HandgunAmmo", 120;
+		Player.StartItem "WP1Ammo", MAG_VP70;
+		/*Player.StartItem "WP2Ammo", MAG_DE;
+		Player.StartItem "WP3Ammo", MAG_W870;
+		Player.StartItem "WP4Ammo", MAG_MAC11;
+		Player.StartItem "WP6Ammo", MAG_FLAME;
+		Player.StartItem "WPAAmmo", MAG_SPARK;
+		Player.StartItem "WP7Ammo", MAG_M202;*/
+		  
+		Player.WeaponSlot 1, "CombatKnife";
+		Player.WeaponSlot 2, "Matilda", "LightningHawk";
+		Player.WeaponSlot 3, "W870";
+		Player.WeaponSlot 4, "MQ11";
+		Player.WeaponSlot 5, "GM79";
+		Player.WeaponSlot 6, "ChemicalFlameThrower";
+		Player.WeaponSlot 7, "SparkShot";
+		Player.WeaponSlot 8, "ATRL";
+		Player.WeaponSlot 0, "AltarWeapon";
+ 		
+		Player.ColorRange 112, 127;
+		Player.Colorset 0, "$TXT_COLOR_GREEN",		0x70, 0x7F, 0x72;
+		Player.Colorset 1, "$TXT_COLOR_GRAY",		0x60, 0x6F, 0x62;
+		Player.Colorset 2, "$TXT_COLOR_BROWN",		0x40, 0x4F, 0x42;
+		Player.Colorset 3, "$TXT_COLOR_RED",		0x20, 0x2F, 0x22;
+		// Doom Legacy additions
+		Player.Colorset 4, "$TXT_COLOR_LIGHTGRAY",	0x58, 0x67, 0x5A;
+		Player.Colorset 5, "$TXT_COLOR_LIGHTBROWN",	0x38, 0x47, 0x3A;
+		Player.Colorset 6, "$TXT_COLOR_LIGHTRED",	0xB0, 0xBF, 0xB2;
+		Player.Colorset 7, "$TXT_COLOR_LIGHTBLUE",	0xC0, 0xCF, 0xC2;
+
+		Player.DamageScreenColor "22 8B 22", 1.0, "Slime";
+		Player.DamageScreenColor "FF 8C 00", 1.0, "Fire";
+		Player.DamageScreenColor "00 80 FF", 1.0, "Drowning";
+		
+		Player.AirCapacity 1.0;
+	}
+	States
+	{
+	Spawn:
+		LEON A -1;
+		Loop;
+	See:
+		LEON ABCD 6;
+		Loop;
+	Missile:
+		LEON E 10;
+		Goto Spawn;		
+	Melee:
+		LEON F 10 BRIGHT;
+		Goto Missile;
+	Pain:
+		LEON G 3;
+		LEON G 3 A_Pain;
+		Goto Spawn;
+	Death:
+		LEON H 0 A_PlayerSkinCheck("AltSkinDeath");
+	Death1:
+		LEON H 6;
+		LEON I 5 A_PlayerScream;
+		LEON J 4 A_NoBlocking;
+		LEON K -1;
+		Stop;
+	XDeath:
+		LEON L 0 A_PlayerSkinCheck("AltSkinXDeath");
+	XDeath1:
+		LEON L 6;
+		LEON M 6 A_XScream;
+		LEON N 5 A_NoBlocking;
+		LEON OP 4;
+		LEON Q -1;
+		Stop;
+	AltSkinDeath:
+		LEON H 6;
+		LEON I 5 A_PlayerScream;
+		LEON J 4 A_NoBlocking;
+		LEON K -1;
+		Stop;
+	AltSkinXDeath:
+		LEON L 6 A_PlayerScream;
+		LEON M 0 A_NoBlocking;
+		LEON M 6 A_SkullPop;
+		LEON N 5;
+		LEON OP 4;
+		LEON Q -1;
+		Stop;
+	}
+	
+	override void CheatGive(String name, int amount)
+	{
+		Super.CheatGive(name, amount);
+		
+		If(name ~== "all" || name ~== "armor") 
+		{
+			CheatTake("armor", 1);
+			Super.CheatGive("ArmorVest", 1);
+		}
+		If(name ~== "all" || name ~== "backpack") { Super.CheatGive("Backpack", 1); }
+		If(name ~== "megasphere")
+		{
+			CheatTake("armor", 1);
+			Super.CheatGive("MegaSphere", 1);
+		}		
+	}
+
+	override void Tick()
+	{	
+		CheckYellowHerb();
+		
+		Super.Tick();
+	}
+
+	void CheckYellowHerb() // code from Guncaster.
+	{
+		int DefaultMaxHealth = Default.MaxHealth;
+		if(DefaultMaxHealth < 1) { DefaultMaxHealth = 100; } // The dehacked default of 0 isn't valid.
+		
+		// Simple function: change maximum health value dynamically.
+		MaxHealth = DefaultMaxHealth + (CountInv("HealthUpgrade") * 25);
+	}
+}
+
+Class The4thSurvivor : PlayerPawn
+{
+	Default
+	{
+		Scale 0.8;
+		Speed 1;
+		Player.JumpZ 9;
+		Health 100;
+		Player.MaxHealth 100;
+		Player.RunHealth 15;
+		Radius 16;
+		Height 56;
+		Mass 100;
+		PainChance 255;
+		Player.DisplayName "Hunk";
+		Player.CrouchSprite "PLYC";
+
+		Player.StartItem "Matilda";
+		Player.StartItem "LightningHawk";
+		Player.StartItem "W870";
+		Player.StartItem "AltarWeapon";
+
+		Player.StartItem "MixedHerb_GB", 2;
+		Player.StartItem "HandgunAmmo", 150;
+		Player.StartItem "MagnumAmmo", MAG_DE;
+		Player.StartItem "ShotgunShells", 15;
+
+		Player.StartItem "WP1Ammo", MAG_VP70;
+		Player.StartItem "WP2Ammo", MAG_DE;
+		Player.StartItem "WP3Ammo", MAG_W870;
+		/*Player.StartItem "WP4Ammo", MAG_MAC11;
+		Player.StartItem "WP6Ammo", MAG_FLAME;
+		Player.StartItem "WPAAmmo", MAG_SPARK;
+		Player.StartItem "WP7Ammo", MAG_M202;*/
+		  
+		Player.WeaponSlot 1, "CombatKnife";
+		Player.WeaponSlot 2, "Matilda", "LightningHawk";
+		Player.WeaponSlot 3, "W870";
+		Player.WeaponSlot 4, "MQ11";
+		Player.WeaponSlot 5, "GM79";
+		Player.WeaponSlot 6, "ChemicalFlameThrower";
+		Player.WeaponSlot 7, "SparkShot";
+		Player.WeaponSlot 8, "ATRL";
+		Player.WeaponSlot 0, "AltarWeapon";
+ 		
+		Player.ColorRange 112, 127;
+		Player.Colorset 0, "$TXT_COLOR_GREEN",		0x70, 0x7F, 0x72;
+		Player.Colorset 1, "$TXT_COLOR_GRAY",		0x60, 0x6F, 0x62;
+		Player.Colorset 2, "$TXT_COLOR_BROWN",		0x40, 0x4F, 0x42;
+		Player.Colorset 3, "$TXT_COLOR_RED",		0x20, 0x2F, 0x22;
+		// Doom Legacy additions
+		Player.Colorset 4, "$TXT_COLOR_LIGHTGRAY",	0x58, 0x67, 0x5A;
+		Player.Colorset 5, "$TXT_COLOR_LIGHTBROWN",	0x38, 0x47, 0x3A;
+		Player.Colorset 6, "$TXT_COLOR_LIGHTRED",	0xB0, 0xBF, 0xB2;
+		Player.Colorset 7, "$TXT_COLOR_LIGHTBLUE",	0xC0, 0xCF, 0xC2;
+
+		Player.DamageScreenColor "22 8B 22", 1.0, "Slime";
+		Player.DamageScreenColor "FF 8C 00", 1.0, "Fire";
+		Player.DamageScreenColor "00 80 FF", 1.0, "Drowning";
+		
+		Player.AirCapacity 1.0;
+	}
+	States
+	{
+	Spawn:
+		LEON A -1;
+		Loop;
+	See:
+		LEON ABCD 6;
+		Loop;
+	Missile:
+		LEON E 10;
+		Goto Spawn;		
+	Melee:
+		LEON F 10 BRIGHT;
+		Goto Missile;
+	Pain:
+		LEON G 3;
+		LEON G 3 A_Pain;
+		Goto Spawn;
+	Death:
+		LEON H 0 A_PlayerSkinCheck("AltSkinDeath");
+	Death1:
+		LEON H 6;
+		LEON I 5 A_PlayerScream;
+		LEON J 4 A_NoBlocking;
+		LEON K -1;
+		Stop;
+	XDeath:
+		LEON L 0 A_PlayerSkinCheck("AltSkinXDeath");
+	XDeath1:
+		LEON L 6;
+		LEON M 6 A_XScream;
+		LEON N 5 A_NoBlocking;
+		LEON OP 4;
+		LEON Q -1;
+		Stop;
+	AltSkinDeath:
+		LEON H 6;
+		LEON I 5 A_PlayerScream;
+		LEON J 4 A_NoBlocking;
+		LEON K -1;
+		Stop;
+	AltSkinXDeath:
+		LEON L 6 A_PlayerScream;
+		LEON M 0 A_NoBlocking;
+		LEON M 6 A_SkullPop;
+		LEON N 5;
+		LEON OP 4;
+		LEON Q -1;
+		Stop;
+	}
+	
+	override void CheatGive(String name, int amount)
+	{
+		Super.CheatGive(name, amount);
+		
+		If(name ~== "all" || name ~== "armor") 
+		{
+			CheatTake("armor", 1);
+			Super.CheatGive("ArmorVest", 1);
+		}
+		If(name ~== "all" || name ~== "backpack") { Super.CheatGive("Backpack", 1); }
+		If(name ~== "megasphere")
+		{
+			CheatTake("armor", 1);
+			Super.CheatGive("MegaSphere", 1);
+		}		
+	}
+
+	override void Tick()
+	{	
+		CheckYellowHerb();
+		
+		Super.Tick();
+	}
+
+	void CheckYellowHerb() // code from Guncaster.
+	{
+		int DefaultMaxHealth = Default.MaxHealth;
+		if(DefaultMaxHealth < 1) { DefaultMaxHealth = 100; } // The dehacked default of 0 isn't valid.
+		
+		// Simple function: change maximum health value dynamically.
+		MaxHealth = DefaultMaxHealth + (CountInv("HealthUpgrade") * 5);
+	}
+}

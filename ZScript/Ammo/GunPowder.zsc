@@ -1,0 +1,223 @@
+Class GunPowder : Inventory
+{
+	Override String PickupMessage()	{ return String.Format("%s",GetTag()); }
+	Default
+	{
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	States
+	{
+	Spawn:
+		"####" A 30;
+		"####" A 2 Bright;
+		Loop;
+	}
+}
+
+// A
+Class GunPowder_A : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A"; // (+15 H. Gun Bullets)
+		Inventory.Icon "GPA1A0";
+	}
+	States
+	{
+	Spawn:
+		GPA1 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_AA : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A+A"; // (+35 H. Gun Bullets)
+		Inventory.Icon "GPA2A0";
+	}
+	States
+	{
+	Spawn:
+		GPA2 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_AAA : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A+A+A"; // (+55 H. Gun Bullets)
+		Inventory.Icon "GPA3A0";
+	}
+	States
+	{
+	Spawn:
+		GPA3 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_BBA : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder B+B+A"; // (+60 H. Gun Bullets)
+		Inventory.Icon "GPA4A0";
+	}
+	States
+	{
+	Spawn:
+		GPA4 A 0;
+		Goto Super::Spawn;
+	}
+}
+// B
+Class GunPowder_B : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder B"; // (+7 Shotgun Shells)
+		Inventory.Icon "GPB1A0";
+	}
+	States
+	{
+	Spawn:
+		GPB1 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_BB : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder B+B"; // (+18 Shotgun Shells)
+		Inventory.Icon "GPB2A0";
+	}
+	States
+	{
+	Spawn:
+		GPB2 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_AAB : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A+A+B"; // (+22 Shotgun Shells)
+		Inventory.Icon "GPB3A0";
+	}
+	States
+	{
+	Spawn:
+		GPB3 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_BBB : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder B+B+B"; // (+30 Shotgun Shells)
+		Inventory.Icon "GPB4A0";
+	}
+	States
+	{
+	Spawn:
+		GPB4 A 0;
+		Goto Super::Spawn;
+	}
+}
+// C = A+B
+Class GunPowder_C : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder C"; // (+10 Grenade Rounds)
+		Inventory.Icon "GPC1A0";
+	}
+	States
+	{
+	Spawn:
+		GPC1 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_AC : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A+C"; // (+10 Flame Rounds)
+		Inventory.Icon "GPC2A0";
+	}
+	States
+	{
+	Spawn:
+		GPC2 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_BC : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder B+C"; // (+10 Acid Rounds)
+		Inventory.Icon "GPC3A0";
+	}
+	States
+	{
+	Spawn:
+		GPC3 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_CC : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder C+C"; // (+10 Freeze Rounds)
+		Inventory.Icon "GPC4A0";
+	}
+	States
+	{
+	Spawn:
+		GPC4 A 0;
+		Goto Super::Spawn;
+	}
+}
+Class GunPowder_CCC : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder C+C+C"; // (+24 Magnum Rounds)
+		Inventory.Icon "GPC5A0";
+	}
+	States
+	{
+	Spawn:
+		GPC5 A 0;
+		Goto Super::Spawn;
+	}
+}
+
+Class GunPowder_ABC : GunPowder
+{
+	Default
+	{
+		Tag "Gun Powder A+B+C"; // (+96 SMG Rounds)
+		Inventory.Icon "GPX1A0";
+	}
+	States
+	{
+	Spawn:
+		GPX1 A 0;
+		Goto Super::Spawn;
+	}
+}

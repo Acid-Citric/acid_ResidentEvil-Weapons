@@ -1,0 +1,104 @@
+Class BonusSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "GunPowder_A", 64;
+		DropItem "GunPowder_B", 64;
+	}
+}
+
+Class ClipSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "HandgunAmmo_15", 128, 2;
+		DropItem "HandgunAmmo_35", 128, 1;
+		DropItem "HandgunAmmo_55", 64, 1;
+		DropItem "HandgunAmmo_60", 32, 1;
+		DropItem "MagnumAmmo", 32, 1;
+		DropItem "SubmachineGunAmmo", 32, 1;
+
+		DropItem "GunPowder_A", 64, 1;
+		DropItem "GunPowder_B", 64, 1;
+	}
+}
+Class ShellSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "ShotgunShells_7", 128, 2;
+		DropItem "ShotgunShells_18", 64, 2;
+		DropItem "ShotgunShells_22", 32, 2;
+		DropItem "ShotgunShells_30", 32, 2;
+
+		DropItem "GunPowder_A", 64, 1;
+		DropItem "GunPowder_B", 64, 1;
+	}
+}
+Class RocketAmmoSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "GrenadeRounds", 128, 2;
+		DropItem "FlameRounds", 64, 2;
+		DropItem "AcidRounds", 32, 2;
+		DropItem "FreezeRounds", 32, 2;
+
+		DropItem "GunPowder_A", 64, 1;
+		DropItem "GunPowder_B", 64, 1;
+	}
+}
+Class CellSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "Fuel", 64, 4;
+		DropItem "SparkShotRounds", 64, 4;
+
+		DropItem "GunPowder_A", 32, 1;
+		DropItem "GunPowder_B", 32, 1;
+	}
+}
+Class BackpackSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "InfiniteBullets", 255, 1;
+		DropItem "SurvivorPack", 255, 3;
+	}
+}
+
+Class StimpackSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "GreenHerb", 255, 2;
+		DropItem "BlueHerb", 255, 1;
+		DropItem "RedHerb", 255, 1;
+	}
+}
+Class MedikitSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "FirstAidSpray", 255, 1;
+		DropItem "GreenHerb", 255, 3;
+	}
+}
+Class SoulSphereSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "FirstAidBox", 255, 9;
+		DropItem "YellowHerb", 255, 1;
+	}
+}
+
+Class ShotgunSpawner : RandomSpawner
+{
+	Default
+	{
+		DropItem "W870";
+		DropItem "LightningHawk";
+	}
+}

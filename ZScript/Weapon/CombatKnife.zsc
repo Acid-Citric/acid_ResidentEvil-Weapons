@@ -1,0 +1,86 @@
+Class CombatKnife : REWeapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 3700;
+		+WEAPON.MELEEWEAPON
+		+WEAPON.NOALERT
+		Obituary "$OB_MPFIST";
+		Tag "Combat Knife";
+		+INVENTORY.UNDROPPABLE
+	}
+	States
+	{
+	Select:
+		WP0G A 0;
+		Goto Raise;
+	Ready:
+		WP0G A 1 A_WeaponReady();
+		Loop;
+	Deselect:
+		"####" "#" 0;
+		Goto Lower;
+	Fire:
+		WP0G AB 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G C 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G C 1 { A_OverlayOffset(PSP_WEAPON, 10, 48); A_OverlayScale(PSP_WEAPON, 1, 1); A_StartSound("Weapons/Knife/Swing", CHAN_WEAPON); }
+		WP0G E 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G E 1 { A_OverlayOffset(PSP_WEAPON, -8, 8); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G G 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G H 3
+		{
+			FTranslatedLineTarget t;
+			double ang = angle + Random2() * (5.625 / 256);
+			double pitch = AimLineAttack(ang, 64, null, 0., ALF_CHECK3D);
+			LineAttack(ang, 64, pitch, 5*random(1,10), 'Melee', "BulletPuff", LAF_ISMELEEATTACK|!LAF_NOIMPACTDECAL, t);
+
+			If(t.LineTarget)
+			{
+				Let victim = t.LineTarget;
+				Let anglediff = deltaangle(victim.angle, angle);
+				A_StartSound("Weapons/Knife/XDeath", CHAN_WEAPON);
+			}
+		}
+		WP0G G 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G E 1 { A_OverlayOffset(PSP_WEAPON, -8, 8); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G E 1 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G C 2 { A_OverlayOffset(PSP_WEAPON, 10, 48); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G C 2 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		WP0G BA 2 { A_OverlayOffset(PSP_WEAPON, 0, 32); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		Goto Ready;
+	AltFire:
+		WP0G C 1 { A_OverlayOffset(PSP_WEAPON, -192, 48); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, -161, 45); A_OverlayScale(PSP_WEAPON, 1, 1); A_StartSound("Weapons/Knife/Swing", CHAN_WEAPON); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, -102, 42); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, -74, 40); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" H 1 { A_OverlayOffset(PSP_WEAPON, -47, 38); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, -21, 37); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1
+		{
+			A_OverlayOffset(PSP_WEAPON, 4, 36);
+			A_OverlayScale(PSP_WEAPON, 1, 1);
+
+			FTranslatedLineTarget t;
+			double ang = angle + Random2() * (5.625 / 256);
+			double pitch = AimLineAttack(ang, 64, null, 0., ALF_CHECK3D);
+			LineAttack(ang, 64, pitch, 50*random(1,10), 'Melee', "BulletPuff", LAF_ISMELEEATTACK|!LAF_NOIMPACTDECAL, t);
+
+			If(t.LineTarget)
+			{
+				Let victim = t.LineTarget;
+				Let anglediff = deltaangle(victim.angle, angle);
+				A_StartSound("Weapons/Knife/XDeath", CHAN_WEAPON);
+			}
+		}
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 28, 36); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 51, 37); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 73, 38); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 94, 40); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 114, 42); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 133, 45); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 151, 48); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 168, 52); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 184, 56); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		Goto Ready;
+	}
+}

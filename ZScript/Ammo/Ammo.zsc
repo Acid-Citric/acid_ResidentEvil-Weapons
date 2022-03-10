@@ -1,0 +1,262 @@
+Class HandgunAmmo : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "H. Gun Bullet";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM1A0";
+		Inventory.MaxAmount 250;
+		Ammo.BackpackMaxAmount 250;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		//AMM1 B 0 A_JumpIf(CountInv("enhanced_a") > 0, 2);
+		AMM1 A 0;
+		"####" "#" 30;
+		"####" "#" 2 Bright;
+		Loop;
+	}
+}
+Class HandgunAmmo_15 : HandgunAmmo { Default { Inventory.Amount 15; }}
+Class HandgunAmmo_35 : HandgunAmmo { Default { Inventory.Amount 35; }}
+Class HandgunAmmo_55 : HandgunAmmo { Default { Inventory.Amount 55; }}
+Class HandgunAmmo_60 : HandgunAmmo { Default { Inventory.Amount 60; }}
+
+Class MagnumAmmo : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Magnum Bullet";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM2A0";
+		Inventory.Amount 8;
+		Inventory.MaxAmount 250;
+		Ammo.BackpackMaxAmount 250;
+		Scale 0.6;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM2 A 30;
+		AMM2 A 2 Bright;
+		Loop;
+	}
+}
+Class MagnumAmmo_24 : MagnumAmmo { Default { Inventory.Amount 24; }}
+/*Class MagnumAmmo_24 : Actor
+{
+	Override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		For(int i; i<3; i++) { A_SpawnItemEx("MagnumAmmo",Random(-8,8),Random(-8,8)); }
+	}
+}*/
+
+Class ShotgunShells : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Shotgun Shell";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM3A0";
+		Inventory.MaxAmount 250;
+		Ammo.BackpackMaxAmount 250;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		//AMM3 B 0 A_JumpIf(CountInv("enhanced_b") > 0, 2);
+		AMM3 A 0;
+		"####" "#" 30;
+		"####" "#" 2 Bright;
+		Loop;
+	}
+}
+Class ShotgunShells_7 : ShotgunShells { Default { Inventory.Amount 7; }}
+Class ShotgunShells_18 : ShotgunShells { Default { Inventory.Amount 18; }}
+Class ShotgunShells_22 : ShotgunShells { Default { Inventory.Amount 22; }}
+Class ShotgunShells_30 : ShotgunShells { Default { Inventory.Amount 30; }}
+
+Class SubmachineGunAmmo : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "M.G. Bullet";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM4A0";
+		Inventory.Amount 32;
+		Inventory.MaxAmount 250;
+		Ammo.BackpackMaxAmount 250;
+		Scale 1.0;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM4 A 30;
+		AMM4 A 2 Bright;
+		Loop;
+	}
+}
+Class SubmachineGunAmmo_96 : SubmachineGunAmmo { Default { Inventory.Amount 96; }}
+
+Class GrenadeRounds : Ammo // The player will be able to load an entire stack of the same ammunition into the weapon, up to 255 rounds (resident evil wiki).
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Grenade Shell";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM5A0";
+		Inventory.Amount 3;
+		Inventory.MaxAmount 64;
+		Ammo.BackpackMaxAmount 64;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM5 A 30;
+		AMM5 A 2 Bright;
+		Loop;
+	}
+}
+Class GrenadeRounds_10 : GrenadeRounds { Default { Inventory.Amount 10; }}
+
+Class FlameRounds : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Incendiary Shell";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM5B0";
+		Inventory.Amount 3;
+		Inventory.MaxAmount 64;
+		Ammo.BackpackMaxAmount 64;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM5 B 30;
+		AMM5 B 2 Bright;
+		Loop;
+	}
+}
+Class FlameRounds_10 : FlameRounds { Default { Inventory.Amount 10; }}
+Class FlameRounds_6 : FlameRounds { Default { Inventory.Amount 6; }}
+Class FlameRounds_12 : FlameRounds { Default { Inventory.Amount 12; }}
+Class FlameRounds_18 : FlameRounds { Default { Inventory.Amount 18; }}
+
+Class AcidRounds : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Acid Shell";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM5C0";
+		Inventory.Amount 3;
+		Inventory.MaxAmount 64;
+		Ammo.BackpackMaxAmount 64;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM5 C 30;
+		AMM5 C 2 Bright;
+		Loop;
+	}
+}
+Class AcidRounds_10 : AcidRounds { Default { Inventory.Amount 10; }}
+Class AcidRounds_6 : AcidRounds { Default { Inventory.Amount 6; }}
+Class AcidRounds_12 : AcidRounds { Default { Inventory.Amount 12; }}
+Class AcidRounds_18 : AcidRounds { Default { Inventory.Amount 18; }}
+
+Class FreezeRounds : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Freeze Shell";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM5D0";
+		Inventory.Amount 3;
+		Inventory.MaxAmount 64;
+		Ammo.BackpackMaxAmount 64;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM5 D 30;
+		AMM5 D 2 Bright;
+		Loop;
+	}
+}
+Class FreezeRounds_10 : FreezeRounds { Default { Inventory.Amount 10; }}
+Class FreezeRounds_6 : FreezeRounds { Default { Inventory.Amount 6; }}
+Class FreezeRounds_12 : FreezeRounds { Default { Inventory.Amount 12; }}
+Class FreezeRounds_18 : FreezeRounds { Default { Inventory.Amount 18; }}
+
+Class Fuel : Ammo
+{
+	Override String PickupMessage()	{ return String.Format("%s (+%d)",GetTag(),Amount);	}
+	Default
+	{
+		Tag "Fuel";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM6A0";
+		Inventory.Amount 400;
+		Inventory.MaxAmount 1600;
+		Ammo.BackpackMaxAmount 1600;
+		Scale 0.75;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM6 A 30;
+		AMM6 A 2 Bright;
+		Loop;
+	}
+}
+
+Class SparkShotRounds : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "SparkShot Round";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMMAA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 10;
+		Ammo.BackpackMaxAmount 10;
+		Scale 0.5;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMMA A 30;
+		AMMA A 2 Bright;
+		Loop;
+	}
+}

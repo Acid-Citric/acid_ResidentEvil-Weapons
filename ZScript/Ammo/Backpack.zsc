@@ -1,0 +1,70 @@
+Class SurvivorPack : CustomInventory
+{
+	Default
+	{
+		+LOOKALLAROUND
+		Radius 1;
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0;
+	Spawned:
+		SBAG A 1 A_Look();
+		Loop;
+	Pickup:
+		SBAG A 1;
+		Fail;
+	See:
+		SBAG A 1 A_JumpIfCloser(64,"Open_1");
+		Loop;
+
+	Health:
+		SBAG A 1
+		{
+			If(Random(1,5) == 5) { A_SpawnItemEx("FirstAidSpray",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+
+			for(int i = 0; i < 6; i++) { A_SpawnItemEx("StimpackSpawner",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+		}
+		Goto Open_2;
+	Clip:
+		SBAG B 1
+		{
+			If(Random(1,10) == 10) { A_SpawnItemEx("MQ11",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+
+			for(int i = 0; i < 6; i++) { A_SpawnItemEx("ClipSpawner",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+		}
+		Goto FadeOut;
+	Shell:
+		SBAG B 1
+		{
+			If(Random(1,10) == 10) { A_SpawnItemEx("W870",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+
+			for(int i = 0; i < 6; i++) { A_SpawnItemEx("ShellSpawner",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+		}
+		Goto FadeOut;
+	RocketAmmo:
+		SBAG B 1 { for(int i = 0; i < 6; i++) { A_SpawnItemEx("RocketAmmoSpawner",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); } }
+		Goto FadeOut;
+	Cell:
+		SBAG B 1
+		{
+			If(Random(1,10) == 1) { A_SpawnItemEx("ChemicalFlameThrower",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+			Else If(Random(1,10) == 10) { A_SpawnItemEx("SparkShot",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+
+			for(int i = 0; i < 3; i++) { A_SpawnItemEx("CellSpawner",0,0,0,frandom(2,4),0,frandom(2,4),random(1,360)); }
+		}
+		Goto FadeOut;
+
+	Open_1:
+		SBAG B 35;
+		SBAG B 0 { return A_Jump(256,"Health"); }
+	Open_2:
+		SBAG C 35;
+		SBAG C 0 { return A_Jump(256,"Clip","Shell","RocketAmmo","Cell"); }
+	FadeOut:
+		SBAG C 5 A_FadeOut(0.1,FTF_REMOVE);
+		Loop;
+	}
+}

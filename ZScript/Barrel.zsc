@@ -1,0 +1,37 @@
+Class REBarrel : ExplosiveBarrel replaces ExplosiveBarrel
+{
+	Default
+	{
+		+PUSHABLE
+		+DONTGIB
+		DamageFactor "Fire", 2.0;
+		DeathSound "world/barrelx";
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay A_Jump(256,1,2,3,4);
+		PROP A -1;
+		BARA A -1;
+		BARB A -1;
+		BARC A -1;
+		Stop;
+	Death:
+		//"####" "#" 0 A_JumpIf(Scale.X > 1.2, 2);
+		//"####" "#" 2 Bright A_SetScale(Scale.X + 0.04,1);
+		//Loop;
+		"####" BCD 1 Bright;
+		TNT1 A 0 A_ScreamAndUnblock();
+		//
+		TNT1 A 1 { A_Explode(128,128,XF_HURTSOURCE); bNOGRAVITY = True; }
+		TNT1 A 0 A_AlertMonsters;
+		TNT1 AAAAAAAAAAA 0 A_SpawnProjectile("Explarticles", 0, 0, random (0, 360), 2, random (0, 360));
+		TNT1 A 0 A_SetTranslucent(0.65,1);
+		ARX4 ABC 2 Bright A_SetScale(1.0);
+		"####" DEF 2 Bright A_SetScale(1.05);
+		"####" GHI 2 Bright A_SetScale(1.1);
+		"####" JKL 2 Bright A_SetScale(1.15);
+		"####" MNO 2 Bright A_SetScale(1.2);
+		Stop;
+	}
+}

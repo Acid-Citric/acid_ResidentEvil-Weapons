@@ -1,0 +1,108 @@
+/*
+Simple universal bleeding system by Jekyll Grim Payne aka Agent_Ash. Use and modify at will but please credit.
+
+OVERVIEW (with default values):
+
+Bleeding is triggered by anything that uses damagetype "Bleed" (can be attached to projectiles or hitscan/melee puffs).
+
+There's an invisible bleeding gauge (see "bleedbuildup") that goes from 0 to 100. Every attack with damagetype "Bleed" 
+increases this gauge by the attack's damage value (i.e. an attack that deals 10 damage will increase bleedbuildup gauge by 10). 
+That gauge is automatically reduced by 1 every second (both when the player is bleeding and when they aren't).
+
+Whenever a "Bleed" attack deals damage to the player, it has a chance to start the bleeding. The chance is equal 
+to the value of "bleedbuildup": if the gauge is at 100, the attack will begin bleeding with 100% chance.
+
+When the player is bleeding, every second there's a chance they'll stop bleeding. 
+This chance is the inverse of "bleedbuildup": the more full the gauge is, the smaller is the chance to stop bleeding.
+This chance CAN NOT proc if "bleedbuildup" value is 80 or higher.
+
+When the player is bleeding, they're dealt damage every second. The amount of damage is equal to 0.1 of the 
+"bleedbuildup" value, but always between 1 and 5. At full bleedbuildup gauge you'll lose 5 HP per second.
+
+When the bleeding stops the gauge DOES NOT reset! Getting hit repeatedly over a short period of time
+will have a higher chance of making you bleed again.
+
+*/
+
+
+/* 
+An event handler is a class that runs while the map is active. Its virtual functions are run when something happens in the world.
+This one gives PlayerBleederItem to the player when they spawn in the world and increases their bleedbuildup when they get hit.
+It also rolls the dice whenever a player is hit and makes them bleed if it procs (details below).
+
+Event handlers need to be added via MAPINFO (see accompanying MAPINFO.txt).
+
+*/
+
+Class BleedingHandler : EventHandler
+{
+	override void WorldThingSpawned (WorldEvent e) 									//When something spawns in the world...
+	{
+		if (e.thing is "PlayerPawn" && e.thing.CountInv("PlayerBleederItem") < 1)	//check if it's a PlayerPawn and if it doesn't have PlayerBleederItem
+			e.thing.GiveInventory("PlayerBleederItem",1);							//if so, give them the item.
+	}
+	
+	override void WorldThingDamaged (WorldEvent e)									 //When something is damaged...
+	{
+		if (e.DamageType != "bleed") return;										//check if damagetype of the attack was "Bleed", otherwise do nothing (return)
+		if (e.thing.CountInv("PlayerBleederItem") < 1)	return;						//if the damaged thing doesn't have PlayerBleederItem, also do nothing (return)
+																					//otherwise...
+		let blood = PlayerBleederItem(e.thing.FindInventory("PlayerBleederItem"));	//Get a pointer to the PlayerBleederItem in the thing's inventory (with the pointer we can control it)
+		if (!blood) return;															//double-check that item and thing still exist (if they don't, do nothing)
+				
+		blood.bleedbuildup = Clamp(blood.bleedbuildup + e.Damage, 0, 100);			//If all above is true, increase 'bleedbuildup' by 'damage' (but within 0-100 range)
+		if (random(1,100) < blood.bleedbuildup)										//Run a random 0-100 value against 'bleedbuildup'. If 'bleedbuildup' turns out to be higher...
+		{
+			blood.BLEEDS = true;													//make the thing bleed
+			blood.bleedsource = e.DamageSource;										//store the source of damage (so that the killer gets credited if the thing bleeds out)
+		}
+	}	
+}
+
+// The item that handles the bleeding itself: it holds the "gauge" and deals damage to the carrier when needed
+
+Class PlayerBleederItem : Inventory
+{
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.UNCLEARABLE
+		+INVENTORY.PERSISTENTPOWER
+		-INVENTORY.INVBAR
+		Inventory.MaxAmount 1;
+	}
+
+	bool BLEEDS;				// if this is true, you're bleeding
+	int bleedbuildup;			// the "gauge"; we try to keep it between 0 and 100
+	private int counter;		// a simple counter to define how often the effect happens (in our case it'll be 1 second)
+	actor bleedsource;			// this variable stores who dealt the damage to the player, so that the killer will be credited and proper obituary message appears
+
+	// DoEffect is a virtual function similar to Tick() but it's only executed for ITEMS when they're in an actor's INVENTORY
+
+	override void DoEffect ()
+	{
+		super.DoEffect(); 				// Do what items normally do
+		if (!owner) return;				// Check if it's still in somebody's inventory just in case (otherwise do nothing)
+
+		// Uncomment the line below to be able to see the buildup value and whether you're bleeding or not:
+		//Console.Printf("Bleed buildup: %d; Bleeding: %d",bleedbuildup,BLEEDS);
+
+		counter++; 						// We don't want the effect to happen every tick, so we use this simple counter.
+		if (counter >= 35)				// whenever counter hits 35 ticks (i.e. 1 second)... <-- Change 35 to something else to change how often the effect happens
+		{
+			counter = 0;				// we reset it. 
+			bleedbuildup = Clamp(bleedbuildup - 1, 0, 100);			// First of all, we reduce bleedbuildup by 1, still making sure it stays between 0-100
+			if (BLEEDS)												// If this value is true...
+																	// We do the damage. The damage value is 20% of bleedbuildup value but always between 1-5:
+				owner.DamageMobj(owner,bleedsource,Clamp(bleedbuildup * 0.2,1,5),"normal",DMG_NO_ARMOR|DMG_THRUSTLESS|DMG_NO_ENHANCE);
+
+			if (random(1,80) > bleedbuildup)						// If a random value between 1-80 is higher than bleedbuildup we may stop bleeding. The longer we bleed, the higher is chance we'll stop bleeding.
+				BLEEDS = false;
+		}
+	}
+}
+
+// A demo replacement for BulletPuff to show off the effect. Uncomment to test.
+
+// Class BleedingPuff : BulletPuff replaces BulletPuff { Default { Damagetype "Bleed";	}}

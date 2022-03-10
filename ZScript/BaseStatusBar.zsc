@@ -1,0 +1,336 @@
+class RE2StatusBar : BaseStatusBar
+{
+	HUDFont mHUDFont;
+	HUDFont mIndexFont;
+	HUDFont mAmountFont;
+
+	HUDFont mConFont;
+	HUDFont mBigFont;
+	HUDFont mSmallFont;
+	HUDFont mNewSmallFont;
+	HUDFont mStatusFont;
+	
+	HUDFont mRE_StatusFont;
+
+	InventoryBarState diparms;
+
+	override void Init()
+	{
+		Super.Init();
+
+		SetSize(0, 320, 200);
+
+		// Create the font used for the fullscreen HUD
+		Font fnt = "HUDFONT_DOOM";
+		mHUDFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 1, 1);
+		fnt = "INDEXFONT_DOOM";
+		mIndexFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		mAmountFont = HUDFont.Create("INDEXFONT");
+
+		mConFont = HUDFont.Create("CONFONT");
+		mBigFont = HUDFont.Create("BIGFONT");
+		mSmallFont = HUDFont.Create("SMALLFONT",1,False);
+		mNewSmallFont = HUDFont.Create("NEWSMALLFONT");
+		mStatusFont = HUDFont.Create("BIGFONT");
+
+		mRE_StatusFont = HUDFont.Create("RE_StatusFont");
+		
+		diparms = InventoryBarState.Create();
+	}
+
+	override void Draw (int state, double TicFrac)
+	{
+		Super.Draw (state, TicFrac);
+
+		BeginStatusBar(True); // Forcescaled
+		if(!automapactive)
+        {
+			if (state == HUD_StatusBar)
+				{ DrawMainBar (TicFrac); }
+			else if (state == HUD_Fullscreen)
+				{ DrawFullScreenStuff (); }
+		}
+	}
+
+	protected void DrawMainBar (double TicFrac)
+	{
+		DrawReSurvivorHud();
+		DrawKriegsland2Inventory();	
+		DrawKeyBar(3, 10, 188, 2);
+
+		Inventory AmmoType1, AmmoType2;
+		[AmmoType1, AmmoType2] = GetCurrentAmmo();
+
+		Int Ammo1_X = 358; // X = max - 10 / Y = max - 20
+		Int Ammo3_X = 354;
+		Int Ammo5_X = 350;
+
+		Let Ammo_5a = CPlayer.mo.FindInventory("GrenadeRounds");
+		Let Ammo_5b = CPlayer.mo.FindInventory("FlameRounds");
+		Let Ammo_5c = CPlayer.mo.FindInventory("AcidRounds");
+		Let Ammo_5d = CPlayer.mo.FindInventory("FreezeRounds");
+
+		Bool Explosive = CPlayer.Mo.CountInv("GrenadeRounds");
+		Bool Incendiary = CPlayer.Mo.CountInv("FlameRounds");
+		Bool Acid = CPlayer.Mo.CountInv("AcidRounds");
+		Bool Cryogenic = CPlayer.Mo.CountInv("FreezeRounds");
+		
+		// Weapons
+  		If(CPlayer.ReadyWeapon != null)
+  		{
+			Bool infAmmo = (sv_infiniteammo || CPlayer.mo.FindInventory('PowerInfiniteAmmo'));
+
+			If(CheckWeaponSelected('CombatKnife')) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+			If(CheckWeaponSelected('Matilda'))
+			{
+				For(int i = CPlayer.Mo.CountInv("WP1Ammo"); i > 0; i--)
+				{
+					DrawImage("AMMO_1", (Ammo1_X, 180), DI_ITEM_OFFSETS);
+					Ammo1_X = Ammo1_X - 4;
+					// int AmmoMag = GetAmount("HandgunAmmo") / AmmoType1.MaxAmount;
+				}
+			}
+			If(CheckWeaponSelected('LightningHawk'))
+			{
+				for(int i = CPlayer.Mo.CountInv("WP2Ammo"); i > 0; i--)
+				{
+					DrawImage("AMMO_2", (Ammo1_X, 179), DI_ITEM_OFFSETS);
+					Ammo1_X = Ammo1_X - 4;
+				}
+			}
+			If(CheckWeaponSelected('W870'))
+			{
+				for(int i = CPlayer.Mo.CountInv("WP3Ammo"); i > 0; i--)
+				{
+					DrawImage("AMMO_3A", (Ammo3_X, 172), DI_ITEM_OFFSETS);
+					Ammo3_X = Ammo3_X - 6;
+				}
+			}
+			If(CheckWeaponSelected('MQ11'))// { DrawAmmoBar(16, Ammo1_X, 182, 2); }
+			{
+				for(int i = CPlayer.Mo.CountInv("WP4Ammo"); i > 0; i--)
+				{
+					DrawImage("AMMO_4", (Ammo1_X, 180), DI_ITEM_OFFSETS);
+					Ammo1_X = Ammo1_X - 4;
+				}
+			}
+			If(CheckWeaponSelected('GM79'))
+			{
+				Let ptr = GM79(CPlayer.mo.FindInventory('GM79'));
+
+				If(CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && Explosive && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5A", (Ammo5_X - 60, 170), DI_ITEM_OFFSETS); }
+					
+				If(CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && Incendiary && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5B", (Ammo5_X - 40, 170), DI_ITEM_OFFSETS); }
+					
+				If(CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && Acid && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5C", (Ammo5_X - 20, 170), DI_ITEM_OFFSETS); }
+					
+				If(CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && Cryogenic && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5D", (Ammo5_X, 170), DI_ITEM_OFFSETS); }
+
+				If(infAmmo) { DrawImage("REFNUMX", (290, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (300, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
+				If(infAmmo) { DrawImage("REFNUMX", (310, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (320, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
+				If(infAmmo) { DrawImage("REFNUMX", (330, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (340, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
+				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+			}
+			If(CheckWeaponSelected('ChemicalFlameThrower'))
+			{
+				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WP6Ammo") / 4), (371, 181), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
+				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+			}
+			If(CheckWeaponSelected('SparkShot'))
+			{
+				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WPAAmmo") * 5), (371, 181), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
+				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+			}
+			If(CheckWeaponSelected('ATRL'))
+			{		
+				int amt = CPlayer.Mo.CountInv("WP7Ammo");
+				String im = "AMMO_8_" .. amt;
+
+				DrawImage(/*infAmmo ? "AMMO_8_4" :*/ im, (316, 167), DI_ITEM_OFFSETS);
+
+				//DrawAmmoBar(2, Ammo1_X, 175, 2);
+				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+			}
+
+			If(CheckWeaponSelected('Matilda') || CheckWeaponSelected('LightningHawk') || CheckWeaponSelected('W870') || CheckWeaponSelected('MQ11') || CheckWeaponSelected('ChemicalFlameThrower') || CheckWeaponSelected('SparkShot'))
+			{
+				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+			}
+		}
+	}
+
+	protected void DrawFullScreenStuff()
+	{
+		DrawKriegsland2HealthArmor();
+
+		DrawKeyBar(3, 321, 153, 2);
+
+		Inventory AmmoType1, AmmoType2;
+		[AmmoType1, AmmoType2] = GetCurrentAmmo();
+
+		Let Ammo_5a = CPlayer.mo.FindInventory("GrenadeRounds");
+		Let Ammo_5b = CPlayer.mo.FindInventory("FlameRounds");
+		Let Ammo_5c = CPlayer.mo.FindInventory("AcidRounds");
+		Let Ammo_5d = CPlayer.mo.FindInventory("FreezeRounds");
+
+		If(CPlayer.ReadyWeapon != null)
+  		{
+			Bool infAmmo = (sv_infiniteammo || CPlayer.mo.FindInventory('PowerInfiniteAmmo'));
+			
+			If(CheckWeaponSelected('CombatKnife')) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
+			If(CheckWeaponSelected('Matilda') || CheckWeaponSelected('LightningHawk') || CheckWeaponSelected('W870') || CheckWeaponSelected('MQ11'))
+			{
+				DrawString(mRE_StatusFont, FormatNumber(AmmoType1.Amount, 3), (360, 180), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
+				If(infAmmo) { DrawImage("REFNUMX", (360, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }			
+			}
+			If(CheckWeaponSelected('GM79'))
+			{
+				If(infAmmo) { DrawImage("REFNUMX", (290, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (300, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
+				If(infAmmo) { DrawImage("REFNUMX", (310, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (320, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
+				If(infAmmo) { DrawImage("REFNUMX", (330, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (340, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
+				If(infAmmo) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+			}
+			If(CheckWeaponSelected('ChemicalFlameThrower'))
+			{
+				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WP6Ammo") / 4), (27, 180), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
+				If(infAmmo) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }				
+			}
+			If(CheckWeaponSelected('SparkShot'))
+			{
+				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WPAAmmo") * 5), (27, 180), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
+				If(infAmmo) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }			
+			}
+			If(CheckWeaponSelected('ATRL'))
+			{
+				If(infAmmo) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType1.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+			}
+		}
+	}
+	
+	void DrawReSurvivorHud()
+	{
+		Bool OverHealth = CPlayer.Mo.CountInv("PowerInvulnerable");
+		Bool Fine = CPlayer.Health > 60;
+		Bool Caution = CPlayer.Health > 30;
+		Bool Danger = CPlayer.Health > 0;
+		//Bool Poison = ;
+		
+		DrawBar("HUD_ECG_1", "HUD_ECG", GetArmorAmount(), 100, (-33, 173), 0, SHADER_HORZ, DI_ITEM_OFFSETS);
+		DrawImage(OverHealth ? "RELINE50" : Fine ? "RELINE10" : Caution ? "RELINE20" : Danger ? "RELINE30" : "RELINE00", (-31, 175), DI_ITEM_OFFSETS);
+		
+		//DrawString(mRE_StatusFont, String.Format("%d%%",CPlayer.Health, 3), (330, 185), DI_TEXT_ALIGN_RIGHT, FONT.CR_UNTRANSLATED);
+	}
+
+	void DrawKriegsland2HealthArmor()
+	{
+		DrawString(mSmallFont, "Vit.", (32+3, 170), DI_TEXT_ALIGN_RIGHT, FONT.CR_GREEN);
+		DrawString(mSmallFont, "Arm.", (67+3, 170), DI_TEXT_ALIGN_RIGHT, FONT.CR_GREEN);
+
+		DrawString(mStatusFont, String.Format("%03d",CPlayer.Health, 3), (25, 180), DI_TEXT_ALIGN_CENTER, FONT.CR_UNTRANSLATED);
+		DrawString(mStatusFont, String.Format("%03d",GetArmorAmount(), 3), (58, 180), DI_TEXT_ALIGN_CENTER, FONT.CR_UNTRANSLATED);		
+	}
+
+	void DrawKriegsland2Inventory()
+	{
+		If(CPlayer.mo.InvSel != null && !Level.NoInventoryBar)
+		{
+			DrawInventoryIcon(CPlayer.mo.InvSel, (50, 197));
+			If(CPlayer.mo.InvSel.Amount > 1)
+			{
+				DrawString(mAmountFont, FormatNumber(CPlayer.mo.InvSel.Amount), (50+15, 197-mIndexFont.mFont.GetHeight()), DI_TEXT_ALIGN_RIGHT, Font.CR_GOLD);
+			}
+		}
+		If(isInventoryBarVisible())
+		{
+			DrawInventoryBar(diparms, (260, 30), 7, DI_SCREEN_RIGHT_TOP, HX_SHADOW);
+		}
+	}
+
+    void DrawAmmoBar(int rowsize, int x, int y, int rowspacing)
+    {
+        Vector2 ammopos = (x, y);
+        int rowc = 0;
+        double roww = 0;
+
+		If(CheckWeaponSelected('MQ11'))
+		{
+			for(int i = CPlayer.Mo.CountInv("WP4Ammo"); i > 0; i--)
+			{
+				DrawImage("AMMO_4", ammopos, DI_ITEM_OFFSETS);
+				ammopos.X -= 8 - rowspacing;
+				roww = max(roww, 5);
+				if (++rowc == rowsize)
+				{
+					ammopos.X = x;
+					ammopos.Y += roww - 18; // - is up / + is down
+					roww = 0;
+					rowc = 0;
+				}
+			}
+		}
+
+		If(CheckWeaponSelected('ATRL'))
+		{		
+			for(int i = CPlayer.Mo.CountInv("WP7Ammo"); i > 0; i--)
+			{
+				DrawImage("AMMO_8", ammopos, DI_ITEM_OFFSETS, 1.0, (-1, -1), (0.6, 0.6));
+				ammopos.X += 60 + rowspacing;
+				roww = max(roww, 5);
+				if (++rowc == rowsize)
+				{
+					ammopos.X = x;
+					ammopos.Y -= roww - 16;
+					roww = 0;
+					rowc = 0;
+				}
+			}
+		}
+    }
+
+
+
+	void DrawKeyBar(int rowsize, int x, int y, int rowspacing)
+	{
+        Vector2 keypos = (x, y);
+        int rowc = 0;
+        double roww = 0;
+
+        for(let i = CPlayer.mo.Inv; i != null; i = i.Inv)
+        {
+            if (i is "Key" && i.Icon.IsValid())
+            {
+                DrawTexture(i.Icon, keypos, DI_ITEM_OFFSETS | DI_SCREEN_RIGHT);
+                Vector2 size = TexMan.GetScaledSize(i.Icon);
+                keypos.X += size.X + rowspacing;
+                roww = max(roww, size.Y);
+                if (++rowc == rowsize)
+                {
+                    keypos.X = x;
+                    keypos.Y -= roww + 2;
+                    roww = 0;
+                    rowc = 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,104 @@
+Class LightningHawk : REWeapon
+{
+	Default
+	{
+		Inventory.Icon "WP2PA0";
+
+		Weapon.SelectionOrder 1900;
+		Weapon.AmmoUse 0;
+		Weapon.AmmoGive2 MAG_DE;
+		Weapon.AmmoType "WP2Ammo";
+		Weapon.AmmoType2 "MagnumAmmo"; // .44 Magnum
+		+WEAPON.NOALERT
+		Inventory.PickupMessage "Lightning Hawk";
+		Obituary "$OB_MPPISTOL";
+		Tag "Lightning Hawk";
+		Scale 0.2;
+	}
+	Override Void AttachToOwner(Actor other)
+	{
+		Super.AttachToOwner(other);
+		other.A_GiveInventory("WP2Ammo",MAG_DE);
+	}
+    Override Bool TryPickup(in out Actor toucher)  
+    {
+		If(toucher)
+		{
+			Let weap = toucher.FindInventory("LightningHawk");
+			If(!weap) { Self.AmmoGive2 = 0; }
+		}
+			Return Super.TryPickup(toucher);
+    }
+	States
+	{
+	Spawn:
+		WP2P A 30;
+		WP2P A 2 Bright;
+		Loop;
+	Select:
+		WP2G B 0 A_JumpIf(!CountInv("WP2Ammo"), "Raise");
+		WP2G A 0;
+		Goto Raise;
+	Ready:
+		WP2G B 0 A_JumpIf(!CountInv("WP2Ammo"), 2);
+		WP2G A 0;
+		WP2G "#" 1 A_WeaponReady(WRF_ALLOWRELOAD);
+		Loop;
+	Deselect:
+		WP2G B 0 A_JumpIf(!CountInv("WP2Ammo"), "Lower");
+		WP2G A 0;
+		Goto Lower;
+	Fire:
+		TNT1 A 0 A_JumpIf(!CountInv("WP2Ammo"), "Reload");
+		WP2F A 3
+		{
+			A_AlertMonsters();
+			A_FireBullets(1, 1, 1, 40, "BulletPuff");
+			A_StartSound("Weapons/DE50/Fire", CHAN_WEAPON);
+
+			A_SetPitch(Pitch - 0.72, SPF_INTERPOLATE); // -72 % = 28 pts of stability
+
+			A_TakeInventory("WP2Ammo",1);
+		}
+		WP2F B 3;
+		WP2F C 3 A_FireProjectile("RE_PistolCasing_Spawner", 345+random(-8,8), False, -4, -5, 0);
+		WP2F D 3 A_JumpIf(!CountInv("WP2Ammo"), "Ready");
+		WP2F E 3;
+		Goto Ready;
+	Flash:
+		TNT1 A 0;
+		Goto LightDone;
+
+	Reload:
+		TNT1 A 0 A_JumpIf(CountInv("WP2Ammo") == MAG_DE, 2);
+		TNT1 A 0 A_JumpIf(CountInv("MagnumAmmo") > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork"); // sv_infiniteammo
+		TNT1 A 0;
+		Goto Ready;
+	ReloadWork:
+		WP2R ABCD 3;
+		WP2R E 3 A_StartSound("Weapons/DE50/Unload", CHAN_WEAPON);
+		WP2R FGHIJ 3;
+		WP2R K 3 A_StartSound("Weapons/DE50/Reload", CHAN_WEAPON);
+		WP2R LMNOP 3;
+	ReloadLoop:
+		TNT1 A 0
+		{
+            While(CountInv("MagnumAmmo") > 0 && CountInv("WP2Ammo") < MAG_DE || CountInv("PowerInfiniteAmmo") && CountInv("WP2Ammo") < MAG_DE)
+			{ // sv_infiniteammo
+				A_TakeInventory("MagnumAmmo", 1, TIF_NOTAKEINFINITE);
+				A_GiveInventory("WP2Ammo", 1);
+			}
+		}
+		TNT1 A 0;
+		Goto Ready;
+	}
+}
+
+Class WP2Ammo : Ammo
+{
+	Default
+	{
+		Inventory.MaxAmount MAG_DE;
+		+INVENTORY.IGNORESKILL
+	}
+}

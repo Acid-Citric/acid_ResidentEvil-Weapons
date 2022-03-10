@@ -1,0 +1,401 @@
+Class HealthUpgrade : Inventory { Default { Inventory.MaxAmount 1; } }
+
+Class FirstAidSpray : Ammo
+{
+	Default
+	{
+		Tag "First Aid Spray";
+		Inventory.PickupMessage "First Aid Spray";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "FAIDA0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.GiveBody(-100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		FAID A 30;
+		FAID A 2 Bright;
+		Loop;
+	}
+}
+
+Class FirstAidBox : FirstAidSpray
+{
+	Default
+	{
+		Tag "First Aid Box";
+		Inventory.PickupMessage "First Aid Box";
+		Inventory.Amount 3;
+	}
+	States
+	{
+	Spawn:
+		FAID B 30;
+		FAID B 2 Bright;
+		Loop;
+	}
+}
+
+
+Class MixedHerb_GG : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+G)";
+		Inventory.PickupMessage "Mixed Herb (G+G)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR1A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.GiveBody(50, -100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR1 A 30;
+		MHR1 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GGG : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+G+G)";
+		Inventory.PickupMessage "Mixed Herb (G+G+G)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR2A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.GiveBody(-100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR2 A 30;
+		MHR2 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GB : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+B)";
+		Inventory.PickupMessage "Mixed Herb (G+B)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR3A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
+			If(blood)
+			{
+				blood.BLEEDS = false;
+				blood.bleedbuildup = 0;
+			}
+
+			Owner.GiveBody(25, -100);
+			Owner.A_GiveInventory("PowerBlueHerb");
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR3 A 30;
+		MHR3 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GGB : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+G+B)";
+		Inventory.PickupMessage "Mixed Herb (G+G+B)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR4A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
+			If(blood)
+			{
+				blood.BLEEDS = false;
+				blood.bleedbuildup = 0;
+			}
+
+			Owner.GiveBody(50, -100);
+			Owner.A_GiveInventory("PowerBlueHerb");
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR4 A 30;
+		MHR4 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GR : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+R)";
+		Inventory.PickupMessage "Mixed Herb (G+R)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR5A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.GiveBody(-100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR5 A 30;
+		MHR5 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GRB : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+R+B)";
+		Inventory.PickupMessage "Mixed Herb (G+R+B)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR6A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
+			If(blood)
+			{
+				blood.BLEEDS = false;
+				blood.bleedbuildup = 0;
+			}
+
+			Owner.GiveBody(-100);
+			Owner.A_GiveInventory("PowerBlueHerb");
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR6 A 30;
+		MHR6 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GY : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+Y)";
+		Inventory.PickupMessage "Mixed Herb (G+Y)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR7A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.A_GiveInventory("HealthUpgrade",1);
+			Owner.GiveBody(25, -100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR7 A 30;
+		MHR7 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_GRY : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (G+R+Y)";
+		Inventory.PickupMessage "Mixed Herb (G+R+Y)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR8A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Owner.A_GiveInventory("HealthUpgrade",1);
+			Owner.GiveBody(-100);
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR8 A 30;
+		MHR8 A 2 Bright;
+		Loop;
+	}
+}
+
+Class MixedHerb_RB : Inventory
+{
+	Default
+	{
+		Tag "Mixed Herb (R+B)";
+		Inventory.PickupMessage "Mixed Herb (R+B)";
+		Inventory.PickupSound "misc/item_pkup";
+		Inventory.Icon "MHR9A0";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 25;
+        Inventory.InterHubAmount 25;
+		Scale 0.6;
+		+INVENTORY.INVBAR
+		+INVENTORY.IGNORESKILL
+		+INVENTORY.KEEPDEPLETED
+	}
+	override bool Use(bool pickup)
+	{
+		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		{
+			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
+			If(blood)
+			{
+				blood.BLEEDS = false;
+				blood.bleedbuildup = 0;
+			}
+
+			Owner.A_GiveInventory("PowerBlueHerb");
+			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Self.Amount--;
+		}
+		Return False;
+	}
+	States
+	{
+	Spawn:
+		MHR9 A 30;
+		MHR9 A 2 Bright;
+		Loop;
+	}
+}
