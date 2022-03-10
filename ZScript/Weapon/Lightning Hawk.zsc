@@ -20,15 +20,15 @@ Class LightningHawk : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP2Ammo",MAG_DE);
 	}
-    Override Bool TryPickup(in out Actor toucher)  
-    {
+   	Override Bool TryPickup(in out Actor toucher)  
+    	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("LightningHawk");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
 			Return Super.TryPickup(toucher);
-    }
+	}
 	States
 	{
 	Spawn:
@@ -83,7 +83,7 @@ Class LightningHawk : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-            While(CountInv("MagnumAmmo") > 0 && CountInv("WP2Ammo") < MAG_DE || CountInv("PowerInfiniteAmmo") && CountInv("WP2Ammo") < MAG_DE)
+            		While(CountInv("MagnumAmmo") > 0 && CountInv("WP2Ammo") < MAG_DE || CountInv("PowerInfiniteAmmo") && CountInv("WP2Ammo") < MAG_DE)
 			{ // sv_infiniteammo
 				A_TakeInventory("MagnumAmmo", 1, TIF_NOTAKEINFINITE);
 				A_GiveInventory("WP2Ammo", 1);
