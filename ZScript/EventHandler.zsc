@@ -63,38 +63,38 @@ Class RE2Handler : EventHandler
 
 	override void CheckReplacement(ReplaceEvent e)
 	{
-		if		(e.Replacee == "Fist")						e.Replacement = "CombatKnife";
+		if (e.Replacee == "Fist")						e.Replacement = "CombatKnife";
 		else if (e.Replacee == "Chainsaw")					e.Replacement = "SparkShot";
 		else if (e.Replacee == "Pistol")					e.Replacement = "Matilda";
 		else if (e.Replacee == "Shotgun")					e.Replacement = "ShotgunDrop";
-		else if (e.Replacee == "SuperShotgun")				e.Replacement = "LightningHawk";
+		else if (e.Replacee == "SuperShotgun")					e.Replacement = "LightningHawk";
 		else if (e.Replacee == "Chaingun")					e.Replacement = "ChaingunDrop";
-		else if (e.Replacee == "RocketLauncher")			e.Replacement = "GM79";
-		else if (e.Replacee == "PlasmaRifle")				e.Replacement = "ChemicalFlameThrower";
+		else if (e.Replacee == "RocketLauncher")				e.Replacement = "GM79";
+		else if (e.Replacee == "PlasmaRifle")					e.Replacement = "ChemicalFlameThrower";
 		else if (e.Replacee == "BFG9000")					e.Replacement = "ATRL";
 
-		else if (e.Replacee == "HealthBonus")				e.Replacement = "BonusSpawner";
+		else if (e.Replacee == "HealthBonus")					e.Replacement = "BonusSpawner";
 		else if (e.Replacee == "Stimpack")					e.Replacement = "StimpackSpawner";
 		else if (e.Replacee == "Medikit")					e.Replacement = "MedikitSpawner";		
-		else if (e.Replacee == "SoulSphere")				e.Replacement = "SoulSphereSpawner";	
+		else if (e.Replacee == "SoulSphere")					e.Replacement = "SoulSphereSpawner";	
 
-		else if (e.Replacee == "ArmorBonus")				e.Replacement = "BonusSpawner";
-		else if (e.Replacee == "GreenArmor")				e.Replacement = "ArmorVest";
+		else if (e.Replacee == "ArmorBonus")					e.Replacement = "BonusSpawner";
+		else if (e.Replacee == "GreenArmor")					e.Replacement = "ArmorVest";
 		else if (e.Replacee == "BlueArmor")					e.Replacement = "PoliceArmor";	
 
 		//else if (e.Replacee == "RadSuit")					e.Replacement = "BlueHerb";
 		else if (e.Replacee == "Infrared")					e.Replacement = "BerserkDrop";
 		/*else if (e.Replacee == "AllMap")					e.Replacement = "AllMap";
-		else if (e.Replacee == "InvulnerabilitySphere")		e.Replacement = "InvulnerabilitySphere";*/
-		else if (e.Replacee == "BlurSphere")				e.Replacement = "BerserkDrop";
+		else if (e.Replacee == "InvulnerabilitySphere")				e.Replacement = "InvulnerabilitySphere";*/
+		else if (e.Replacee == "BlurSphere")					e.Replacement = "BerserkDrop";
 		else if (e.Replacee == "Berserk")					e.Replacement = "BerserkDrop";	
-		else if (e.Replacee == "MegaSphere")				e.Replacement = "SoulSphereSpawner";
+		else if (e.Replacee == "MegaSphere")					e.Replacement = "SoulSphereSpawner";
 
 		else if (e.Replacee == "Clip")						e.Replacement = "ClipDrop";
 		else if (e.Replacee == "ClipBox")					e.Replacement = "ClipDrop";
 		else if (e.Replacee == "Shell")						e.Replacement = "ShellDrop";
 		else if (e.Replacee == "ShellBox")					e.Replacement = "ShellDrop";
-		else if (e.Replacee == "RocketAmmo")				e.Replacement = "RocketAmmoDrop";
+		else if (e.Replacee == "RocketAmmo")					e.Replacement = "RocketAmmoDrop";
 		else if (e.Replacee == "RocketBox")					e.Replacement = "RocketAmmoDrop";
 		else if (e.Replacee == "Cell")						e.Replacement = "CellDrop";
 		else if (e.Replacee == "CellPack")					e.Replacement = "CellDrop";
@@ -104,21 +104,19 @@ Class RE2Handler : EventHandler
 
 Class FireDeathEffect : Inventory // Credits to jarewill on the ZDoom Forums
 {
-    override void AttachToOwner(Actor other)
-    {
-        self.height = other.height; //Store the monster's height
-        Super.AttachToOwner(other);
-    }
-    override void DoEffect()
-    {
-        Super.DoEffect();
-        If(Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental")&& !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire") && !Owner.FindState("Death.Burn") )
-        {
-            /*Owner.bNODAMAGE = True;*/ Owner.bFLY = False; Owner.bNOGRAVITY = False; Owner.bNOBLOOD = True; // Set relevant flags so the monster cannot be damaged, can't fly and doesn't spawn blood.
-            Owner.height = self.height; //Reset the height
-            //Owner.Revive(); level.total_monsters--; //Revive it so it can be interacted with, but don't increase the monster count
-            //Owner.tics=-1; //Set it's tics to -1
-            Owner.A_SetTranslation("Scorched"); //Set a color translation
-        }
-    }
+	override void AttachToOwner(Actor other)
+	{
+		self.height = other.height; //Store the monster's height
+		Super.AttachToOwner(other);
+	}
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		If(Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental") && !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire") && !Owner.FindState("Burn") )
+		{
+			Owner.bFLY = False; Owner.bNOGRAVITY = False; Owner.bNOBLOOD = True; // Set relevant flags so the monster cannot be damaged, can't fly and doesn't spawn blood.
+			Owner.height = self.height; //Reset the height
+			Owner.A_SetTranslation("Scorched"); //Set a color translation
+		}
+	}
 }
