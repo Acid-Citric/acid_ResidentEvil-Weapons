@@ -18,15 +18,15 @@ Class ChemicalFlameThrower : REWeapon // "Kill it with fire before it lays eggs!
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP6Ammo",MAG_FLAME);
 	}
-    Override Bool TryPickup(in out Actor toucher) 
-    {
+	Override Bool TryPickup(in out Actor toucher) 
+	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("ChemicalFlameThrower");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
-			Return Super.TryPickup(toucher);
-    }
+		Return Super.TryPickup(toucher);
+	}
 	States
 	{
 	Spawn:
@@ -134,8 +134,8 @@ Class FlameThrowerBall : FastProjectile
 	States
 	{
 	Spawn:
-        TNT1 A 2;
-        WFKB ABCDEFGHIJKLMNOP 1 Bright A_SetScale(Scale.X + 0.025, Scale.Y + 0.025);
+		TNT1 A 2;
+        	WFKB ABCDEFGHIJKLMNOP 1 Bright A_SetScale(Scale.X + 0.025, Scale.Y + 0.025);
 		Stop;
 	}
 }
