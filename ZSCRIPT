@@ -1,0 +1,52 @@
+version "4.6.1"
+
+#include "ZScript/BaseStatusBar.zsc"
+
+#include "ZScript/Player.zsc"
+#include "ZScript/Spawner.zsc"
+#include "ZScript/Dropper.zsc"
+
+#include "ZScript/EventHandler.zsc"
+#include "ZScript/EventHandler_2.zsc"
+
+#include "ZScript/Barrel.zsc"
+
+#include "ZScript/Weapon/Weapon.zsc"
+#include "ZScript/Weapon/CombatKnife.zsc"
+#include "ZScript/Weapon/Matilda.zsc"
+#include "ZScript/Weapon/Lightning Hawk.zsc"
+#include "ZScript/Weapon/W-870.zsc"
+#include "ZScript/Weapon/MQ 11.zsc"
+#include "ZScript/Weapon/GM79.zsc"
+#include "ZScript/Weapon/FlameThrower.zsc"
+#include "ZScript/Weapon/SparkShot.zsc"
+#include "ZScript/Weapon/ATRL.zsc"
+#include "ZScript/Weapon/ZSCRIPT" // WIP
+
+#include "ZScript/Health/Herbs.zsc"
+#include "ZScript/Health/Health.zsc"
+
+#include "ZScript/Ammo/Ammo.zsc"
+#include "ZScript/Ammo/GunPowder.zsc"
+#include "ZScript/Ammo/Backpack.zsc"
+
+#include "ZScript/Armor/Armor.zsc"
+
+#include "ZScript/Powerups/Powerups.zsc"
+#include "ZScript/Powerups/Inventory.zsc"
+
+mixin Class RE_AmmoPickupMessage
+{
+	Override String PickupMessage()
+	{
+		If(Amount == 1) return String.Format("%s (+%d)",GetTag(),Amount);
+		Else return String.Format("%ss (+%d)",GetTag(),Amount);	
+	}
+}
+
+
+// need graphics : (320 x 200) or (320 x 240)
+// HELP1
+// CREDIT
+// TITLEPIC
+// ENDPIC
