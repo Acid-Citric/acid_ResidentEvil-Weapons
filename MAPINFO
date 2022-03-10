@@ -1,0 +1,12 @@
+GameInfo
+{
+	PlayerClasses = "RE2Player", "The4thSurvivor"
+	AddEventHandlers = "RE2Handler", "AltarUI", "BleedingHandler"
+    StatusBarClass = "RE2StatusBar"
+
+	IntermissionMusic = "D_DM2INT"
+	//BossBackMusic = "D_DM2INT"
+
+	QuitMessages = "This is war. Survival is your responsibility..." // -Hunk (Resident Evil 2 Remake)
+	QuitSound = "Menu/clear"
+}

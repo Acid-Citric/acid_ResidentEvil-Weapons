@@ -1,0 +1,20 @@
+Model SparshotTracer
+{ 
+   Path "Models"
+   SKIN 0 "lightning.png"
+   MODEL 0 "Tracer.md3" 
+   Scale 0.3 0.5 0.6
+   PITCHFROMMOMENTUM
+
+   FrameIndex PLSE E 0 0
+}
+Model SparshotTracerB
+{ 
+   Path "Models"
+   SKIN 0 "lightning.png"
+   MODEL 0 "Tracer.md3" 
+   Scale 0.3 0.5 0.6
+   PITCHFROMMOMENTUM
+
+   FrameIndex PLSE E 0 0
+}

@@ -1,0 +1,17 @@
+RE_StatusFont
+{
+	0 REFNUM0
+	1 REFNUM1
+	2 REFNUM2
+	3 REFNUM3
+	4 REFNUM4
+	5 REFNUM5
+	6 REFNUM6
+	7 REFNUM7
+	8 REFNUM8
+	9 REFNUM9
+	% REFPRCNT
+	// / REFSLASH
+	// - REFMINUS
+	// NOTRANSLATION 109	// don't touch the shadow color!
+}

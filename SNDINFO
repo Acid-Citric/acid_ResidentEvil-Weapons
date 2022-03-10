@@ -1,0 +1,121 @@
+// Combat Knife
+Weapons/Knife/Swing				Sounds/w_knife1.ogg
+Weapons/Knife/Crash				Sounds/w_knife2.ogg
+Weapons/Knife/Death				Sounds/w_knife3.ogg
+Weapons/Knife/Miss				Sounds/w_knife4.ogg
+Weapons/Knife/XDeath			Sounds/w_knife5.ogg
+
+// VP70
+Weapons/VP70/Fire				Sounds/RE2_Sounds/VP70-Fire.ogg
+Weapons/VP70/Burst				Sounds/RE2_Sounds/VP70-Burst.ogg
+VP70/Reload						Sounds/RE2_Sounds/VP70-Reload.ogg
+VP70/Reload2					Sounds/RE2_Sounds/VP70-Reload2.ogg
+$Random Weapons/VP70/Reload
+{ 
+	VP70/Reload
+	VP70/Reload2
+}
+VP70/Unload						Sounds/RE2_Sounds/VP70-Unload.ogg
+VP70/Unload2					Sounds/RE2_Sounds/VP70-Unload2.ogg
+$Random Weapons/VP70/Unload
+{
+	VP70/Unload
+	VP70/Unload2
+}
+// DE .50
+Weapons/DE50/Fire				Sounds/RE2_Sounds/DE50-Fire.ogg
+//DE50/Fire2					Sounds/RE2_Sounds/DE50-Fire2.ogg
+Weapons/DE50/Reload				Sounds/RE2_Sounds/DE50-Reload.ogg
+Weapons/DE50/Unload				Sounds/RE2_Sounds/DE50-Unload.ogg
+// W870
+Weapons/W870/Fire				Sounds/RE2_Sounds/M1100-Fire.ogg
+Weapons/W870/Fire2				Sounds/RE2_Sounds/M1100-Fire2.ogg
+Weapons/W870/Pump				Sounds/RE2_Sounds/M1100-Pump.ogg
+Weapons/W870/Reload				Sounds/RE2_Sounds/M1100-Reload.ogg
+Weapons/W870/Reload2			Sounds/RE2_Sounds/M1100-Reload2.ogg
+// MAC-11
+Weapons/MAC11/Fire				Sounds/RE2_Sounds/MAC10-Fire.ogg
+Weapons/MAC11/Reload			Sounds/RE2_Sounds/MAC10-Reload.ogg
+Weapons/MAC11/Unload			Sounds/RE2_Sounds/MAC10-Unload.ogg
+// M79
+M79/Fire/1						Sounds/M79/w_grenade_shot1.ogg
+M79/Fire/2						Sounds/M79/w_grenade_shot2.ogg
+M79/Fire/3						Sounds/M79/w_grenade_shot3.ogg
+$Random Weapons/M79/Fire
+{
+	M79/Fire/1
+	M79/Fire/2
+	M79/Fire/3
+}
+
+Weapons/M79/Dry					Sounds/M79/w_empty3.ogg
+Weapons/M79/Open				Sounds/M79/w_grenade_rel1.ogg
+Weapons/M79/Close				Sounds/M79/w_grenade_rel2.ogg
+
+Grenade/1						Sounds/M79/w_grenade_ex1.ogg
+Grenade/2						Sounds/M79/w_grenade_ex2.ogg
+$Random Weapons/M79/Grenade	
+{
+	Grenade/1
+	Grenade/2
+}
+
+Flame/1							Sounds/M79/w_grenade_fire1.ogg
+Flame/2							Sounds/M79/w_grenade_fire2.ogg
+$Random Weapons/M79/Flame
+{
+	Flame/1
+	Flame/2
+}
+
+Weapons/M79/Acid				Sounds/M79/w_grenade_acid.ogg
+Acid/1							Sounds/acid1.ogg
+Acid/2							Sounds/acid2.ogg
+Acid/3							Sounds/acid3.ogg
+$Random Grenade/Acid
+{
+	Acid/1
+	Acid/2
+	Acid/3
+}
+
+Weapons/M79/Freeze				Sounds/M79/w_grenade_ice.ogg
+// FlameThrower
+Weapons/Flamer/Fire				Sounds/RE2_Sounds/Flamer-Fire.ogg
+Weapons/Flamer/Dry				Sounds/RE2_Sounds/Flamer-Dry.ogg
+Weapons/Flamer/Hit				Sounds/RE2_Sounds/Flamer-Hit.ogg
+// SparkShot
+Weapons/SparkShot/Fire			Sounds/RE2_Sounds/w_spark_shot.ogg
+Weapons/SparkShot/Reload		Sounds/RE2_Sounds/Sparkshot-Reload.ogg
+
+M202/Explosion/1				Sounds/w_rocket_ex1.ogg
+M202/Explosion/2				Sounds/w_rocket_ex2.ogg
+$Random M202/Explosion
+{
+	M202/Explosion/1
+	M202/Explosion/2
+}
+
+//==============================================================================
+// Menu	
+//==============================================================================
+Menu/activate					DSFKMNOK //Open Menu
+Menu/clear						DSFKMNBK //Close Menu	
+Menu/choose						DSFKMNOK //Confirm
+Menu/dismiss					DSFKMNBK //Close a prompt menu
+Menu/cursor						DSFKMNCH //Up and Down
+Menu/invalid					DSFKMNNO //Invalid
+Menu/backup						DSFKMNBK //Back to previous
+Menu/change						DSFKMNAD //Change Values
+Menu/quit1						DSFKMNOK //Menu Quit 1
+Menu/quit2						DSFKMNBK //Menu Quit 2
+
+Intermission/tick				DSFKMNCH //number tick
+Intermission/nextstage			DSFKMNOK //number done 
+Intermission/paststats			DSFKMNOK //next stage weapon load
+
+
+Item/common		DSHLWPIK
+misc/item_pkup	DSHMDPIK
+misc/item_use	DSHHIPIK
+Item/Ammo 		DSBOXAMO

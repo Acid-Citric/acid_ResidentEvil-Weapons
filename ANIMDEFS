@@ -1,0 +1,6 @@
+Texture RELINE10 Range RELINE17 Tics 2 // Fine
+Texture RELINE20 Range RELINE27 Tics 2 // Caution
+Texture RELINE30 Range RELINE37 Tics 2 // Danger
+Texture RELINE40 Range RELINE47 Tics 2 // Poison
+
+Texture RELINE50 Range RELINE57 Tics 2 // OverHealth

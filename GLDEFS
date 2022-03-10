@@ -1,0 +1,36 @@
+pulselight LighterLight
+{
+	color 0.5 0.35 0.15
+	size 60
+	secondarySize 64
+	interval 2.0
+	offset 0 16 0
+	attenuate 1
+}
+object Lighter
+{
+	frame BRIT { light LighterLight }
+}
+
+//Flares from Trailblazer
+flickerlight FLARELIGHTOR
+{
+    color 0.9 0.7 0.2
+    size 56
+    secondarySize 64 // 256/4
+    offset 0 35 0
+    chance 0.2
+}
+
+pointlight FLARELIGHTOR2
+{
+    color 0.8 0.5 0.1
+    size 60 // 480/8
+    offset 0 35 0
+}
+
+object LighterSticker
+{
+    frame TNT1 { light FLARELIGHTOR }
+	frame TNT1A { light FLARELIGHTOR2 }
+}
