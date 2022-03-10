@@ -18,15 +18,15 @@ Class SparkShot : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WPAAmmo", MAG_SPARK);
 	}
-    Override Bool TryPickup(in out Actor toucher) 
-    {
+	Override Bool TryPickup(in out Actor toucher) 
+    	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("SparkShot");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
 			Return Super.TryPickup(toucher);
-    }
+  	}
 	States
 	{
 	Spawn:
@@ -51,6 +51,9 @@ Class SparkShot : REWeapon
 			A_RailAttack(500,3,False,"","DD DD FF",RGF_SILENT|RGF_NOPIERCING|RGF_FULLBRIGHT,1,"BulletPuff", 0, 0, 0, 35, 64.0, 0.5,"SparshotTracer");
 			//A_RailAttack(0,3,False,"","DD DD FF",RGF_SILENT|RGF_NOPIERCING|RGF_FULLBRIGHT,1,"BulletPuff", 0, 0, 0, 35, 64.0, 0.5,"SparshotTracerB");
 			A_TakeInventory("WPAAmmo",1);
+			
+			A_SetPitch(Pitch - 0.16, SPF_INTERPOLATE);
+			
 			A_WeaponOffset(random(0,1),random(32,33),WOF_INTERPOLATE);
 		}
 		"####" A 34 A_WeaponReady(WRF_NOFIRE);
