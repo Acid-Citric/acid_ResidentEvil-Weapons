@@ -21,15 +21,15 @@ Class Matilda : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP1Ammo",MAG_VP70);
 	}
-    Override Bool TryPickup(in out Actor toucher) 
-    {
+	Override Bool TryPickup(in out Actor toucher) 
+	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("Matilda");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
 			Return Super.TryPickup(toucher);
-    }
+	}
 	States
 	{
 	Spawn:
@@ -82,7 +82,7 @@ Class Matilda : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-            While(CountInv("HandgunAmmo") > 0 && CountInv("WP1Ammo") < MAG_VP70 || CountInv("PowerInfiniteAmmo")  && CountInv("WP1Ammo") < MAG_VP70)
+			While(CountInv("HandgunAmmo") > 0 && CountInv("WP1Ammo") < MAG_VP70 || CountInv("PowerInfiniteAmmo")  && CountInv("WP1Ammo") < MAG_VP70)
 			{ // sv_infiniteammo
 				A_TakeInventory("HandgunAmmo",1,TIF_NOTAKEINFINITE);
 				A_GiveInventory("WP1Ammo",1);
