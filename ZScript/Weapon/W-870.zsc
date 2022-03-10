@@ -20,15 +20,15 @@ Class W870 : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP3Ammo",MAG_W870);
 	}
-    Override Bool TryPickup(in out Actor toucher)  
-    {
+	Override Bool TryPickup(in out Actor toucher)  
+	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("W870");
 			If(!weap) { Self.AmmoGive2 = 0; }
 		}
 			Return Super.TryPickup(toucher);
-    }
+	}
 	int shotgunempty; // 1 = shotgun is empty, load the chamber. 2 = the shotgun's chamber is loaded.
 	bool shotgunreload;
 	States
@@ -60,16 +60,12 @@ Class W870 : REWeapon
 
 			A_TakeInventory("WP3Ammo",1);
 		}
-		WP3F B 2; // A_SetPitch(Pitch - 0.75, SPF_INTERPOLATE);
-		WP3F CD 2; // A_SetPitch(Pitch + 0.25, SPF_INTERPOLATE);
-		WP3F E 4; // A_SetPitch(Pitch + 0.25, SPF_INTERPOLATE);
-		WP3F F 2 { /*A_SetPitch(Pitch + 0.25, SPF_INTERPOLATE);*/ A_StartSound("Weapons/W870/Pump",CHAN_WEAPON); }
-		WP3F G 2
-		{
-			//A_SetPitch(Pitch + 0.25, SPF_INTERPOLATE);
-			A_FireProjectile("RE_ShotgunCasing_Spawner", 363+FRandom(-3,3), False, 33, 3, FPF_NOAUTOAIM, -1);
-		}
-		WP3F HI 2; // A_SetPitch(Pitch + 0.25, SPF_INTERPOLATE);
+		WP3F B 2;
+		WP3F CD 2;
+		WP3F E 4;
+		WP3F F 2 A_StartSound("Weapons/W870/Pump",CHAN_WEAPON);
+		WP3F G 2 A_FireProjectile("RE_ShotgunCasing_Spawner", 363+FRandom(-3,3), False, 33, 3, FPF_NOAUTOAIM, -1);
+		WP3F HI 2;
 		WP3G A 3;
 		Goto Ready;
 	Flash:
