@@ -102,7 +102,7 @@ Class FireDeathEffect : Inventory // Credits to jarewill on the ZDoom Forums
 	Override Void DoEffect()
 	{
 		Super.DoEffect();
-		If(Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental") && !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire") && !Owner.FindState("Burn") )
+		If(Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental") && !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire", True) && !Owner.FindState("Burn", True))
 		{
 			Owner.bFLY = False; Owner.bNOGRAVITY = False; Owner.bNOBLOOD = True; // Set relevant flags so the monster cannot be damaged, can't fly and doesn't spawn blood.
 			Owner.height = self.height; //Reset the height
