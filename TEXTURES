@@ -123,4 +123,30 @@ Graphic "AMMO_8_0", 45, 22
 	Patch "AMMO_8_X", 3, 13
 }
 
+Sprite "VP70_FLIGHT", 18, 11
+{
+	Patch "WP1GB0", -99, -58
+}
+
+Sprite "WP1HA0", 173, 137
+{
+	Offset -133, -56
+	Patch "WP1FA0", 0, 0
+	Patch "VP70_FLIGHT", 101, 79
+}
+
+Sprite "WP1HB0", 170, 111
+{
+	Offset -134, -80
+	Patch "WP1FB0", 0, 0
+	Patch "VP70_FLIGHT", 99, 54
+}
+
+Sprite "WP1HC0", 170, 106
+{
+	Offset -135, -86
+	Patch "WP1FC0", 0, 0
+	Patch "VP70_FLIGHT", 99, 49
+}
+
 // End of texture definitions
