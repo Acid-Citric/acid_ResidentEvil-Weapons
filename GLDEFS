@@ -1,15 +1,8 @@
-pulselight LighterLight
+PointLight FlashLight
 {
-	color 0.5 0.35 0.15
-	size 60
-	secondarySize 64
-	interval 2.0
-	offset 0 16 0
-	attenuate 1
-}
-object Lighter
-{
-	frame BRIT { light LighterLight }
+	Color 1.0 1.0 1.0
+	Size 28
+	Offset 0 1 0
 }
 
 //Flares from Trailblazer
