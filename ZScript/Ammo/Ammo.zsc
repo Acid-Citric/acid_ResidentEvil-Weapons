@@ -215,6 +215,28 @@ Class FreezeRounds_6 : FreezeRounds { Default { Inventory.Amount 6; }}
 Class FreezeRounds_12 : FreezeRounds { Default { Inventory.Amount 12; }}
 Class FreezeRounds_18 : FreezeRounds { Default { Inventory.Amount 18; }}
 
+Class MineRounds : Ammo
+{
+	mixin RE_AmmoPickupMessage;
+	Default
+	{
+		Tag "Mine Round";
+		Inventory.PickupSound "Item/Ammo";
+		Inventory.Icon "AMM5E0";
+		Inventory.Amount 6;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackMaxAmount 50;
+		+INVENTORY.IGNORESKILL
+	}
+	States
+	{
+	Spawn:
+		AMM5 E 30;
+		AMM5 E 2 Bright;
+		Loop;
+	}
+}
+
 Class Fuel : Ammo
 {
 	Override String PickupMessage()	{ return String.Format("%s (+%d)",GetTag(),Amount);	}
