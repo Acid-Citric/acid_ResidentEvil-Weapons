@@ -44,11 +44,9 @@ class RE2StatusBar : BaseStatusBar
 
 		BeginStatusBar(True); // Forcescaled
 		if(!automapactive)
-        {
-			if (state == HUD_StatusBar)
-				{ DrawMainBar (TicFrac); }
-			else if (state == HUD_Fullscreen)
-				{ DrawFullScreenStuff (); }
+		{
+			if (state == HUD_StatusBar)	{ DrawMainBar (TicFrac); }
+			else if (state == HUD_Fullscreen)	{ DrawFullScreenStuff (); }
 		}
 	}
 
@@ -69,11 +67,13 @@ class RE2StatusBar : BaseStatusBar
 		Let Ammo_5b = CPlayer.mo.FindInventory("FlameRounds");
 		Let Ammo_5c = CPlayer.mo.FindInventory("AcidRounds");
 		Let Ammo_5d = CPlayer.mo.FindInventory("FreezeRounds");
+		Let Ammo_5e = CPlayer.mo.FindInventory("MineRounds");
 
-		Bool Explosive = CPlayer.Mo.CountInv("GrenadeRounds");
-		Bool Incendiary = CPlayer.Mo.CountInv("FlameRounds");
-		Bool Acid = CPlayer.Mo.CountInv("AcidRounds");
-		Bool Cryogenic = CPlayer.Mo.CountInv("FreezeRounds");
+		Bool Grenade_A = CPlayer.Mo.CountInv("GrenadeRounds");
+		Bool Grenade_B = CPlayer.Mo.CountInv("FlameRounds");
+		Bool Grenade_C = CPlayer.Mo.CountInv("AcidRounds");
+		Bool Grenade_D = CPlayer.Mo.CountInv("FreezeRounds");
+		Bool Grenade_E = CPlayer.Mo.CountInv("MineRounds");
 		
 		// Weapons
   		If(CPlayer.ReadyWeapon != null)
@@ -118,26 +118,31 @@ class RE2StatusBar : BaseStatusBar
 			{
 				Let ptr = GM79(CPlayer.mo.FindInventory('GM79'));
 
-				If(CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && Explosive && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && infAmmo && !ptr.noammo)
-					{ DrawImage("AMMO_5A", (Ammo5_X - 60, 170), DI_ITEM_OFFSETS); }
-					
-				If(CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && Incendiary && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && infAmmo && !ptr.noammo)
-					{ DrawImage("AMMO_5B", (Ammo5_X - 40, 170), DI_ITEM_OFFSETS); }
-					
-				If(CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && Acid && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && infAmmo && !ptr.noammo)
-					{ DrawImage("AMMO_5C", (Ammo5_X - 20, 170), DI_ITEM_OFFSETS); }
-					
-				If(CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && Cryogenic && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && infAmmo && !ptr.noammo)
-					{ DrawImage("AMMO_5D", (Ammo5_X, 170), DI_ITEM_OFFSETS); }
+				If(CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && Grenade_A && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "GrenadeRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5A", (Ammo5_X - 80, 170), DI_ITEM_OFFSETS); }
 
+				If(CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && Grenade_B && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FlameRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5B", (Ammo5_X - 60, 170), DI_ITEM_OFFSETS); }
+
+				If(CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && Grenade_C && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "AcidRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5C", (Ammo5_X - 40, 170), DI_ITEM_OFFSETS); }
+
+				If(CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && Grenade_D && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "FreezeRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5D", (Ammo5_X - 20, 170), DI_ITEM_OFFSETS); }
+
+				If(CPlayer.ReadyWeapon.AmmoType1 is "MineRounds" && Grenade_E && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "MineRounds" && infAmmo && !ptr.noammo)
+					{ DrawImage("AMMO_5E", (Ammo5_X, 170), DI_ITEM_OFFSETS); }
+
+				If(infAmmo) { DrawImage("REFNUMX", (270, 190), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (280, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
 				If(infAmmo) { DrawImage("REFNUMX", (290, 190), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (300, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (300, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
 				If(infAmmo) { DrawImage("REFNUMX", (310, 190), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (320, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (320, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
 				If(infAmmo) { DrawImage("REFNUMX", (330, 190), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (340, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (340, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
 				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5e.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_BLACK); }
 			}
 			If(CheckWeaponSelected('ChemicalFlameThrower'))
 			{
@@ -184,6 +189,7 @@ class RE2StatusBar : BaseStatusBar
 		Let Ammo_5b = CPlayer.mo.FindInventory("FlameRounds");
 		Let Ammo_5c = CPlayer.mo.FindInventory("AcidRounds");
 		Let Ammo_5d = CPlayer.mo.FindInventory("FreezeRounds");
+		Let Ammo_5e = CPlayer.mo.FindInventory("MineRounds");
 
 		If(CPlayer.ReadyWeapon != null)
   		{
@@ -198,14 +204,16 @@ class RE2StatusBar : BaseStatusBar
 			}
 			If(CheckWeaponSelected('GM79'))
 			{
+				If(infAmmo) { DrawImage("REFNUMX", (270, 188), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (280, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
 				If(infAmmo) { DrawImage("REFNUMX", (290, 188), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (300, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (300, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
 				If(infAmmo) { DrawImage("REFNUMX", (310, 188), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (320, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (320, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
 				If(infAmmo) { DrawImage("REFNUMX", (330, 188), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (340, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (340, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
 				If(infAmmo) { DrawImage("REFNUMX", (350, 188), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5e.Amount, 3), (360, 188), DI_TEXT_ALIGN_RIGHT, Font.CR_BLACK); }
 			}
 			If(CheckWeaponSelected('ChemicalFlameThrower'))
 			{
