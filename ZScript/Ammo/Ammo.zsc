@@ -49,14 +49,6 @@ Class MagnumAmmo : Ammo
 	}
 }
 Class MagnumAmmo_24 : MagnumAmmo { Default { Inventory.Amount 24; }}
-/*Class MagnumAmmo_24 : Actor
-{
-	Override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-		For(int i; i<3; i++) { A_SpawnItemEx("MagnumAmmo",Random(-8,8),Random(-8,8)); }
-	}
-}*/
 
 Class ShotgunShells : Ammo
 {
@@ -119,8 +111,8 @@ Class GrenadeRounds : Ammo // The player will be able to load an entire stack of
 		Inventory.PickupSound "Item/Ammo";
 		Inventory.Icon "AMM5A0";
 		Inventory.Amount 3;
-		Inventory.MaxAmount 64;
-		Ammo.BackpackMaxAmount 64;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackMaxAmount 50;
 		Scale 0.75;
 		+INVENTORY.IGNORESKILL
 	}
@@ -143,8 +135,8 @@ Class FlameRounds : Ammo
 		Inventory.PickupSound "Item/Ammo";
 		Inventory.Icon "AMM5B0";
 		Inventory.Amount 3;
-		Inventory.MaxAmount 64;
-		Ammo.BackpackMaxAmount 64;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackMaxAmount 50;
 		Scale 0.75;
 		+INVENTORY.IGNORESKILL
 	}
@@ -170,8 +162,8 @@ Class AcidRounds : Ammo
 		Inventory.PickupSound "Item/Ammo";
 		Inventory.Icon "AMM5C0";
 		Inventory.Amount 3;
-		Inventory.MaxAmount 64;
-		Ammo.BackpackMaxAmount 64;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackMaxAmount 50;
 		Scale 0.75;
 		+INVENTORY.IGNORESKILL
 	}
@@ -197,8 +189,8 @@ Class FreezeRounds : Ammo
 		Inventory.PickupSound "Item/Ammo";
 		Inventory.Icon "AMM5D0";
 		Inventory.Amount 3;
-		Inventory.MaxAmount 64;
-		Ammo.BackpackMaxAmount 64;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackMaxAmount 50;
 		Scale 0.75;
 		+INVENTORY.IGNORESKILL
 	}
