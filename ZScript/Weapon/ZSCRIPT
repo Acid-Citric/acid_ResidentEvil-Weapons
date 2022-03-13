@@ -117,14 +117,14 @@ Class AltarWeapon : Weapon
 		}
 		addindex++;
 	}
-	
+
 	override void PostBeginPlay()
 	{
 		if(Wads.CheckNumForName("MAP01",0)!=-1)
 			isdoom2 = true;
-	
+
 		AddItem("MixedHerb_GG", "GreenHerb", "2");
-		
+
 		// RE Mixed Herbs
 		AddItem("MixedHerb_GG", "GreenHerb", "2");
 		AddItem("MixedHerb_GGG", "GreenHerb", "3");
@@ -137,7 +137,7 @@ Class AltarWeapon : Weapon
 		AddItem("MixedHerb_GRY", "GreenHerb|RedHerb|YellowHerb", "1|1|1");
 		// Mixed Herbs R+B
 		AddItem("MixedHerb_RB", "RedHerb|BlueHerb", "1|1");
-		
+
 		// GunPowder A // 8 times for Enhanced Handgun Ammo
 		AddItem("GunPowder_AA", "GunPowder_A", "2");
 		AddItem("GunPowder_AAA", "GunPowder_A", "3");
@@ -164,10 +164,10 @@ Class AltarWeapon : Weapon
 		AddItem("GunPowder_BC", "GunPowder_B|GunPowder_C", "1|1");
 		AddItem("GunPowder_CC", "GunPowder_C", "2");
 		AddItem("GunPowder_CCC", "GunPowder_C", "3");
-		
+
 		// GunPowder A+B+C
 		AddItem("GunPowder_ABC", "GunPowder_A|GunPowder_B|GunPowder_C", "1|1|1");
-		
+
 		// Grenade Rounds
 		AddItem("GrenadeRounds_10", "GunPowder_C", "1");
 		AddItem("FlameRounds_10", "GunPowder_AC", "1");
@@ -185,10 +185,12 @@ Class AltarWeapon : Weapon
 
 		// Magnum Rounds
 		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1");
-		
+
 		// SMG Rounds
 		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1");
-		
+
+		// Mine Rounds
+		AddItem("MineRounds", "GunPowder_ABC|GrenadeRounds", "1|6");		
 		Super.PostBeginPlay();
 	}
 	
