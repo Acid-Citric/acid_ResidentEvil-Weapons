@@ -19,10 +19,11 @@ Class GM79 : REWeapon
 		Flame = False;
 		Acid = False;
 		Freeze = False;
+		Sticky = False;	
 		noammo = False;
 		Super.PostBeginPlay();
 	}
-	Bool Flame, Acid, Freeze, noammo;
+	Bool Flame, Acid, Freeze, Sticky, noammo;
 	States
 	{
 	Spawn:
@@ -33,7 +34,7 @@ Class GM79 : REWeapon
 		WP5G A 0 { If(Invoker.Ammo1.Amount > 0 || CountInv("PowerInfiniteAmmo")) { Invoker.noammo = False; } Else { Invoker.noammo = True; } }
 		Goto Raise;
 	Ready:
-		WP5G A 1 A_WeaponReady(WRF_ALLOWUSER1|WRF_ALLOWUSER2|WRF_ALLOWUSER3);
+		WP5G A 1 A_WeaponReady(WRF_ALLOWUSER1|WRF_ALLOWUSER2|WRF_ALLOWUSER3|WRF_ALLOWUSER4);
 		TNT1 A 0 { If(Invoker.Ammo1.Amount > 0 || CountInv("PowerInfiniteAmmo")) { Invoker.noammo = False; } Else { Invoker.noammo = True; } }
 		Loop;
 	Deselect:
@@ -52,9 +53,19 @@ Class GM79 : REWeapon
 		WP5F BCD 3;
 		TNT1 A 0 A_JumpIf(Invoker.Ammo1.Amount < 1 && !CountInv("PowerInfiniteAmmo"), "Empty"); // || Invoker.Ammo1.Amount < 1 && !sv_infiniteammo
 	Reload:
+		TNT1 A 0 A_JumpIf(Invoker.Sticky, "ReloadMine");
 		WP5R A 3;
 		WP5R B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
 		WP5R XCDEFGHIJKLMN 3;
+		WP5R O 3 { A_StartSound("weapons/sshotl", CHAN_WEAPON); Invoker.noammo = False; }
+		WP5R PQ 3;
+		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
+		WP5R YS 3;
+		Goto Ready;
+	ReloadMine:
+		WP5G A 3;
+		WP5R S 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
+		WP5R ZJKLMN 3;
 		WP5R O 3 { A_StartSound("weapons/sshotl", CHAN_WEAPON); Invoker.noammo = False; }
 		WP5R PQ 3;
 		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
@@ -72,71 +83,103 @@ Class GM79 : REWeapon
 	
 	User1:
 		// WP5G A 1 A_JumpIf(!CountInv("FlameRounds"), "Empty");
-		"####" "#" 1
+		"####" "#" 2
 		{
+			A_WeaponOffset(1,33,WOF_INTERPOLATE);
+
 			If(Invoker.Flame == False)
 			{
 				SetAmmoType1(True, "FlameRounds");
-				Invoker.Flame = True; Invoker.Acid = False; Invoker.Freeze = False;
+				Invoker.Flame = True; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = False;
 				A_Log("\c[Red]Incendiary rounds selected\c-");
 			}
 			Else If(Invoker.Flame == True)
 			{
 				SetAmmoType1(True, "GrenadeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False;
-				A_Log("\c[Black]Grenade rounds selected\c-");
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = False;
+				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto Reload;
+		Goto AfterStates;		
 	User2:
 		// WP5G A 1 A_JumpIf(!CountInv("AcidRounds"), "Empty");
-		"####" "#" 1
+		"####" "#" 2
 		{
+			A_WeaponOffset(1,33,WOF_INTERPOLATE);
+
 			If(Invoker.Acid == False)
 			{
 				SetAmmoType1(True, "AcidRounds");
-				Invoker.Acid = True; Invoker.Freeze = False; Invoker.Flame = False;
+				Invoker.Flame = False; Invoker.Acid = True; Invoker.Freeze = False; Invoker.Sticky = False;
 				A_Log("\c[Yellow]Acid rounds selected\c-");
 			}
 			Else If(Invoker.Acid == True)
 			{
 				SetAmmoType1(True, "GrenadeRounds");
-				Invoker.Acid = False; Invoker.Freeze = False; Invoker.Flame = False;
-				A_Log("\c[Black]Grenade rounds selected\c-");
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = False;
+				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto Reload;
+		Goto AfterStates;
 	User3:
 		// WP5G A 1 A_JumpIf(!CountInv("FreezeRounds"), "Empty");
-		"####" "#" 1
+		"####" "#" 2
 		{
+			A_WeaponOffset(1,33,WOF_INTERPOLATE);
+
 			If(Invoker.Freeze == False)
 			{
 				SetAmmoType1(True, "FreezeRounds");
-				Invoker.Freeze = True; Invoker.Flame = False; Invoker.Acid = False;
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = True; Invoker.Sticky = False;
 				A_Log("\c[Blue]Freeze rounds selected\c-");
 			}
 			Else If(Invoker.Freeze == True)
 			{
 				SetAmmoType1(True, "GrenadeRounds");
-				Invoker.Freeze = False; Invoker.Flame = False; Invoker.Acid = False;
-				A_Log("\c[Black]Grenade rounds selected\c-");
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = False;
+				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto Reload;
+		Goto AfterStates;
+	User4:
+		// WP5G A 1 A_JumpIf(!CountInv("MineRounds"), "Empty");
+		"####" "#" 2
+		{
+			A_WeaponOffset(1,33,WOF_INTERPOLATE);
+
+			If(Invoker.Sticky == False)
+			{
+				SetAmmoType1(True, "MineRounds");
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = True;
+				A_Log("\c[Grey]Sticky rounds selected\c-");
+			}
+			Else If(Invoker.Sticky == True)
+			{
+				SetAmmoType1(True, "GrenadeRounds");
+				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Sticky = False;
+				A_Log("\c[White]Grenade rounds selected\c-");
+			}
+		}
+		Goto AfterStates;
+
+	AfterStates:
+		"####" "#" 2 A_WeaponOffset(3,35,WOF_INTERPOLATE);		
+		"####" "#" 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
+		Goto Ready;
 	}
 	
-	action void FireRE2GL()
+	Action Void FireRE2GL()
 	{
 		If(Invoker.Flame == True) { A_FireProjectile("M79FlameProj",0,True,8,8); }
 		Else If(Invoker.Acid == True) { A_FireProjectile("M79AcidProj",0,True,8,8); }
 		Else If(Invoker.Freeze == True) { A_FireProjectile("M79FreezeProj",0,True,8,8); }
+		Else If(Invoker.Sticky == True) { A_FireProjectile("M79StickyProj",0,True,8,8); } 
 		Else { A_FireProjectile("M79GrenadeProj",0,True,8,8); }
 	}
 	
 	//Credit Agent_Ash aka Jekyll Grim Payne and Boondorl
 	//Changes ammo type
-	action void SetAmmoType1(bool set, Class<Ammo> AmmoClass)
+	Action Void SetAmmoType1(bool set, Class<Ammo> AmmoClass)
 	{
 		If(set) 
 		{
@@ -145,5 +188,131 @@ Class GM79 : REWeapon
 			Return;
 		}
 		Invoker.Ammo1 = null;
+	}
+}
+
+Class M79StickyProj : Actor
+{
+	Default
+	{
+		Radius 8;
+		Height 8;
+		Speed 30;
+		Gravity 0.4;
+		+MISSILE
+		+FORCEXYBILLBOARD
+		+HITTRACER
+		+SKYEXPLODE
+		Scale 0.15;
+	}	
+	Vector3 stickOfs;
+   	Double stickAngle;
+	Int Timer;
+	Bool exploded, stuck;
+	
+	Override Void Tick()
+	{
+		Super.Tick();
+		If(Timer > 125 && !exploded)
+		{
+			exploded = true;
+			SetStateLabel("Explode");
+		}
+		Timer++;
+	}
+
+	States
+	{
+	Spawn:
+		GREN B 1 { Tracer = null; }
+		Loop;
+		
+	XDeath:
+		TNT1 A 0;
+		TNT1 A 0 A_StartSound("StickyGrenade/Hit");
+		TNT1 A 0 
+		{
+			stuck = true;
+
+			If(Tracer)
+			{
+				Tracer.A_Pain();
+				stickOfs = Tracer.Vec3To(self);
+				stickAngle = Tracer.angle;
+			}
+			If(!Tracer) { SetStateLabel("Fall"); }
+		}
+		
+	Stuck:
+		GREN B 1 
+		{
+			If(!Tracer || Tracer.Health < 1) { SetStateLabel("Fall"); }
+		
+			If(Tracer && Tracer.Health > 0)
+			{
+				double angDiff = DeltaAngle(stickAngle, Tracer.angle);
+				if(angDiff)
+				{
+					stickOfs.xy = RotateVector(stickOfs.xy, angDiff);
+					angle += angDiff;
+				}
+				SetOrigin(Tracer.Vec3Offset(stickOfs.x, stickOfs.y, stickOfs.z), true);
+				stickAngle = Tracer.angle;
+			}
+		}
+		Loop;
+		
+	Death:
+		TNT1 A 0 
+		{
+			A_StartSound("StickyGrenade/Hit");
+			Tracer = null;
+		}
+		TNT1 A 0 A_CheckFloor("DeathFloor");
+		TNT1 A 0 A_CheckCeiling("DeathCeiling");
+		TNT1 A 0 { bNOGRAVITY = true; }
+	StayDead:
+	DeathFloor:
+		GREN B 1;
+		Loop;
+	DeathCeiling:
+		TNT1 A 0
+		{
+			bNOGRAVITY = True;
+			vel.z = 6;
+		}
+		GREN B 1;
+		Loop;
+
+	Explode:
+		TNT1 A 0
+		{
+			If(Tracer && stuck)
+			{
+				A_DamageTracer(FRandom(120,200),"Normal");
+			}
+		}
+		TNT1 A 0 A_JumpIf(WaterLevel >= 2, "UnderWater");
+		TNT1 A 0;
+		TNT1 A 0 { A_Explode(128,128,XF_HURTSOURCE); A_AlertMonsters(); }
+		TNT1 AAAAAAAAAAA 0 A_SpawnProjectile("Explarticles", 0, 0, random (0, 360), 2, random (0, 360));
+		TNT1 A 0 A_SetTranslucent(0.65,1);
+		ARX4 ABC 2 Bright A_SetScale(1.0);
+		"####" DEF 2 Bright A_SetScale(1.05);
+		"####" GHI 2 Bright A_SetScale(1.1);
+		"####" JKL 2 Bright A_SetScale(1.15);
+		"####" MNO 2 Bright A_SetScale(1.2);
+		Stop;
+	UnderWater:
+		TNT1 A 0 A_Explode(128,32);
+		Stop;
+		
+	Fall:
+		TNT1 A 0
+		{
+			Tracer = null;
+			bNOGRAVITY = False;
+		}
+		Goto DeathFloor;	
 	}
 }
