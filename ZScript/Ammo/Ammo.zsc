@@ -37,7 +37,7 @@ Class MagnumAmmo : Ammo
 		Inventory.Amount 8;
 		Inventory.MaxAmount 250;
 		Ammo.BackpackMaxAmount 250;
-		Scale 0.6;
+		Scale 0.75;
 		+INVENTORY.IGNORESKILL
 	}
 	States
