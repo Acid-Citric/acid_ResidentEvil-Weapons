@@ -1,7 +1,7 @@
 //Giving the item to the player
 Class RE2Handler : EventHandler
 {
-	// bool yesOrNo(double probabilityOfYes) { return random()%100 < (probabilityOfYes * 100);	}
+	// bool yesOrNo(double probabilityOfYes) { return random()%100 < (probabilityOfYes * 100); }
 	// if(yesOrNo(0.06)) { e.Thing.A_SpawnItemEx("",0,0,random(6,14)); }
 
 	/*Override Void PlayerSpawned(PlayerEvent e)
@@ -28,6 +28,7 @@ Class RE2Handler : EventHandler
 			e.Thing.GiveInventory("FlameRounds",0);
 			e.Thing.GiveInventory("AcidRounds",0);
 			e.Thing.GiveInventory("FreezeRounds",0);
+			e.Thing.GiveInventory("MineRounds",0);
 		}
 
 		If(e.thing && e.thing.GetClass() == "DeadMarine" || e.thing.GetClass() == "GibbedMarine" || e.thing.GetClass() == "GibbedMarineExtra")
