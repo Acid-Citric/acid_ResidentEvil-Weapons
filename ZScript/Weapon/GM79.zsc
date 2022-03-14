@@ -208,23 +208,24 @@ Class M79StickyProj : Actor
 	Vector3 stickOfs;
    	Double stickAngle;
 	Int Timer;
-	Bool exploded, stuck;
+	Bool stuck;
 	
 	Override Void Tick()
 	{
 		Super.Tick();
-		If(Timer > 125 && !exploded)
-		{
-			exploded = true;
-			SetStateLabel("Explode");
-		}
+		If(Timer > 125) { SetStateLabel("Explode"); }
 		Timer++;
+	}
+	Override Void PostBeginPlay()
+	{
+		If(CountInv("PowerInfiniteAmmo") || sv_infiniteammo) { bSEEKERMISSILE = True;  bSCREENSEEKER = True; }
+		Super.PostBeginPlay();
 	}
 
 	States
 	{
 	Spawn:
-		GREN B 1 { Tracer = null; }
+		GREN A 1 { Tracer = null; }
 		Loop;
 		
 	XDeath:
@@ -244,7 +245,7 @@ Class M79StickyProj : Actor
 		}
 		
 	Stuck:
-		GREN B 1 
+		GREN A 1 
 		{
 			If(!Tracer || Tracer.Health < 1) { SetStateLabel("Fall"); }
 		
@@ -273,7 +274,7 @@ Class M79StickyProj : Actor
 		TNT1 A 0 { bNOGRAVITY = true; }
 	StayDead:
 	DeathFloor:
-		GREN B 1;
+		GREN A 1;
 		Loop;
 	DeathCeiling:
 		TNT1 A 0
