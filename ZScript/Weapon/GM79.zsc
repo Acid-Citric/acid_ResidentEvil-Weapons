@@ -181,6 +181,7 @@ Class GM79 : REWeapon
 	}
 }
 
+//Credit EmeraldCoasttt (Emerald#7486) for the sticky grenade from Brutal Doom Platinum
 Class M79StickyProj : Actor
 {
 	Default
