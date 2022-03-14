@@ -203,7 +203,7 @@ Class M79StickyProj : Actor
 		+FORCEXYBILLBOARD
 		+HITTRACER
 		+SKYEXPLODE
-		Scale 0.15;
+		Scale 0.25;
 	}	
 	Vector3 stickOfs;
    	Double stickAngle;
