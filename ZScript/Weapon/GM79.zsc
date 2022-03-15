@@ -55,11 +55,20 @@ Class GM79 : REWeapon
 	Reload:
 		WP5R A 3;
 		WP5R B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		WP5R XCDEFGHIJKLMN 3;
+		WP5R CDEFGHIJKLMN 3;
 		WP5R O 3 { A_StartSound("weapons/sshotl", CHAN_WEAPON); Invoker.noammo = False; }
 		WP5R PQ 3;
 		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
-		WP5R YS 3;
+		WP5R S 3;
+		Goto Ready;
+	SwitchAmmo:
+		WP5R A 3;
+		WP5R B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
+		WP5R CDENMLKJJKLMN 3;
+		WP5R O 3 A_StartSound("weapons/sshotl", CHAN_WEAPON);
+		WP5R PQ 3;
+		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
+		WP5R S 3;
 		Goto Ready;
 
 	Empty:
@@ -90,7 +99,7 @@ Class GM79 : REWeapon
 				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto AfterStates;		
+		Goto SwitchAmmo;		
 	User2:
 		// WP5G A 1 A_JumpIf(!CountInv("AcidRounds"), "Empty");
 		"####" "#" 2
@@ -110,7 +119,7 @@ Class GM79 : REWeapon
 				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto AfterStates;
+		Goto SwitchAmmo;
 	User3:
 		// WP5G A 1 A_JumpIf(!CountInv("FreezeRounds"), "Empty");
 		"####" "#" 2
@@ -130,7 +139,7 @@ Class GM79 : REWeapon
 				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto AfterStates;
+		Goto SwitchAmmo;
 	User4:
 		// WP5G A 1 A_JumpIf(!CountInv("MineRounds"), "Empty");
 		"####" "#" 2
@@ -150,12 +159,7 @@ Class GM79 : REWeapon
 				A_Log("\c[White]Grenade rounds selected\c-");
 			}
 		}
-		Goto AfterStates;
-
-	AfterStates:
-		"####" "#" 2 A_WeaponOffset(3,35,WOF_INTERPOLATE);		
-		"####" "#" 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
-		Goto Ready;
+		Goto SwitchAmmo;
 	}
 	
 	Action Void FireRE2GL()
