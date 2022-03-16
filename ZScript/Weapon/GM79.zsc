@@ -55,7 +55,9 @@ Class GM79 : REWeapon
 	Reload:
 		WP5R A 3;
 		WP5R B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		WP5R CDEFGHIJKLMN 3;
+		WP5R CDEFGHI 3;
+		WP5R J 12;
+		WP5R KLMN 3;
 		WP5R O 3 { A_StartSound("weapons/sshotl", CHAN_WEAPON); Invoker.noammo = False; }
 		WP5R PQ 3;
 		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
@@ -64,7 +66,11 @@ Class GM79 : REWeapon
 	SwitchAmmo:
 		WP5R A 3;
 		WP5R B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		WP5R CDENMLKJJKLMN 3;
+		WP5R CDE 3;
+		WP5R N 3; // no ammo
+		WP5R MLK 3;
+		WP5R J 12;
+		WP5R KLMN 3;
 		WP5R O 3 A_StartSound("weapons/sshotl", CHAN_WEAPON);
 		WP5R PQ 3;
 		WP5R R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
