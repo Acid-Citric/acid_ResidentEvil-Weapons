@@ -63,7 +63,7 @@ Class RE_CasingBase : Actor  // Bueller... Bueller... Bueller... Bueller... Buel
 		TNT1 A 0 NoDelay
 		{
 			// Credits to Jekyll Grim Payne aka Agent_Ash (Beautiful Doom)
-			if (self is "RE_PistolCasing") sprite = GetSpriteIndex("CAS1");
+			if (self is "RE_PistolCasing" || self is "RE_MagnumCasing") sprite = GetSpriteIndex("CAS1");
 			else if (self is "RE_ShotgunCasing") sprite = GetSpriteIndex("CAS2");
 			return ResolveState(null);
 		}
@@ -103,7 +103,21 @@ Class RE_PistolCasing_Spawner : Actor
 		Stop;
 	}
 }
-
+Class RE_MagnumCasing_Spawner : Actor
+{
+	Default
+	{
+		Speed 25;
+		PROJECTILE;
+		+NOCLIP
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 1 NoDelay A_SpawnProjectile("RE_MagnumCasing", 8, 12, Random(-70,-80), CMF_AIMDIRECTION, Random(-45,-60));
+		Stop;
+	}
+}
 Class RE_SMGCasing_Spawner : Actor
 {
 	Default
@@ -119,7 +133,6 @@ Class RE_SMGCasing_Spawner : Actor
 		Stop;
 	}
 }
-
 Class RE_ShotgunCasing_Spawner : Actor
 {
 	Default
@@ -142,13 +155,25 @@ Class RE_PistolCasing : RE_CasingBase
 	{
 		Scale 0.25;
 		//BounceSound "casings/bullet";
+		Translation "0:255=#[255,192,128]"; // Colourise
+	}
+}
+Class RE_MagnumCasing : RE_CasingBase
+{
+	Default
+	{
+		XScale 0.375;
+		YScale 0.25;
+		//BounceSound "casings/bullet";
+		Translation "0:255=#[255,192,128]"; // Colourise
 	}
 }
 Class RE_ShotgunCasing : RE_CasingBase
 {
 	Default
 	{
-		Scale 0.375;
+		XScale 0.5;
+		YScale 0.375;
 		//BounceSound "casings/shell";
 	}
 }
