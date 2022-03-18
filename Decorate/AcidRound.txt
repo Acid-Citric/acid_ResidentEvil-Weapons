@@ -4,13 +4,14 @@ ACTOR M79AcidProj
 	Height 8
 	Speed 50//30
 	Damage 27
-	Projectile
+	PROJECTILE
 	-NOGRAVITY
 	+RANDOMIZE
 	+DEHEXPLOSION
+	+SKYEXPLODE
 	+BRIGHT
 	Gravity 0.8
-    DeathSound "Weapons/M79/Acid"
+	DeathSound "Weapons/M79/Acid"
 	Obituary "%k played some hot ball toss at %o."
 	DamageType "PoisonCloud"
 	States
@@ -35,16 +36,40 @@ ACTOR M79AcidProj
 
 ACTOR AcidBomb
 {
+	Alpha 0.99
 	RenderStyle "Add"
-    Alpha 0.8
-    Scale 0.45
 	+NOGRAVITY
-    +FORCEXYBILLBOARD
-    States
-    {
-    Spawn:
-      AEXP A 1 Bright A_StartSound("Grenade/Acid")
-	  AEXP BCDEFGHIJKLMNOPQRS 1 Bright
-      Stop
+	+FORCEXYBILLBOARD
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_StartSound("Grenade/Acid");
+			A_SetScale(frandom(1.0, 0.5));
+			A_ChangeFlag(SPRITEFLIP, Random(0,1));
+			Return A_Jump(256,"Set1","Set2","Set3");
+		}
+	Set1:
+		SPT1 ABCDEFGHIJKLMNOPQRS 1
+		{
+			A_SetScale(ScaleX + frandom(0.0025, 0.0015));
+			A_FadeOut(frandom(0.05,0.025));
+		}
+		Stop
+	Set2:
+		SPT2 ABCDEFGHIJKLMNOPQR 1
+		{
+			A_SetScale(ScaleX + frandom(0.0025, 0.0015));
+			A_FadeOut(frandom(0.05,0.025));
+		}
+		Stop
+	Set3:
+		SPT3 ABCDEFGHIJKLM 1
+		{
+			A_SetScale(ScaleX + frandom(0.0025, 0.0015));
+			A_FadeOut(frandom(0.05,0.025));
+		}
+		Stop
     }
 }
