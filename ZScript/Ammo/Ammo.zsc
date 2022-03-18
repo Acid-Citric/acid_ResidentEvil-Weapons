@@ -48,7 +48,17 @@ Class MagnumAmmo : Ammo
 		Loop;
 	}
 }
-Class MagnumAmmo_24 : MagnumAmmo { Default { Inventory.Amount 24; }}
+Class MagnumAmmo_24 : MagnumAmmo
+{
+	Default { Inventory.Amount 24; }
+	States
+	{
+	Spawn:
+		AMM2 B 30;
+		AMM2 B 2 Bright;
+		Loop;
+	}
+}
 
 Class ShotgunShells : Ammo
 {
