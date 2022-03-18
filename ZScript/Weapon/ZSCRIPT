@@ -80,8 +80,8 @@ Class SpaghettiAltar : Actor
 Class AltarWeapon : Weapon
 {
 	Array<Class<Inventory> > itemlist;
-	Array<Class<Inventory> > itemcost1[50];
-	Array<Int> itemcost2[50];
+	Array<Class<Inventory> > itemcost1[50]; //50
+	Array<Int> itemcost2[50]; //50
 	int itemindex;
 	int addindex;
 	bool isdoom2;
@@ -117,59 +117,44 @@ Class AltarWeapon : Weapon
 		}
 		addindex++;
 	}
-
+	
 	override void PostBeginPlay()
 	{
 		if(Wads.CheckNumForName("MAP01",0)!=-1)
 			isdoom2 = true;
-
+	
 		AddItem("MixedHerb_GG", "GreenHerb", "2");
-
-		// RE Mixed Herbs
-		AddItem("MixedHerb_GG", "GreenHerb", "2");
+		
+		AddItem("MixedHerb_GG", "GreenHerb", "2"); // RE Mixed Herbs
 		AddItem("MixedHerb_GGG", "GreenHerb", "3");
 		AddItem("MixedHerb_GB", "GreenHerb|BlueHerb", "1|1");
 		AddItem("MixedHerb_GGB", "GreenHerb|BlueHerb", "2|1");
 		AddItem("MixedHerb_GR", "GreenHerb|RedHerb", "1|1");
 		AddItem("MixedHerb_GRB", "GreenHerb|RedHerb|BlueHerb", "1|1|1");
-		// RE 4 Mixed Herbs
-		AddItem("MixedHerb_GY", "GreenHerb|YellowHerb", "1|1");
+		AddItem("MixedHerb_GY", "GreenHerb|YellowHerb", "1|1"); // RE 4 Mixed Herbs
 		AddItem("MixedHerb_GRY", "GreenHerb|RedHerb|YellowHerb", "1|1|1");
-		// Mixed Herbs R+B
-		AddItem("MixedHerb_RB", "RedHerb|BlueHerb", "1|1");
-
-		// GunPowder A // 8 times for Enhanced Handgun Ammo
-		AddItem("GunPowder_AA", "GunPowder_A", "2");
+		AddItem("MixedHerb_RB", "RedHerb|BlueHerb", "1|1"); // Mixed Herbs R+B
+		AddItem("GunPowder_AA", "GunPowder_A", "2"); // GunPowder A // 8 times for Enhanced Handgun Ammo
 		AddItem("GunPowder_AAA", "GunPowder_A", "3");
 		AddItem("GunPowder_BBA", "GunPowder_B|GunPowder_A", "2|1");	
-		// HandgunAmmo		
-		AddItem("HandgunAmmo_15", "GunPowder_A", "1");
+		AddItem("HandgunAmmo_15", "GunPowder_A", "1"); // HandgunAmmo
 		AddItem("HandgunAmmo_35", "GunPowder_AA", "1");
 		AddItem("HandgunAmmo_55", "GunPowder_AAA", "1");
 		AddItem("HandgunAmmo_60", "GunPowder_BBA", "1");
-
-		// GunPowder B // 8 times for Enhanced Shotgun Shells
-		AddItem("GunPowder_BB", "GunPowder_B", "2");
+		AddItem("GunPowder_BB", "GunPowder_B", "2"); // GunPowder B // 8 times for Enhanced Shotgun Shells
 		AddItem("GunPowder_AAB", "GunPowder_A|GunPowder_B", "2|1");
 		AddItem("GunPowder_BBB", "GunPowder_B", "3");
-		// ShotgunShells		
-		AddItem("ShotgunShells_7", "GunPowder_B", "1");
+		AddItem("ShotgunShells_7", "GunPowder_B", "1"); // ShotgunShells
 		AddItem("ShotgunShells_18", "GunPowder_BB", "1");
 		AddItem("ShotgunShells_22", "GunPowder_AAB", "1");
 		AddItem("ShotgunShells_30", "GunPowder_BBB", "1");
-
-		// GunPowder C
-		AddItem("GunPowder_C", "GunPowder_A|GunPowder_B", "1|1");
+		AddItem("GunPowder_C", "GunPowder_A|GunPowder_B", "1|1"); // GunPowder C
 		AddItem("GunPowder_AC", "GunPowder_A|GunPowder_C", "1|1");
 		AddItem("GunPowder_BC", "GunPowder_B|GunPowder_C", "1|1");
 		AddItem("GunPowder_CC", "GunPowder_C", "2");
-		AddItem("GunPowder_CCC", "GunPowder_C", "3");
-
-		// GunPowder A+B+C
-		AddItem("GunPowder_ABC", "GunPowder_A|GunPowder_B|GunPowder_C", "1|1|1");
-
-		// Grenade Rounds
-		AddItem("GrenadeRounds_10", "GunPowder_C", "1");
+		AddItem("GunPowder_CCC", "GunPowder_C", "3");		
+		AddItem("GunPowder_ABC", "GunPowder_A|GunPowder_B|GunPowder_C", "1|1|1"); // GunPowder A+B+C
+		AddItem("GrenadeRounds_10", "GunPowder_C", "1"); // Grenade Rounds
 		AddItem("FlameRounds_10", "GunPowder_AC", "1");
 		AddItem("AcidRounds_10", "GunPowder_BC", "1");
 		AddItem("FreezeRounds_10", "GunPowder_CC", "1");
@@ -182,15 +167,10 @@ Class AltarWeapon : Weapon
 		AddItem("FreezeRounds_6", "GunPowder_C|GrenadeRounds", "1|6");
 		AddItem("FreezeRounds_12", "GunPowder_CC|GrenadeRounds", "1|6");
 		AddItem("FreezeRounds_18", "GunPowder_CCC|GrenadeRounds", "1|6");
-
-		// Magnum Rounds
-		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1");
-
-		// SMG Rounds
-		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1");
-
-		// Mine Rounds
-		AddItem("MineRounds", "GunPowder_ABC|GrenadeRounds", "1|6");		
+		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1"); // Magnum Rounds
+		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1"); // SMG Rounds
+		AddItem("MineRounds", "GunPowder_ABC|GrenadeRounds", "1|6"); // Mine Rounds
+		
 		Super.PostBeginPlay();
 	}
 	
