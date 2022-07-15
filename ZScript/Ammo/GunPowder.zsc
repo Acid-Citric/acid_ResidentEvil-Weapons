@@ -15,8 +15,8 @@ Class GunPowder : Inventory
 	States
 	{
 	Spawn:
-		"####" A 30;
-		"####" A 2 Bright;
+		#### A 9;
+		#### A 1 Bright;
 		Loop;
 	}
 }
