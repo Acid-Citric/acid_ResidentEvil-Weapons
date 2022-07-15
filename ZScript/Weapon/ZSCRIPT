@@ -10,7 +10,7 @@ Class AltarUI : EventHandler
 	String itemname;
 
 	override void RenderUnderlay(RenderEvent e)
-	{   
+	{
 		if(showicon)
 		{
 			int celly = Screen.GetHeight()/50;
@@ -20,14 +20,14 @@ Class AltarUI : EventHandler
 			int i;
 			for(i = 0; i < itemcost1.size(); i++)
 			{
-				TextureID pic2 = GetDefaultByType(itemcost1[i]).FindState("Spawn").GetSpriteTexture(0);
+				//TextureID pic2 = GetDefaultByType(itemcost1[i]).FindState("Spawn").GetSpriteTexture(0);
+				TextureID pic2 = GetDefaultByType(itemcost1[i]).Icon;
 				Screen.DrawTexture(pic2, true, 640-w/2-w2[i], 250+55*i, DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_DestWidth, w2[i], DTA_DestHeight, h2[i], DTA_Alpha, 0.6, DTA_LeftOffset, 0, DTA_TopOffset, 0);
 				Screen.DrawText(CONFONT, Font.CR_DARKRED, 640-w/2 + 60, 250+55*i+25, "x"..itemcost2[i], DTA_VirtualWidth, 1280, DTA_VirtualHeight, 800, DTA_Monospace, 1, DTA_Spacing, 18, DTA_CellX, cellx, DTA_CellY, celly);
 			}
 		}
 	}
 }
-
 
 Class SpaghettiAltar : Actor
 {
@@ -98,7 +98,7 @@ Class AltarWeapon : Weapon
 		+WEAPON.NOALERT
 		+INVENTORY.UNDROPPABLE
 	}
-	
+
 	void AddItem(class<Actor> output, string input, string cost)
 	{
 		Array<String> inputarray;
@@ -117,14 +117,14 @@ Class AltarWeapon : Weapon
 		}
 		addindex++;
 	}
-	
+
 	override void PostBeginPlay()
 	{
 		if(Wads.CheckNumForName("MAP01",0)!=-1)
 			isdoom2 = true;
-	
+
 		AddItem("MixedHerb_GG", "GreenHerb", "2");
-		
+
 		AddItem("MixedHerb_GG", "GreenHerb", "2"); // RE Mixed Herbs
 		AddItem("MixedHerb_GGG", "GreenHerb", "3");
 		AddItem("MixedHerb_GB", "GreenHerb|BlueHerb", "1|1");
@@ -152,7 +152,7 @@ Class AltarWeapon : Weapon
 		AddItem("GunPowder_AC", "GunPowder_A|GunPowder_C", "1|1");
 		AddItem("GunPowder_BC", "GunPowder_B|GunPowder_C", "1|1");
 		AddItem("GunPowder_CC", "GunPowder_C", "2");
-		AddItem("GunPowder_CCC", "GunPowder_C", "3");		
+		AddItem("GunPowder_CCC", "GunPowder_C", "3");
 		AddItem("GunPowder_ABC", "GunPowder_A|GunPowder_B|GunPowder_C", "1|1|1"); // GunPowder A+B+C
 		AddItem("GrenadeRounds_10", "GunPowder_C", "1"); // Grenade Rounds
 		AddItem("FlameRounds_10", "GunPowder_AC", "1");
@@ -169,11 +169,11 @@ Class AltarWeapon : Weapon
 		AddItem("FreezeRounds_18", "GunPowder_CCC|GrenadeRounds", "1|6");
 		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1"); // Magnum Rounds
 		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1"); // SMG Rounds
-		AddItem("MineRounds", "GunPowder_ABC|GrenadeRounds", "1|6"); // Mine Rounds
-		
+		AddItem("GasRounds", "GunPowder_ABC|GrenadeRounds", "1|6"); // B.O.W Gas Rounds
+
 		Super.PostBeginPlay();
 	}
-	
+
 	override void DetachFromOwner()
 	{
 		AltarUI Event = AltarUI(EventHandler.Find("AltarUI"));
@@ -181,7 +181,7 @@ Class AltarWeapon : Weapon
 			Event.showicon = false;
 		super.DetachFromOwner();
 	}
-	
+
 	void SwitchPage(bool reset = false)
 	{
 		if(itemindex >= itemlist.size()-1 || reset)
@@ -190,14 +190,14 @@ Class AltarWeapon : Weapon
 			itemindex++;
 		if(!itemlist[itemindex])
 			itemindex = 0;
-			
+
 		if(itemindex >= 0 && itemindex <= 4)
 		{
 			if(itemindex == 0 && isdoom2) { itemindex++; }
 			while(owner.CountInv(itemlist[itemindex]) > 0 && itemindex <= 4)
 				itemindex++;
 		}
-			
+
 		AltarUI Event = AltarUI(EventHandler.Find("AltarUI"));
 		if(Event)
 		{
@@ -240,7 +240,7 @@ Class AltarWeapon : Weapon
 	}
 
 	void ResetIndex() { SwitchPage(true); }
-	
+
 	States
 	{
 	Select:
@@ -280,7 +280,7 @@ Class AltarWeapon : Weapon
 				if(CountInv(invoker.itemcost1[invoker.itemindex][i]) < invoker.itemcost2[invoker.itemindex][i])
 				{ block = true; }
 			}
-			
+
 			if(block)
 			{
 				int buttons = GetPlayerInput(MODINPUT_OLDBUTTONS);
@@ -300,7 +300,7 @@ Class AltarWeapon : Weapon
 			{
 				A_TakeInventory(invoker.itemcost1[invoker.itemindex][i], invoker.itemcost2[invoker.itemindex][i]);
 			}
-			
+
 			FLineTraceData RemoteRay;
 			LineTrace(angle, 100, 0, TRF_THRUACTORS|TRF_BLOCKSELF, data: RemoteRay);
 			Vector3 spawnpos;
@@ -310,10 +310,10 @@ Class AltarWeapon : Weapon
 			{
 				x.angle = angle;
 				SpaghettiAltar(x).itemcost1.copy(invoker.itemcost1[invoker.itemindex]);
-				SpaghettiAltar(x).output = invoker.itemlist[invoker.itemindex];			
+				SpaghettiAltar(x).output = invoker.itemlist[invoker.itemindex];
 			}
 		}
-		TNT1 A 31;	
+		TNT1 A 31;
 		TNT1 A 0;
 		Goto Ready;
 	}
