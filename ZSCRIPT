@@ -1,39 +1,42 @@
 version "4.6.1"
 
-#include "ZScript/BaseStatusBar.zsc"
+#Include "ZScript/Libraries/base_thrower.txt"
 
-#include "ZScript/Player.zsc"
-#include "ZScript/Spawner.zsc"
-#include "ZScript/Dropper.zsc"
+#Include "ZScript/BaseStatusBar.zsc"
 
-#include "ZScript/EventHandler.zsc"
-#include "ZScript/EventHandler_2.zsc"
+#Include "ZScript/Player.zsc"
+#Include "ZScript/Spawner.zsc"
 
-#include "ZScript/Barrel.zsc"
+#Include "ZScript/EventHandler.zsc"
+#Include "ZScript/EventHandler_2.zsc"
 
-#include "ZScript/Weapon/Weapon.zsc"
-#include "ZScript/Weapon/CombatKnife.zsc"
-#include "ZScript/Weapon/Matilda.zsc"
-#include "ZScript/Weapon/Lightning Hawk.zsc"
-#include "ZScript/Weapon/W-870.zsc"
-#include "ZScript/Weapon/MQ 11.zsc"
-#include "ZScript/Weapon/GM79.zsc"
-#include "ZScript/Weapon/FlameThrower.zsc"
-#include "ZScript/Weapon/SparkShot.zsc"
-#include "ZScript/Weapon/ATRL.zsc"
-#include "ZScript/Weapon/ZSCRIPT" // WIP
+#Include "ZScript/Barrel.zsc"
 
-#include "ZScript/Health/Herbs.zsc"
-#include "ZScript/Health/Health.zsc"
+#Include "ZScript/Weapon/Weapon.zsc"
+#Include "ZScript/Weapon/CombatKnife.zsc"
+#Include "ZScript/Weapon/Matilda.zsc"
+#Include "ZScript/Weapon/Lightning Hawk.zsc"
+#Include "ZScript/Weapon/W-870.zsc"
+#Include "ZScript/Weapon/MQ 11.zsc"
+#Include "ZScript/Weapon/GM79.zsc"
+#Include "ZScript/Weapon/FlameThrower.zsc"
+#Include "ZScript/Weapon/SparkShot.zsc"
+#Include "ZScript/Weapon/ATRL.zsc"
+#Include "ZScript/Weapon/ZSCRIPT" // WIP
 
-#include "ZScript/Ammo/Ammo.zsc"
-#include "ZScript/Ammo/GunPowder.zsc"
-#include "ZScript/Ammo/Backpack.zsc"
+#Include "ZScript/M79_Grenade.zsc"
 
-#include "ZScript/Armor/Armor.zsc"
+#Include "ZScript/Health/Herbs.zsc"
+#Include "ZScript/Health/Health.zsc"
 
-#include "ZScript/Powerups/Powerups.zsc"
-#include "ZScript/Powerups/Inventory.zsc"
+#Include "ZScript/Ammo/Ammo.zsc"
+#Include "ZScript/Ammo/GunPowder.zsc"
+#Include "ZScript/Ammo/Backpack.zsc"
+
+#Include "ZScript/Armor/Armor.zsc"
+
+#Include "ZScript/Powerups/Powerups.zsc"
+#Include "ZScript/Powerups/Inventory.zsc"
 
 mixin Class RE_AmmoPickupMessage
 {
@@ -44,9 +47,158 @@ mixin Class RE_AmmoPickupMessage
 	}
 }
 
-
 // need graphics : (320 x 200) or (320 x 240)
 // HELP1
 // CREDIT
 // TITLEPIC
 // ENDPIC
+
+Class BurningFlames : Actor
+{
+	Default
+	{
+		DamageType "Fire";
+		Radius 5;
+		Height 5;
+		RenderStyle "Add";
+		Alpha 0.7;
+		Scale 0.1;
+	}
+	int flametimer;
+	States
+	{
+	Spawn:
+		TNT1 A 3 { bSPRITEFLIP = random(0,1); }
+		FLMS ABCDEFGHIJ 1 Bright
+		{
+			If(self is "BurningFlames_Big")
+			{
+				A_SetScale(Scale.X + 0.25, Scale.Y + 0.25);
+				Return A_JumpIf(Scale.X >= 1.5, "FlameBurns");
+			}
+			Else If(self is "BurningFlames_Mini")
+			{
+				A_SetScale(Scale.X + 0.05, Scale.Y + 0.05);
+				Return A_JumpIf(Scale.X >= 0.5, "FlameBurns");
+			}
+			Else
+			{
+				A_SetScale(Scale.X + 0.1, Scale.Y + 0.1);
+				Return A_JumpIf(Scale.X >= 1, "FlameBurns");
+			}
+		}
+		Loop;
+	FlameBurns:
+		FLMS ABCDEFGHIJ 1 Bright A_Explode(5, 10, 0, 0, 1, 0, 0);
+		TNT1 A 0
+		{
+			flametimer++; 
+			Return A_JumpIf(Invoker.flametimer > 60, 1);
+		}
+		Loop;
+		FLMS ABCDEFGHIJ 1 Bright
+		{
+			If(self is "BurningFlames_Big") { A_SetScale(Scale.X - 0.25, Scale.Y - 0.25); }
+			Else If(self is "BurningFlames_Mini") { A_SetScale(Scale.X - 0.05, Scale.Y - 0.05); }
+			Else { A_SetScale(Scale.X - 0.1, Scale.Y - 0.1); }
+				Return A_JumpIf(Scale.X <= 0, "Null");
+		}
+		Wait;
+	}
+}
+
+Class BurningFlames_Mini : BurningFlames { Default { Scale 0.05; } }
+Class BurningFlames_Big : BurningFlames { Default { Scale 0.25; } }
+
+Class AcidBomb : Actor
+{
+	Default
+	{
+		Alpha 0.99;
+		RenderStyle "Add";
+		+NOGRAVITY
+		+FORCEXYBILLBOARD
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			A_StartSound("Grenade/Acid");
+			A_SetScale(FRandom(1.0, 0.5));
+			{ bSPRITEFLIP = Random(0,1); }
+			Return A_Jump(256,"Set1","Set2","Set3");
+		}
+	Set1:
+		SPT1 ABCDEFGHIJKLMNOPQRS 1
+		{
+			A_SetScale(Scale.X + FRandom(0.0025, 0.0015));
+			A_FadeOut(FRandom(0.05,0.025));
+		}
+		Stop;
+	Set2:
+		SPT2 ABCDEFGHIJKLMNOPQR 1
+		{
+			A_SetScale(Scale.X + FRandom(0.0025, 0.0015));
+			A_FadeOut(FRandom(0.05,0.025));
+		}
+		Stop;
+	Set3:
+		SPT3 ABCDEFGHIJKLM 1
+		{
+			A_SetScale(Scale.X + FRandom(0.0025, 0.0015));
+			A_FadeOut(FRandom(0.05,0.025));
+		}
+		Stop;
+    }
+}
+
+Class FreezeSmoke : Actor
+{
+	Default
+	{
+		Translation "Ice";
+		RenderStyle "Add";
+		Alpha 0.3;
+		VSpeed 2.5;
+		+NOGRAVITY
+		+FORCEXYBILLBOARD
+	}
+    States
+    {
+    Spawn:
+		FRPT A 1
+		{
+			A_SetScale(Scale.X + 0.05, Scale.Y + 0.05);
+			A_FadeOut(0.025);
+			Return A_JumpIf(Alpha <= 0, "Null");
+		}
+		Wait;
+	}
+}
+
+Class RocketEffect : Actor
+{
+	Default
+	{
+		Radius 2;
+		Height 4;
+		Gravity 0.5;
+		Speed 3;
+		PROJECTILE;
+		-NOGRAVITY
+		+FORCEXYBILLBOARD
+		Scale 0.25;
+		RenderStyle "Add";
+		Alpha 0.5;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A 0 A_SpawnItemEx("RocketEffect_2");
+		FRPT ABCDEFG 2 Bright; 
+		Stop;
+	}
+}
+
+Class RocketEffect_2 : RocketEffect { Default { Scale 0.5; } }
