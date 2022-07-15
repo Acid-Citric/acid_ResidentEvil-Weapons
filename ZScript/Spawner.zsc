@@ -1,104 +1,246 @@
+mixin Class YoN
+{
+	Bool YesOrNo(double probabilityOfYes) { return random()%100 < (probabilityOfYes * 100); }
+}
+
 Class BonusSpawner : RandomSpawner
 {
-	Default
+	mixin YoN;
+	Override Name ChooseSpawn()
 	{
-		DropItem "GunPowder_A", 64;
-		DropItem "GunPowder_B", 64;
+		If(YesOrNo(0.5))
+		{
+			If(Random(0,2))
+			Return 'GunPowder_A';
+			Return 'GunPowder_B';
+		}
+		Else Return 'None';
 	}
 }
 
 Class ClipSpawner : RandomSpawner
 {
-	Default
-	{
-		DropItem "HandgunAmmo_15", 128, 2;
-		DropItem "HandgunAmmo_35", 128, 1;
-		DropItem "HandgunAmmo_55", 64, 1;
-		DropItem "HandgunAmmo_60", 32, 1;
-		DropItem "MagnumAmmo", 32, 1;
-		DropItem "SubmachineGunAmmo", 32, 1;
-
-		DropItem "GunPowder_A", 64, 1;
-		DropItem "GunPowder_B", 64, 1;
-	}
+	mixin YoN;
+	Override Name ChooseSpawn()
+    {
+		If(YesOrNo(0.25))
+		{
+			If(Random(0,2))
+			Return "HandgunAmmo_15";
+            Else If(Random(0,2))
+            Return "HandgunAmmo_35";
+            Else If(Random(0,2))
+            Return "HandgunAmmo_55";
+            Return "HandgunAmmo_60";
+		}
+		Else If(YesOrNo(0.15))
+		{
+			If(Random(0,2))
+			Return "E_HandgunAmmo_15";
+            Else If(Random(0,2))
+            Return "E_HandgunAmmo_35";
+            Else If(Random(0,2))
+            Return "E_HandgunAmmo_55";
+            Return "E_HandgunAmmo_60";
+		}
+		Else If(YesOrNo(0.25))
+		{
+			If(Random(0,2))
+			Return 'MagnumAmmo';
+			Return 'SubmachineGunAmmo';
+		}
+		Else If(YesOrNo(0.35))
+		{
+			If(Random(0,2))
+			Return 'GunPowder_A';
+			Return 'GunPowder_B';
+		}
+		Else Return 'None';
+    }
 }
+
 Class ShellSpawner : RandomSpawner
 {
-	Default
-	{
-		DropItem "ShotgunShells_7", 128, 2;
-		DropItem "ShotgunShells_18", 64, 2;
-		DropItem "ShotgunShells_22", 32, 2;
-		DropItem "ShotgunShells_30", 32, 2;
-
-		DropItem "GunPowder_A", 64, 1;
-		DropItem "GunPowder_B", 64, 1;
-	}
+	mixin YoN;
+	Override Name ChooseSpawn()
+    {
+		If(YesOrNo(0.25))
+		{
+			If(Random(0,2))
+			Return "ShotgunShells_7";
+            Else If(Random(0,2))
+            Return "ShotgunShells_18";
+            Else If(Random(0,2))
+            Return "ShotgunShells_22";
+            Return "ShotgunShells_30";
+		}
+		Else If(YesOrNo(0.15))
+		{
+			If(Random(0,2))
+			Return "E_ShotgunShells_7";
+            Else If(Random(0,2))
+            Return "E_ShotgunShells_18";
+            Else If(Random(0,2))
+            Return "E_ShotgunShells_22";
+            Return "E_ShotgunShells_30";
+		}
+		Else If(YesOrNo(0.35))
+		{
+			If(Random(0,2))
+			Return 'GunPowder_A';
+			Return 'GunPowder_B';
+		}
+		Else Return 'None';
+    }
 }
 Class RocketAmmoSpawner : RandomSpawner
 {
-	Default
-	{
-		DropItem "GrenadeRounds", 128, 2;
-		DropItem "FlameRounds", 64, 2;
-		DropItem "AcidRounds", 32, 2;
-		DropItem "FreezeRounds", 32, 2;
-
-		DropItem "GunPowder_A", 64, 1;
-		DropItem "GunPowder_B", 64, 1;
-	}
+	mixin YoN;
+	Override Name ChooseSpawn()
+    {
+		If(YesOrNo(0.45))
+		{
+			If(Random(0,2))
+			Return "GrenadeRounds";
+            Else If(Random(0,2))
+            Return "FlameRounds";
+            Else If(Random(0,2))
+            Return "AcidRounds";
+            Else If(Random(0,2))
+            Return "FreezeRounds";
+            Return "GasRounds";
+		}
+		Else If(YesOrNo(0.35))
+		{
+			If(Random(0,2))
+			Return 'GunPowder_A';
+			Return 'GunPowder_B';
+		}
+		Else Return 'None';
+    }
 }
 Class CellSpawner : RandomSpawner
 {
-	Default
-	{
-		DropItem "Fuel", 64, 4;
-		DropItem "SparkShotRounds", 64, 4;
-
-		DropItem "GunPowder_A", 32, 1;
-		DropItem "GunPowder_B", 32, 1;
-	}
+	mixin YoN;
+	Override Name ChooseSpawn()
+    {
+		If(YesOrNo(0.45))
+		{
+			If(Random(0,2))
+            Return "Fuel";
+            Return "SparkShotRound";
+		}
+		Else If(YesOrNo(0.35))
+		{
+			If(Random(0,2))
+			Return 'GunPowder_A';
+			Return 'GunPowder_B';
+		}
+		Else Return 'None';
+    }
 }
 Class BackpackSpawner : RandomSpawner
 {
-	Default
+	Override Name ChooseSpawn()
 	{
-		DropItem "InfiniteBullets", 255, 1;
-		DropItem "SurvivorPack", 255, 3;
+		If(Random(0,2))
+		Return 'InfiniteBullets';
+		Return 'SurvivorPack';
 	}
 }
 
 Class StimpackSpawner : RandomSpawner
 {
-	Default
+	mixin YoN;
+	Override Name ChooseSpawn()
 	{
-		DropItem "GreenHerb", 255, 2;
-		DropItem "BlueHerb", 255, 1;
-		DropItem "RedHerb", 255, 1;
+		If(YesOrNo(0.3))
+		{
+			If(Random(0,2))
+			Return 'GreenHerb';
+			Else If(Random(0,2))
+			Return "RedHerb";
+			Return "BlueHerb";
+		}
+		Else Return 'None';
 	}
 }
 Class MedikitSpawner : RandomSpawner
 {
-	Default
+	mixin YoN;
+	Override Name ChooseSpawn()
 	{
-		DropItem "FirstAidSpray", 255, 1;
-		DropItem "GreenHerb", 255, 3;
+		If(YesOrNo(0.3))
+		{
+			If(Random(0,2))
+			Return "FirstAidSpray";
+			Else If(Random(0,2))
+			Return "GreenHerb";
+			Else If(Random(0,2))
+			Return "RedHerb";
+			Return "BlueHerb";
+		}
+		Else Return 'None';
 	}
 }
 Class SoulSphereSpawner : RandomSpawner
 {
-	Default
+	Override Name ChooseSpawn()
 	{
-		DropItem "FirstAidBox", 255, 9;
-		DropItem "YellowHerb", 255, 1;
+		If(Random[randomspawn](0,1))
+		{
+			If(Random(0,2))
+			Return 'FirstAidSpray';
+			If(Random(0,2))
+			Return 'FirstAidBox';
+			Return 'YellowHerb';
+		}
+		Else Return 'None';
 	}
 }
 
-Class ShotgunSpawner : RandomSpawner
+Class ArmorSpawner : RandomSpawner
 {
-	Default
+	mixin YoN;
+	Override Name ChooseSpawn()
 	{
-		DropItem "W870";
-		DropItem "LightningHawk";
+		If(YesOrNo(0.3))
+		{
+			If(Random(0,2))
+			Return "ArmorVest";
+			Else If(Random(0,2))
+			Return "PoliceArmor";
+			Else If(Random(0,2))
+			Return "FirstAidSpray";
+			Return "GreenHerb";
+		}
+		Else Return 'None';
+	}
+}
+
+Class ShotgunDrop : Inventory
+{
+	Default	{}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)
+				Return ResolveState("Drop.Weapon");	
+				Return ResolveState(Null);
+		}
+		TNT1 A 0
+		{
+			If(Wads.CheckNumForName("MAP01",0)!=-1)
+			{
+				If(Random(0,1)) A_SpawnItemEx("W870");
+				Else A_SpawnItemEx("LightningHawk");
+			}
+		}
+		Stop;
+	Drop.Weapon:
+		TNT1 A 0 A_SpawnItemEx("W870");
+		Stop;
 	}
 }
