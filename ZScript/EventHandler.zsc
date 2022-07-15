@@ -1,9 +1,5 @@
-//Giving the item to the player
 Class RE2Handler : EventHandler
 {
-	// bool yesOrNo(double probabilityOfYes) { return random()%100 < (probabilityOfYes * 100); }
-	// if(yesOrNo(0.06)) { e.Thing.A_SpawnItemEx("",0,0,random(6,14)); }
-
 	/*Override Void PlayerSpawned(PlayerEvent e)
 	{
 		PlayerInfo player = players[e.PlayerNumber];
@@ -17,102 +13,93 @@ Class RE2Handler : EventHandler
 	Override Void PlayerRespawned(PlayerEvent e)
 	{
 		PlayerInfo player = players[e.PlayerNumber];
-		//player.mo.TakeInventory("PowerLightAmp", 1);
 		player.mo.TakeInventory("FireDeathEffect", 1);
 	}
 
 	Override Void WorldThingSpawned(WorldEvent e)
 	{
+		If (e.Thing is "PlayerPawn" && !e.Thing.FindInventory("Matilda") || e.Thing is "PlayerPawn" && e.Thing.FindInventory("Matilda"))
+		{ e.Thing.GiveInventory("WP1AmmoB",0); e.Thing.GiveInventory("E_HandgunAmmo",0); }
+
+		If (e.Thing is "PlayerPawn" && !e.Thing.FindInventory("W870") || e.Thing is "PlayerPawn" && e.Thing.FindInventory("W870"))
+		{ e.Thing.GiveInventory("WP3AmmoB",0); e.Thing.GiveInventory("E_ShotgunShells",0); }
+
 		If (e.Thing is "PlayerPawn" && !e.Thing.FindInventory("GM79"))
 		{
+			e.Thing.GiveInventory("WP5AmmoB",0);
 			e.Thing.GiveInventory("FlameRounds",0);
+			
+			e.Thing.GiveInventory("WP5AmmoC",0);
 			e.Thing.GiveInventory("AcidRounds",0);
+			
+			e.Thing.GiveInventory("WP5AmmoD",0);
 			e.Thing.GiveInventory("FreezeRounds",0);
-			e.Thing.GiveInventory("MineRounds",0);
-		}
-
-		If (e.thing && e.thing.GetClass() == "DeadMarine" || e.thing.GetClass() == "GibbedMarine" || e.thing.GetClass() == "GibbedMarineExtra")
-		{
-			Switch(Random(0,4))
-			{
-			Case 0:
-				e.thing.Spawn("HandgunAmmo_15", e.thing.pos + (15, 0, 0));
-				Break;
-			Case 1:
-				e.thing.Spawn("W870", e.thing.pos + (15, 0, 0));
-				Break;
-			Case 2:
-				e.thing.Spawn("ShotgunShells_7", e.thing.pos + (15, 0, 0));
-				Break;
-			Case 3:
-				e.thing.Spawn("LightningHawk", e.thing.pos + (15, 0, 0));
-				Break;
-			Case 4:
-				e.thing.Spawn("MQ11", e.thing.pos + (15, 0, 0));
-				Break;
-			}
+			
+			//e.Thing.GiveInventory("MineRounds",0);
+			
+			e.Thing.GiveInventory("WP5AmmoE",0);
+			e.Thing.GiveInventory("GasRounds",0);
 		}
 	}
 
-	Override Void WorldThingDied(WorldEvent e) // Credits to jarewill on the ZDoom Forums
+    Override Void WorldThingDied(WorldEvent e) // Credits to jarewill on the ZDoom Forums
 	{
    	     If (e.Inflictor && e.Inflictor.DamageType == "Fire") { e.Thing.GiveInventory("FireDeathEffect",1); }
 	}
 
 	Override Void CheckReplacement(ReplaceEvent e)
 	{
-        	/*String Checksum = level.GetChecksum(); // mapchecksum map05
-		If (level.GetChecksum() == "a3ce6146701c9e9598741a8ef92f5a47") // Multiverse.wad map05
-		{
-			If (e.Replacee is "Green_Herb") { e.Replacement = "StimpackSpawner"; }
-			If (e.Replacee is 'FirstAid_Pack') { e.Replacement = "MedikitSpawner"; }
-			If (e.Replacee is 'BulletBox') { e.Replacement = "ClipSpawner"; }
-			If (e.Replacee is 'REShells') { e.Replacement = "ShellSpawner"; }
-		}*/
-		If (e.Replacee == 'Fist')							e.Replacement = "CombatKnife";
-		Else If (e.Replacee == 'Chainsaw')						e.Replacement = "SparkShot";
-		Else If (e.Replacee == 'Pistol')						e.Replacement = "Matilda";
-		Else If (e.Replacee == 'Shotgun')						e.Replacement = "ShotgunDrop";
-		Else If (e.Replacee == 'SuperShotgun')						e.Replacement = "LightningHawk";
-		Else If (e.Replacee == 'Chaingun')						e.Replacement = "ChaingunDrop";
-		Else If (e.Replacee == 'RocketLauncher')					e.Replacement = "GM79";
-		Else If (e.Replacee == 'PlasmaRifle')						e.Replacement = "ChemicalFlameThrower";
-		Else If (e.Replacee == 'BFG9000')						e.Replacement = "ATRL";
+		class<Actor> cls = e.Replacee;
 
-		Else If ((e.Replacee == 'HealthBonus') || (e.Replacee == 'ArmorBonus'))		e.Replacement = "BonusSpawner";
-		Else If (e.Replacee == 'Stimpack')						e.Replacement = "StimpackSpawner";
-		Else If (e.Replacee == 'Medikit')						e.Replacement = "MedikitSpawner";		
-		Else If ((e.Replacee == 'SoulSphere') || (e.Replacee == 'MegaSphere'))		e.Replacement = "SoulSphereSpawner";	
+		If (cls == 'Fist')							e.Replacement = "CombatKnife";
+		Else If (cls == 'Chainsaw')						e.Replacement = "SparkShot";
+		Else If (cls == 'Pistol')						e.Replacement = "Matilda";
+		Else If (cls == 'Shotgun')					 e.Replacement = "ShotgunDrop";
+		Else If (cls == 'SuperShotgun')						e.Replacement = "LightningHawk";
+		Else If (cls == 'Chaingun')						e.Replacement = "MQ11";
+		Else If (cls == 'RocketLauncher')					e.Replacement = "GM79";
+		Else If (cls == 'PlasmaRifle')						e.Replacement = "ChemicalFlameThrower";
+		Else If (cls == 'BFG9000')						e.Replacement = "ATRL";
 
-		Else If (e.Replacee == 'GreenArmor')						e.Replacement = "ArmorVest";
-		Else If (e.Replacee == 'BlueArmor')						e.Replacement = "PoliceArmor";	
+		Else If ((cls == 'HealthBonus') || (cls == 'ArmorBonus'))		e.Replacement = "BonusSpawner";
+		Else If (cls == 'Stimpack')						e.Replacement = "StimpackSpawner";
+		Else If (cls == 'Medikit')						e.Replacement = "MedikitSpawner";
+		Else If ((cls == 'SoulSphere') || (cls == 'MegaSphere'))		e.Replacement = "SoulSphereSpawner";
+
+		Else If ((cls == 'GreenArmor') || (cls == 'BlueArmor'))						e.Replacement = "ArmorSpawner";
 
 		// Else If (e.Replacee == "RadSuit")						e.Replacement = "BlueHerb";
-		Else If (e.Replacee == 'Infrared')						e.Replacement = "BerserkDrop";
+		Else If (cls == 'Infrared')						e.Replacement = "MedikitSpawner";
 		// Else If (e.Replacee == 'AllMap')						e.Replacement = "AllMap";
 		// Else If (e.Replacee == 'InvulnerabilitySphere')				e.Replacement = "InvulnerabilitySphere";
-		Else If ((e.Replacee == 'BlurSphere') || (e.Replacee == 'Berserk'))		e.Replacement = "BerserkDrop";
+		Else If ((cls == 'BlurSphere') || (cls == 'Berserk'))		e.Replacement = "MedikitSpawner";
 
-		Else If ((e.Replacee == 'Clip') || (e.Replacee == 'ClipBox'))			e.Replacement = "ClipDrop";
-		Else If ((e.Replacee == 'Shell') || (e.Replacee == 'ShellBox'))			e.Replacement = "ShellDrop";
-		Else If ((e.Replacee == 'RocketAmmo') || (e.Replacee == 'RocketBox'))		e.Replacement = "RocketAmmoDrop";
-		Else If ((e.Replacee == 'Cell') || (e.Replacee == 'CellPack'))			e.Replacement = "CellDrop";
-		Else If (e.Replacee == 'Backpack')						e.Replacement = "BackpackSpawner";
-
+		Else If ((cls == 'Clip') || (cls == 'ClipBox'))			e.Replacement = "ClipSpawner";
+		Else If ((cls == 'Shell') || (cls == 'ShellBox'))			e.Replacement = "ShellSpawner";
+		Else If ((cls == 'RocketAmmo') || (cls == 'RocketBox'))		e.Replacement = "RocketAmmoSpawner";
+		Else If ((cls == 'Cell') || (cls == 'CellPack'))			e.Replacement = "CellSpawner";
+		Else If (cls == 'Backpack')						e.Replacement = "BackpackSpawner";
 	}
 }
 
 Class FireDeathEffect : Inventory // Credits to jarewill on the ZDoom Forums
 {
+	uint oldTranslation;
+
 	Override Void AttachToOwner(Actor other)
 	{
-		self.height = other.height; //Store the monster's height
+        oldTranslation = other.Translation;
 		Super.AttachToOwner(other);
 	}
+	Override Void DetachFromOwner()
+    {
+        Owner.Translation = oldTranslation;
+    }
+
 	Override Void DoEffect()
 	{
 		Super.DoEffect();
-		If (Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental") && !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire", True) && !Owner.FindState("Burn", True))
+		If(Owner && !(Owner is "ExplosiveBarrel") && !(Owner is "LostSoul") && !(Owner is "PainElemental") && !(Owner is "CyberDemon") && !(Owner is "SpiderMastermind") && !Owner.FindState("Death.Fire", True) && !Owner.FindState("Burn", True))
 		{
 			Owner.bFLY = False; Owner.bNOGRAVITY = False; Owner.bNOBLOOD = True; // Set relevant flags so the monster cannot be damaged, can't fly and doesn't spawn blood.
 			Owner.height = self.height; //Reset the height
