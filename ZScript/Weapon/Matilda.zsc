@@ -5,8 +5,6 @@ Class Matilda : REWeapon
 		Inventory.Icon "WP1PA0";
 
 		Weapon.SelectionOrder 1900;
-		Weapon.AmmoUse 0;
-		Weapon.AmmoGive2 MAG_VP70;
 		Weapon.AmmoType "WP1Ammo";
 		Weapon.AmmoType2 "HandgunAmmo";
 		+WEAPON.NOALERT
@@ -21,12 +19,13 @@ Class Matilda : REWeapon
 		Super.AttachToOwner(other);
 		other.A_GiveInventory("WP1Ammo",MAG_VP70);
 	}
-	Override Bool TryPickup(in out Actor toucher) 
+	Override Bool TryPickup(in out Actor toucher)
 	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("Matilda");
 			If(!weap) { Self.AmmoGive2 = 0; }
+			Else { Self.AmmoGive2 = MAG_VP70; }
 		}
 			Return Super.TryPickup(toucher);
 	}
@@ -35,12 +34,12 @@ Class Matilda : REWeapon
 		flashlight = False;
 		Super.PostBeginPlay();
 	}
-	Bool flashlight;
+	Bool flashlight, altammo;
 	States
 	{
 	Spawn:
-		WP1P A 30;
-		WP1P A 2 Bright;
+		WP1P A 9;
+		#### # 1 Bright;
 		Loop;
 	Select:
 		WP1G A 0;
@@ -48,31 +47,32 @@ Class Matilda : REWeapon
 	Ready:
 		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
 		WP1G A 0;
-		"####" "#" 1
+		#### # 1
 		{
-			A_WeaponReady(WRF_ALLOWRELOAD);
+			A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 			
 			If(Invoker.flashlight == False) { A_ClearOverlays(3,3); }
 			Else { A_Overlay(3,"FlashLight"); }
 		}
 		Loop;
 	Deselect:
-		"####" "#" 0;
+		#### # 0;
 		Goto Lower;
 	Fire:
-		TNT1 A 0 A_JumpIf(!CountInv("WP1Ammo"), "Reload");
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == 0, "Reload");
 		WP1F A 2 Bright
 		{
 			A_AlertMonsters();
-			A_FireBullets(0, 0, 1, 7, "BulletPuff");
+			If(Invoker.altammo) A_FireBullets(1, 1, 1, random(18,20), "SuperPuff"); // Kickback 150
+			Else A_FireBullets(1, 1, 1, random(15,20), "BulletPuff_2", FBF_NORANDOM);
 			A_StartSound("Weapons/VP70/Fire", CHAN_WEAPON);
 
 			A_SetPitch(Pitch - 0.4, SPF_INTERPOLATE); // -40 % = 60 pts of stability
 
-			A_TakeInventory("WP1Ammo",1);
+			A_TakeInventory(Invoker.ammo1.GetClass(), 1);
 		}
 		WP1F B 1;
-		WP1F C 1 A_FireProjectile("RE_PistolCasing_Spawner", 345+random(-8,8), False, -4, -5, 0);
+		WP1F C 1 A_SpawnItemEx("RE_PistolCasing",24,-24,40*GetCrouchFactor(AAPTR_Default),8,2,4,random(-55,-80),SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH);
 		WP1F B 1;
 		WP1G A 2;
 		Goto Ready;
@@ -83,22 +83,22 @@ Class Matilda : REWeapon
 	AltFire:
 		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
 		WP1G A 0;
-		"####" "#" 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
-		"####" "#" 2
+		#### # 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
+		#### # 2
 		{
 			A_WeaponOffset(3,35,WOF_INTERPOLATE);
 
 			If(Invoker.flashlight == True) { Invoker.flashlight = False; }
-            		Else If(Invoker.flashlight == False) { Invoker.flashlight = True; }
+			Else If(Invoker.flashlight == False) { Invoker.flashlight = True; }
 		}
 		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
 		WP1G A 0;
-		"####" "#" 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
+		#### # 2 A_WeaponOffset(1,33,WOF_INTERPOLATE);
 		Goto Ready;
 
 	Reload:
-		TNT1 A 0 A_JumpIf(CountInv("WP1Ammo") == MAG_VP70, 2);
-		TNT1 A 0 A_JumpIf(CountInv("HandgunAmmo") > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork"); // sv_infiniteammo
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_VP70, 2);
+		TNT1 A 0 A_JumpIf(Invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork");
 		TNT1 A 0;
 		Goto Ready;
 	ReloadWork:
@@ -112,18 +112,53 @@ Class Matilda : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-			While(CountInv("HandgunAmmo") > 0 && CountInv("WP1Ammo") < MAG_VP70 || CountInv("PowerInfiniteAmmo")  && CountInv("WP1Ammo") < MAG_VP70)
-			{ // sv_infiniteammo
-				A_TakeInventory("HandgunAmmo",1,TIF_NOTAKEINFINITE);
-				A_GiveInventory("WP1Ammo",1);
-			}
+			If(!CountInv("PowerInfiniteAmmo")) { TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); } //take 1 of AmmoType2
+			GiveInventory(Invoker.ammo1.GetClass(), 1); //give 1 of AmmoType1
 		}
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_VP70, 2);
+		TNT1 A 0 A_JumpIf(Invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), "ReloadLoop");
 		TNT1 A 0;
 		Goto Ready;
+	
+	Zoom:
+		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
+		WP1G A 0;
+		#### # 2;
+		#### # 2
+		{
+			If(Invoker.altammo == True)
+			{
+				Invoker.altammo = False;
+				SetAmmoType1(True, "WP1Ammo");
+				SetAmmoType2(True, "HandgunAmmo");
+			}
+            Else If(Invoker.altammo == False)
+			{
+				Invoker.altammo = True;
+				SetAmmoType1(True, "WP1AmmoB");
+				SetAmmoType2(True, "E_HandgunAmmo");
+			}
+		}
+		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
+		WP1G A 0;
+		#### # 2;
+		Goto Ready;
+
+	FlashLight:
+		TNT1 A 1 BRIGHT A_FireBullets(0,0,0,0,"FlashLightPuff",FBF_NOFLASH|FBF_NORANDOMPUFFZ);
+		Loop;
 	}
 }
 
 Class WP1Ammo : Ammo
+{
+	Default
+	{
+		Inventory.MaxAmount MAG_VP70;
+		+INVENTORY.IGNORESKILL
+	}
+}
+Class WP1AmmoB : Ammo
 {
 	Default
 	{
