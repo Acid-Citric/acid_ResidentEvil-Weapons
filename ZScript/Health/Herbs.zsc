@@ -5,19 +5,20 @@ Class GreenHerb : Inventory
 		Tag "Green Herb";
 		Inventory.PickupMessage "Green Herb";
 		Inventory.PickupSound "misc/item_pkup";
-		Inventory.Icon "HERGA0";
+		Inventory.Icon "Graphics/Herb_Green.png";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 25;
         Inventory.InterHubAmount 25;
-		Scale 0.5;
+		Scale 0.75;
 		+INVENTORY.INVBAR
 		+INVENTORY.KEEPDEPLETED
 	}
 	override bool Use(bool pickup)
 	{
-		If(Owner && Owner.Health < PlayerPawn(Owner).MaxHealth && Self.Amount > 0)
+		Let P = PlayerPawn(Owner);
+		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
 		{
-			Owner.GiveBody(25, -100);
+			P.GiveBody(25);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			Self.Amount--;
 		}
@@ -26,8 +27,8 @@ Class GreenHerb : Inventory
 	States
 	{
 	Spawn:
-		HERG A 30;
-		HERG A 2 Bright;
+		HERG A 9;
+		#### # 1 Bright;
 		Loop;
 	}
 }
@@ -39,19 +40,19 @@ Class RedHerb : Inventory
 		Tag "Red Herb";
 		Inventory.PickupMessage "Red Herb";
 		Inventory.PickupSound "misc/item_pkup";
-		Inventory.Icon "HERRA0";
+		Inventory.Icon "Graphics/Herb_Red.png";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 25;
         Inventory.InterHubAmount 25;
-		Scale 0.5;
+		Scale 0.75;
 		+INVENTORY.INVBAR
 		+INVENTORY.KEEPDEPLETED
 	}
 	States
 	{
 	Spawn:
-		HERR A 30;
-		HERR A 2 Bright;
+		HERR A 9;
+		#### # 1 Bright;
 		Loop;
 	}
 }
@@ -63,11 +64,12 @@ Class BlueHerb : Inventory // Remove Poison
 		Tag "Blue Herb";
 		Inventory.PickupMessage "Blue Herb";
 		Inventory.PickupSound "misc/item_pkup";
-		Inventory.Icon "HERBA0";
+		Inventory.UseSound "misc/item_use";
+		Inventory.Icon "Graphics/Herb_Blue.png";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 25;
         Inventory.InterHubAmount 25;
-		Scale 0.5;
+		Scale 0.75;
 		+INVENTORY.INVBAR
 		+INVENTORY.KEEPDEPLETED
 	}
@@ -81,9 +83,8 @@ Class BlueHerb : Inventory // Remove Poison
 				blood.BLEEDS = false;
 				blood.bleedbuildup = 0;
 			}
-
-			Owner.A_GiveInventory("PowerBlueHerb");
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
+			Owner.A_GiveInventory("PowerBlueHerb");
 			Self.Amount--;
 		}
 		Return False;
@@ -91,8 +92,8 @@ Class BlueHerb : Inventory // Remove Poison
 	States
 	{
 	Spawn:
-		HERB A 30;
-		HERB A 2 Bright;
+		HERB A 9;
+		#### # 1 Bright;
 		Loop;
 	}
 }
@@ -104,24 +105,19 @@ Class YellowHerb : Inventory
 		Tag "Yellow Herb";
 		Inventory.PickupMessage "Yellow Herb";
 		Inventory.PickupSound "misc/item_pkup";
-		Inventory.Icon "HERYA0";
+		Inventory.Icon "Graphics/Herb_Yellow.png";
 		Inventory.Amount 1;
 		Inventory.MaxAmount 25;
         Inventory.InterHubAmount 25;
-		Scale 0.5;
+		Scale 0.75;
 		+INVENTORY.INVBAR
 		+INVENTORY.KEEPDEPLETED
 	}
-	/*override void DoEffect()
-	{
-		Super.DoEffect();
-		Owner.GiveBody(5,-100);
-	}*/
 	States
 	{
 	Spawn:
-		HERY A 30;
-		HERY A 2 Bright;
+		HERY A 9;
+		#### # 1 Bright;
 		Loop;
 	}
 }
