@@ -26,11 +26,12 @@ Generator W870					BulletChip
 Generator MQ11					BulletChip
 
 // GM79
-Generator M79GrenadeProj		Scorch
-Generator M79FlameProj			Scorch
-Generator M79AcidProj			Scorch
-Generator M79FreezeProj			FreezeScorch
+Generator M79Proj_Grenade		Scorch
+Generator M79Proj_Flame			DoomImpScorch
+Generator M79Proj_Acid			DoomImpScorch
+Generator M79Proj_Freeze		FreezeScorch
+Generator M79Proj_Gas			DoomImpScorch
 
-Generator FlameThrowerBall		DoomImpScorch
+Generator FlameThrowerProj		DoomImpScorch
 Generator SparkShot				RailScorch
 Generator ATRocket				RevenantScorch
