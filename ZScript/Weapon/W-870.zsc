@@ -5,8 +5,6 @@ Class W870 : REWeapon
 		Inventory.Icon "WP3PA0";
 
 		Weapon.SelectionOrder 1300;
-		Weapon.AmmoUse 0;
-		Weapon.AmmoGive2 MAG_W870;
 		Weapon.AmmoType "WP3Ammo";
 		Weapon.AmmoType2 "ShotgunShells";
 		+WEAPON.NOALERT
@@ -18,54 +16,62 @@ Class W870 : REWeapon
 	Override Void AttachToOwner(Actor other)
 	{
 		Super.AttachToOwner(other);
-		other.A_GiveInventory("WP3Ammo",MAG_W870);
+		other.A_GiveInventory("WP3Ammo",MAG_VP70);
 	}
-	Override Bool TryPickup(in out Actor toucher)  
+	Override Bool TryPickup(in out Actor toucher)
 	{
 		If(toucher)
 		{
 			Let weap = toucher.FindInventory("W870");
 			If(!weap) { Self.AmmoGive2 = 0; }
+			Else { Self.AmmoGive2 = MAG_W870; }
 		}
 			Return Super.TryPickup(toucher);
 	}
 	int shotgunempty; // 1 = shotgun is empty, load the chamber. 2 = the shotgun's chamber is loaded.
-	bool shotgunreload;
+	bool shotgunreload, altammo;
 	States
 	{
 	Spawn:
-		WP3P A 30;
-		WP3P A 2 Bright;
+		WP3P A 9;
+		#### # 1 Bright;
 		Loop;
 	Select:
 		WP3G A 0;
 		Goto Raise;
 	Ready:
-		WP3G A 1 A_WeaponReady(WRF_ALLOWRELOAD);
+		WP3G A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		Loop;
 	Deselect:
-		"####" "#" 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
+		#### # 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
 		Goto Lower;
 	Fire:
-		TNT1 A 0 A_JumpIf(!CountInv("WP3Ammo"), "Reload");
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == 0, "Reload");
 		TNT1 A 0 A_JumpIf(Invoker.shotgunempty == 2, "FinishReload_2");
 		TNT1 A 0 A_JumpIf(Invoker.shotgunreload, "FinishReload");
 		WP3F A 3
 		{
 			A_AlertMonsters();
-			A_FireBullets(3, 3, 7, 10, "BulletPuff");
+
+			If(Invoker.altammo) { A_FireBullets(0, 0, 1, random(40,75), "SuperPuff"); A_ChangeVelocity(Cos(Pitch) * -0.28, 0, Sin(Pitch) * 0.28, CVF_Relative); }
+            Else { A_FireBullets(3, 3, 8, random(8,13), "BulletPuff"); }
+
 			A_StartSound("Weapons/W870/Fire", CHAN_WEAPON);
 
 			A_SetPitch(Pitch - 0.72, SPF_INTERPOLATE); // -72 % = 28 pts of stability
+			A_QuakeEX(4,4,4,5,0,10, "None", QF_SCALEDOWN);
 
-			A_TakeInventory("WP3Ammo",1);
+			A_TakeInventory(Invoker.ammo1.GetClass(), 1);
 		}
-		WP3F B 2;
-		WP3F CD 2;
-		WP3F E 4;
-		WP3F F 2 A_StartSound("Weapons/W870/Pump",CHAN_WEAPON);
-		WP3F G 2 A_FireProjectile("RE_ShotgunCasing_Spawner", 363+FRandom(-3,3), False, 33, 3, FPF_NOAUTOAIM, -1);
-		WP3F HI 2;
+		#### BCDEE 2;
+		#### F 2 A_StartSound("Weapons/W870/Pump",CHAN_WEAPON);
+		#### G 2 A_SpawnItemEx(Invoker.altammo ? "RE_ShotgunCasing_B" : "RE_ShotgunCasing",16,6,36*GetCrouchFactor(AAPTR_Default),1,-5,1,0,SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH);
+		#### G 0 A_JumpIf(Invoker.ammo1.amount > 0, 1);
+		Goto Fire+16;
+		WPEF # 0 A_JumpIf(Invoker.altammo, 2);
+		WP3F # 0;
+		#### H 2;
+		WP3F I 2;
 		WP3G A 3;
 		Goto Ready;
 	Flash:
@@ -73,27 +79,32 @@ Class W870 : REWeapon
 		Goto LightDone;
 	
 	Reload:
-		TNT1 A 0 A_JumpIfInventory("WP3Ammo", MAG_W870, "Ready");
-		TNT1 A 0 A_JumpIf(CountInv("WP3Ammo") > 0, "ReloadWork");
-		TNT1 A 0 { Invoker.shotgunempty++; }
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_W870, "Ready");
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount > 0, "ReloadWork");
+		TNT1 A 0 { Invoker.shotgunempty++; } // 1
 	ReloadWork:
-		TNT1 A 0 A_JumpIf(CountInv("ShotgunShells") > 0 || CountInv("PowerInfiniteAmmo"), 1); // sv_infiniteammo
-        Goto Ready;
+		TNT1 A 0 A_JumpIf(invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork_2");
+		TNT1 A 0 A_JumpIf(Invoker.shotgunempty == 1 && Invoker.ammo1.amount == 0 && Invoker.ammo2.amount == 0, "Reset");
+		Goto Ready; //
+	ReloadWork_2:
 		TNT1 A 0 { Invoker.shotgunreload = True; }
-		TNT1 A 0 A_JumpIf(Invoker.shotgunempty == 1, "LoadChamber");
+		TNT1 A 0 A_JumpIf(Invoker.shotgunempty == 1 && Invoker.ammo1.amount == 0 && Invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), "LoadChamber");
 		WP3F I 3;
 		WP3R NOPQR 3;
 	ReloadLoop:
-		TNT1 A 0 A_JumpIf(CountInv("WP3Ammo") == MAG_W870 || CountInv("ShotgunShells") < 1 && !CountInv("PowerInfiniteAmmo"), "FinishReload"); // sv_infiniteammo
-		WP3R RST 2;
-		WP3R U 2
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_W870 || Invoker.ammo2.amount < 1 && !CountInv("PowerInfiniteAmmo"), "FinishReload");
+		WP3R R 2;
+		WPER # 0 A_JumpIf(Invoker.altammo, 2);
+		WP3R # 0;
+		#### ST 2;
+		#### U 2
 		{
 			A_StartSound("Weapons/W870/Reload",CHAN_WEAPON);
-			A_TakeInventory("ShotgunShells",1,TIF_NOTAKEINFINITE);
-			A_GiveInventory("WP3Ammo",1);
+			If(!CountInv("PowerInfiniteAmmo")) { TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); }
+			GiveInventory(Invoker.ammo1.GetClass(), 1);
 		}
 		WP3R V 4 A_WeaponReady(WRF_NOBOB);
-		TNT1 A 0 A_JumpIf(CountInv("WP3Ammo") == MAG_W870 || CountInv("ShotgunShells") < 1 && !CountInv("PowerInfiniteAmmo"), "FinishReload"); // sv_infiniteammo
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_W870 || Invoker.ammo2.amount < 1 && !CountInv("PowerInfiniteAmmo"), "FinishReload");
 		Goto ReloadLoop;
 	FinishReload:
 		WP3R WX 3;
@@ -105,29 +116,67 @@ Class W870 : REWeapon
 	LoadChamber:
 		WP3G A 2;
 		WP3R A 2 A_StartSound("Weapons/W870/Pump",CHAN_WEAPON);
-		WP3R BCDEFGHI 2;
+		WP3R BCDEF 2;
+		WPER # 0 A_JumpIf(Invoker.altammo, 2);
+		WP3R # 0;
+		#### GHI 2;
 		WP3R J 2
 		{
 			A_StartSound("Weapons/W870/Reload",CHAN_WEAPON);
-			A_TakeInventory("ShotgunShells",1,TIF_NOTAKEINFINITE);
-			A_GiveInventory("WP3Ammo",1);
+			If(!CountInv("PowerInfiniteAmmo")) { TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); }
+			GiveInventory(Invoker.ammo1.GetClass(), 1);
 
-			Invoker.shotgunempty++;
+			Invoker.shotgunempty++; // 2
 		}
-		WP3R KLM 2;
-		WP3R N 2 
+		WPER # 0 A_JumpIf(Invoker.altammo, 2);
+		WP3R # 0;
+		#### KLM 2;
+		WP3R N 2
 		{
 			A_StartSound("Weapons/W870/Pump",CHAN_WEAPON);
 			A_WeaponReady(WRF_NOBOB);
 		}
-		TNT1 A 0 A_JumpIf(CountInv("ShotgunShells") > 0 || CountInv("PowerInfiniteAmmo")/* || sv_infiniteammo*/, 1);
+		TNT1 A 0 A_JumpIf(Invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), 1);
         Goto FinishReload+1;
 		WP3R OPQ 2;
 		Goto ReloadLoop;
+
+	Zoom:
+		WP3G A 2;
+		#### # 2
+		{
+			If(Invoker.altammo == True)
+			{
+				Invoker.altammo = False;
+				SetAmmoType1(True, "WP3Ammo");
+				SetAmmoType2(True, "ShotgunShells");
+			}
+            Else If(Invoker.altammo == False)
+			{
+				Invoker.altammo = True;
+				SetAmmoType1(True, "WP3AmmoB");
+				SetAmmoType2(True, "E_ShotgunShells");
+			}
+		}
+		#### # 2;
+		Goto Ready;
+
+	Reset:
+		TNT1 A 0 { Invoker.shotgunempty = 0; }
+        Goto Ready;
 	}
 }
 
 Class WP3Ammo : Ammo
+{
+	Default
+	{
+		Inventory.MaxAmount MAG_W870;
+		+INVENTORY.IGNORESKILL
+	}
+}
+
+Class WP3AmmoB : Ammo
 {
 	Default
 	{
