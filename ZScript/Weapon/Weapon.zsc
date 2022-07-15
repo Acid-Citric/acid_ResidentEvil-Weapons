@@ -6,36 +6,66 @@ Class REWeapon : Weapon
 		Weapon.BobRangeY 0.5;
 		Weapon.BobStyle "InverseSmooth";
 		Weapon.BobSpeed 2.4;
-		// Weapon.Kickback 150;
+		Weapon.Kickback 100;
 		// Inventory.Icon "UNKNA0";
 		Inventory.PickupSound "misc/item_pkup";
+	}
+	//Credit Agent_Ash aka Jekyll Grim Payne and Boondorl
+	//Changes ammo type
+	Action Void SetAmmoType1(bool set, Class<Ammo> AmmoClass)
+	{
+		If(set)
+		{
+			Invoker.AmmoType1 = AmmoClass;
+			Invoker.Ammo1 = Ammo(FindInventory(AmmoClass));
+			Return;
+		}
+		Invoker.Ammo1 = null;
+	}
+	Action Void SetAmmoType2(bool set, Class<Ammo> AmmoClass)
+	{
+		If(set)
+		{
+			Invoker.AmmoType2 = AmmoClass;
+			Invoker.Ammo2 = Ammo(FindInventory(AmmoClass));
+			Return;
+		}
+		Invoker.Ammo2 = null;
 	}
 	States
 	{
 	Raise:
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 67, 100, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.9, 0.9); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 54, 81, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.92, 0.92); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 32, 69, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.94, 0.94); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 22, 58, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.96, 0.96); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 10, 47, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.97, 0.97); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 7, 39, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.98, 0.98); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 2, 34, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.99, 0.99); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 0, 32, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 1, 1); }
-		"####" "#" 1 A_Raise(int.max);
+		/*#### # 0
+		{
+			String Selected = Stringtable.Localize("\c[Gold]Selected:\c- ");
+			Console.PrintF(Selected .. Invoker.GetTag(""));
+		}*/
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 67, 100, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.9, 0.9); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 54, 81, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.92, 0.92); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 32, 69, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.94, 0.94); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 22, 58, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.96, 0.96); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 10, 47, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.97, 0.97); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 7, 39, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.98, 0.98); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 2, 34, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.99, 0.99); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 0, 32, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		#### # 1 A_Raise(int.max);
 		Wait;
 	Lower:
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 0, 32, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 1, 1); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 2, 34, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.99, 0.99); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 7, 39, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.98, 0.98); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 10, 47, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.97, 0.97); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 22, 58, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.96, 0.96); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 32, 69, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.94, 0.94); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 54, 81, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.92, 0.92); }
-		"####" "#" 1 { A_OverlayOffset(PSP_WEAPON, 67, 100, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.9, 0.9); }
-		"####" "#" 1 A_Lower(int.max);
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 0, 32, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 1, 1); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 2, 34, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.99, 0.99); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 7, 39, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.98, 0.98); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 10, 47, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.97, 0.97); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 22, 58, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.96, 0.96); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 32, 69, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.94, 0.94); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 54, 81, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.92, 0.92); }
+		#### # 1 { A_OverlayOffset(PSP_WEAPON, 67, 100, WOF_INTERPOLATE); A_OverlayScale(PSP_WEAPON, 0.9, 0.9); }
+		#### # 1 A_Lower(int.max);
 		Wait;
 	}
 }
+
+Class BulletPuff_2 : BulletPuff { Default { +NOEXTREMEDEATH } }
+Class SuperPuff : BulletPuff { Default { ProjectileKickBack 250; } }
 
 Class RE_CasingBase : Actor  // Bueller... Bueller... Bueller... Bueller... Bueller...
 {
@@ -63,88 +93,29 @@ Class RE_CasingBase : Actor  // Bueller... Bueller... Bueller... Bueller... Buel
 		TNT1 A 0 NoDelay
 		{
 			// Credits to Jekyll Grim Payne aka Agent_Ash (Beautiful Doom)
-			if (self is "RE_PistolCasing" || self is "RE_MagnumCasing") sprite = GetSpriteIndex("CAS1");
+			if (self is "RE_PistolCasing" || self is "RE_MagnumCasing" || self is "RE_GrenadeCasing") sprite = GetSpriteIndex("CAS1");
 			else if (self is "RE_ShotgunCasing") sprite = GetSpriteIndex("CAS2");
+			else if (self is "RE_ShotgunCasing_B") sprite = GetSpriteIndex("CAS3");
 			return ResolveState(null);
 		}
 	Looping:
-		"####" A 0 A_JumpIf(Invoker.CasingLife == 105, "Death");
-		"####" A 1 { A_SetRoll(Roll + 45.0, SPF_INTERPOLATE); CasingLife++; }
+		#### A 0 A_JumpIf(Invoker.CasingLife == 105, "Death");
+		#### A 1 { A_SetRoll(Roll + 45.0, SPF_INTERPOLATE); CasingLife++; }
 		Loop;
 	Death:
-		"####" A 0
+		#### A 0
 		{
 			bSPRITEFLIP = random(0,1);
 			A_SetRoll(Roll = 0);
 		}
-		"####" A 175;
-		"####" A 1 A_FadeOut(0.1);
+		#### A 175;
+		#### A 1 A_FadeOut(0.1);
 		Wait;
 
 	LoadSprites: // Used for 'GetSpriteIndex'
 		CAS1 A 0; // Pistol
 		CAS2 A 0; // Shotguns
-		Stop;
-	}
-}
-
-Class RE_PistolCasing_Spawner : Actor
-{
-	Default
-	{
-		Speed 25;
-		PROJECTILE;
-		+NOCLIP
-	}
-	States
-	{
-	Spawn:
-		TNT1 A 1 NoDelay A_SpawnProjectile("RE_PistolCasing", 8, 12, Random(-70,-80), CMF_AIMDIRECTION, Random(-45,-60));
-		Stop;
-	}
-}
-Class RE_MagnumCasing_Spawner : Actor
-{
-	Default
-	{
-		Speed 25;
-		PROJECTILE;
-		+NOCLIP
-	}
-	States
-	{
-	Spawn:
-		TNT1 A 1 NoDelay A_SpawnProjectile("RE_MagnumCasing", 8, 12, Random(-70,-80), CMF_AIMDIRECTION, Random(-45,-60));
-		Stop;
-	}
-}
-Class RE_SMGCasing_Spawner : Actor
-{
-	Default
-	{
-		Speed 25;
-		PROJECTILE;
-		+NOCLIP
-	}
-	States
-	{
-	Spawn:
-		TNT1 A 1 NoDelay A_SpawnProjectile("RE_PistolCasing", 0, 0, Random(-85,-95), CMF_AIMDIRECTION, Random(-10,-10));
-		Stop;
-	}
-}
-Class RE_ShotgunCasing_Spawner : Actor
-{
-	Default
-	{
-		Speed 20;
-		PROJECTILE;
-		+NOCLIP
-	}
-	States
-	{
-	Spawn:
-		TNT1 A 1 NoDelay A_SpawnProjectile("RE_ShotgunCasing", -2, -23, FRandom(80,100), CMF_AIMDIRECTION, FRandom(15,25));
+		CAS3 A 0;
 		Stop;
 	}
 }
@@ -172,8 +143,27 @@ Class RE_ShotgunCasing : RE_CasingBase
 {
 	Default
 	{
-		XScale 0.5;
-		YScale 0.375;
+		XScale 0.375;
+		YScale 0.25;
 		//BounceSound "casings/shell";
+	}
+}
+Class RE_ShotgunCasing_B : RE_CasingBase
+{
+	Default
+	{
+		XScale 0.375;
+		YScale 0.25;
+		//BounceSound "casings/shell";
+	}
+}
+Class RE_GrenadeCasing : RE_CasingBase
+{
+	Default
+	{
+		XScale 0.5;
+		YScale 0.75;
+		//BounceSound "casings/bullet";
+		Translation "0:255=#[255,192,128]"; // Colourise
 	}
 }
