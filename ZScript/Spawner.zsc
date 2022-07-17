@@ -230,17 +230,71 @@ Class ShotgunDrop : Inventory
 				Return ResolveState("Drop.Weapon");	
 				Return ResolveState(Null);
 		}
-		TNT1 A 0
+		TNT1 A 0 A_SpawnItemEx("ShotgunReplacement");
+		Stop;
+	Drop.Weapon:
+		TNT1 A 0 A_SpawnItemEx("ShotgunSpawner");
+		Stop;
+	}
+}
+
+Class ShotgunReplacement : Inventory
+{
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
 		{
 			If(Wads.CheckNumForName("MAP01",0)!=-1)
+			{
+				A_SpawnItemEx("W870");
+			}
+			Else
 			{
 				If(Random(0,1)) A_SpawnItemEx("W870");
 				Else A_SpawnItemEx("LightningHawk");
 			}
 		}
 		Stop;
-	Drop.Weapon:
-		TNT1 A 0 A_SpawnItemEx("W870");
+	}
+}
+
+Class ShotgunSpawner : RandomSpawner
+{
+	mixin YoN;
+	Override Name ChooseSpawn()
+	{
+		If(YesOrNo(0.5)) Return 'W870';
+		Else Return 'None';
+	}
+}
+
+Class ChaingunDrop : Inventory
+{
+	Default	{}
+	States
+	{
+	Spawn:
+		TNT1 A 0 NoDelay
+		{
+			If(invoker.bTOSSED)
+				Return ResolveState("Drop.Weapon");	
+				Return ResolveState(Null);
+		}
+		TNT1 A 0 A_SpawnItemEx("MQ11");
 		Stop;
+	Drop.Weapon:
+		TNT1 A 0 A_SpawnItemEx("ChaingunSpawner");
+		Stop;
+	}
+}
+
+Class ChaingunSpawner : RandomSpawner
+{
+	mixin YoN;
+	Override Name ChooseSpawn()
+	{
+		If(YesOrNo(0.5)) Return 'MQ11';
+		Else Return 'None';
 	}
 }
