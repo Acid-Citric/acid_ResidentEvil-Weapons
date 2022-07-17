@@ -16,7 +16,7 @@ Class GreenHerb : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.GiveBody(25);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
