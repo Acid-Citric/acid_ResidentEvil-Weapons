@@ -95,7 +95,7 @@ Class ATRL : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-            While(CountInv("Rockets") > 0 && CountInv("WP7Ammo") < 4)
+            While(CountInv("Rockets") >= 0 && CountInv("WP7Ammo") < 4)
 			{
 				If(!CountInv("PowerInfiniteAmmo")) { A_TakeInventory("Rockets",1,TIF_NOTAKEINFINITE); }
 				A_GiveInventory("WP7Ammo",1);
@@ -154,12 +154,16 @@ Class ATRocket : Rocket
 			Else { For(int i = 0; i < 30; i++) { A_SpawnItemEx("BurningFlames", random(0, 45), random(0, 55), 0, 0, 0, 0, random(0, 360)); } }
 		}
 		TNT1 A 1 A_Explode(256,256,XF_HURTSOURCE);
-		TNT1 A 0 A_JumpIf(WaterLevel >= 2, 16);
-		ARX4 ABC 2 Bright A_SetScale(1.5);
-		#### DEF 2 Bright A_SetScale(1.55);
-		#### GHI 2 Bright A_SetScale(1.6);
-		#### JKL 2 Bright A_SetScale(1.65);
-		#### MNO 2 Bright A_SetScale(1.7);
+		TNT1 A 0 A_JumpIf(WaterLevel >= 2, 15);		
+		EXP1 A 2 BRIGHT
+		{
+			{ bNOGRAVITY = True; bSPRITEFLIP = Random(0,1); }
+			A_SetScale(1.0,1.0);
+			A_SetTranslucent(0.85,1);
+		}		 
+		#### BCDEFGHIJKL 2 BRIGHT;
+		#### M 2 BRIGHT A_SetTranslucent(0.55,1);
+		#### N 2 BRIGHT A_SetTranslucent(0.20,1);
 		TNT1 A 0;
 		Stop;
 	}
