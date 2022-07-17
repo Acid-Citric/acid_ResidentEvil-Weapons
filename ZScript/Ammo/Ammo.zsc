@@ -147,7 +147,7 @@ Class SubmachineGunAmmo : Ammo
 		Inventory.Amount 32;
 		Inventory.MaxAmount 250;
 		Ammo.BackpackMaxAmount 250;
-		Scale 1.2;
+		Scale 1.35;
 		+INVENTORY.IGNORESKILL
 	}
 	States
@@ -158,7 +158,17 @@ Class SubmachineGunAmmo : Ammo
 		Loop;
 	}
 }
-Class SubmachineGunAmmo_96 : SubmachineGunAmmo { Default { Inventory.Amount 96; }}
+Class SubmachineGunAmmo_50 : SubmachineGunAmmo
+{
+	Default { Inventory.Amount 50; Scale 0.75; }
+	States
+	{
+	Spawn:
+		AMM4 B 9;
+		#### # 1 Bright;
+		Loop;
+	}
+}
 
 Class GrenadeRounds : Ammo // The player will be able to load an entire stack of the same ammunition into the weapon, up to 255 rounds (resident evil wiki).
 {
