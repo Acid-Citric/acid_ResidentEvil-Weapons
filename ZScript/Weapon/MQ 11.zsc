@@ -91,7 +91,7 @@ Class MQ11 : REWeapon
 	ReloadLoop:
 		TNT1 A 0
 		{
-           	While(CountInv("SubmachineGunAmmo") > 0 && CountInv("WP4Ammo") < MAG_MAC11)
+           	While(CountInv("SubmachineGunAmmo") >= 0 && CountInv("WP4Ammo") < MAG_MAC11)
 			{
 				If(!CountInv("PowerInfiniteAmmo")) { A_TakeInventory("SubmachineGunAmmo", 1, TIF_NOTAKEINFINITE); }
 				A_GiveInventory("WP4Ammo", 1);
