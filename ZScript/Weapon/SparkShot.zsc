@@ -64,7 +64,7 @@ Class SparkShot : REWeapon
 
 	Reload:
 		TNT1 A 0 A_JumpIfInventory("WPAAmmo", MAG_SPARK, "Ready");
-		TNT1 A 0 A_JumpIf(CountInv("SparkShotRound") > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork");
+		TNT1 A 0 A_JumpIf(CountInv("SparkShotRound") >= 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork");
 		TNT1 A 0;
 		Goto Empty;
 	ReloadWork:
