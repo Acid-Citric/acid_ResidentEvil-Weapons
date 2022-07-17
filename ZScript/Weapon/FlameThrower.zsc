@@ -83,7 +83,7 @@ Class ChemicalFlameThrower : REWeapon // "Kill it with fire before it lays eggs!
 		#### B 15 A_StartSound("weapons/sshotl",CHAN_AUTO);
 		#### B 0
 		{
-			While(CountInv("Fuel") > 0 && CountInv("WP6Ammo") < MAG_FLAME)	
+			While(CountInv("Fuel") >= 0 && CountInv("WP6Ammo") < MAG_FLAME)	
 			{
 				If(!CountInv("PowerInfiniteAmmo")) { A_TakeInventory("Fuel", 1, TIF_NOTAKEINFINITE); }
 				A_GiveInventory("WP6Ammo", 1);
