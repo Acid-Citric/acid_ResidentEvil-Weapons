@@ -55,6 +55,11 @@ mixin Class RE_AmmoPickupMessage
 
 Class BurningFlames : Actor
 {
+	static const String noSpawn[] =
+	{
+		"FWATER1", "FWATER2", "FWATER3", "FWATER4",
+		"BLOOD1", "BLOOD2", "BLOOD3"
+	};
 	Default
 	{
 		DamageType "Fire";
@@ -63,6 +68,21 @@ Class BurningFlames : Actor
 		RenderStyle "Add";
 		Alpha 0.7;
 		Scale 0.1;
+	}
+	override void BeginPlay()
+	{
+		super.BeginPlay();
+		
+		TextureID offLimits;
+		for (int i = 0; i < noSpawn.Size(); ++i)
+		{
+			offLimits = TexMan.CheckForTexture(noSpawn[i], TexMan.Type_Flat);
+			if (floorpic == offLimits)
+			{
+				Destroy();
+				return;
+			}
+		}
 	}
 	int flametimer;
 	States
