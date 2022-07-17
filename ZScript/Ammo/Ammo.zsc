@@ -143,7 +143,7 @@ Class SubmachineGunAmmo : Ammo
 	{
 		Tag "M.G. Bullet";
 		Inventory.PickupSound "Item/Ammo";
-		Inventory.Icon "AMM4A0";
+		Inventory.Icon "AMM4B0";
 		Inventory.Amount 32;
 		Inventory.MaxAmount 250;
 		Ammo.BackpackMaxAmount 250;
