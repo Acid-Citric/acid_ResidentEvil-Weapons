@@ -17,7 +17,7 @@ Class FirstAidSpray : Ammo
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.GiveBody(-100);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
@@ -72,9 +72,9 @@ Class MixedHerb_GG : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
-			P.GiveBody(50, P.MaxHealth);
+			P.GiveBody(50);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			Self.Amount--;
 		}
@@ -109,7 +109,7 @@ Class MixedHerb_GGG : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.GiveBody(-100);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
@@ -146,7 +146,7 @@ Class MixedHerb_GB : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
 			If(blood)
@@ -154,7 +154,7 @@ Class MixedHerb_GB : Inventory
 				blood.BLEEDS = false;
 				blood.bleedbuildup = 0;
 			}
-			P.GiveBody(25, PlayerPawn(Owner).MaxHealth);
+			P.GiveBody(25);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			P.A_GiveInventory("PowerBlueHerb");
 			Self.Amount--;
@@ -190,7 +190,7 @@ Class MixedHerb_GGB : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
 			If(blood)
@@ -198,7 +198,7 @@ Class MixedHerb_GGB : Inventory
 				blood.BLEEDS = false;
 				blood.bleedbuildup = 0;
 			}
-			P.GiveBody(50, PlayerPawn(Owner).MaxHealth);
+			P.GiveBody(50);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			P.A_GiveInventory("PowerBlueHerb");
 			Self.Amount--;
@@ -234,7 +234,7 @@ Class MixedHerb_GR : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.GiveBody(-100);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
@@ -271,7 +271,7 @@ Class MixedHerb_GRB : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
 			If(blood)
@@ -324,10 +324,10 @@ Class MixedHerb_GY : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < 150 && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.BonusHealth = Clamp(P.BonusHealth + MaxHPBonus, 0, MaxHPBonusLimit);
-			P.GiveBody(25, PlayerPawn(Owner).MaxHealth);
+			P.GiveBody(25);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			Self.Amount--;
 		}
@@ -370,10 +370,10 @@ Class MixedHerb_GRY : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < 150 && Self.Amount > 0)
+		If(P && P.Health < P.GetMaxHealth(true) && Self.Amount > 0)
 		{
 			P.BonusHealth = Clamp(P.BonusHealth + MaxHPBonus, 0, MaxHPBonusLimit);
-			P.GiveBody(100, PlayerPawn(Owner).MaxHealth);
+			P.GiveBody(100);
 			Owner.A_StartSound("misc/item_use",CHAN_ITEM);
 			Self.Amount--;
 		}
@@ -407,7 +407,7 @@ Class MixedHerb_RB : Inventory
 	override bool Use(bool pickup)
 	{
 		Let P = PlayerPawn(Owner);
-		If(P && P.Health < P.MaxHealth && Self.Amount > 0)
+		If(P && Self.Amount > 0)
 		{
 			Let blood = PlayerBleederItem(FindInventory("PlayerBleederItem"));
 			If(blood)
