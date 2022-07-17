@@ -168,7 +168,7 @@ Class AltarWeapon : Weapon
 		AddItem("FreezeRounds_12", "GunPowder_CC|GrenadeRounds", "1|6");
 		AddItem("FreezeRounds_18", "GunPowder_CCC|GrenadeRounds", "1|6");
 		AddItem("MagnumAmmo_24", "GunPowder_CCC", "1"); // Magnum Rounds
-		AddItem("SubmachineGunAmmo_96", "GunPowder_ABC", "1"); // SMG Rounds
+		AddItem("SubmachineGunAmmo_50", "GunPowder_ABC", "1"); // SMG Rounds
 		AddItem("GasRounds", "GunPowder_ABC|GrenadeRounds", "1|6"); // B.O.W Gas Rounds
 
 		Super.PostBeginPlay();
