@@ -19,7 +19,22 @@ Class HandgunAmmo : Ammo
 		Loop;
 	}
 }
-Class HandgunAmmo_15 : HandgunAmmo { Default { Inventory.Amount 15; }}
+Class HandgunAmmo_15 : HandgunAmmo
+{
+	Default
+	{
+		Inventory.Icon "AMM1C0";
+		Inventory.Amount 15;
+		Scale 0.85;
+	}
+	States
+	{
+	Spawn:
+		AMM1 C 9;
+		#### # 1 Bright;
+		Loop;
+	}
+}
 Class HandgunAmmo_35 : HandgunAmmo { Default { Inventory.Amount 35; }}
 Class HandgunAmmo_55 : HandgunAmmo { Default { Inventory.Amount 55; }}
 Class HandgunAmmo_60 : HandgunAmmo { Default { Inventory.Amount 60; }}
