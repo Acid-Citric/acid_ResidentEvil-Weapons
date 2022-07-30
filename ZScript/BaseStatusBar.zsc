@@ -3,21 +3,18 @@ class RE2StatusBar : BaseStatusBar
 	HUDFont mHUDFont;
 	HUDFont mIndexFont;
 	HUDFont mAmountFont;
-
 	HUDFont mConFont;
 	HUDFont mBigFont;
 	HUDFont mSmallFont;
 	HUDFont mNewSmallFont;
 	HUDFont mStatusFont;
-	
 	HUDFont mRE_StatusFont;
-
 	InventoryBarState diparms;
+	
 
 	override void Init()
 	{
 		Super.Init();
-
 		SetSize(0, 320, 200);
 
 		// Create the font used for the fullscreen HUD
@@ -26,15 +23,12 @@ class RE2StatusBar : BaseStatusBar
 		fnt = "INDEXFONT_DOOM";
 		mIndexFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
 		mAmountFont = HUDFont.Create("INDEXFONT");
-
 		mConFont = HUDFont.Create("CONFONT");
 		mBigFont = HUDFont.Create("BIGFONT");
 		mSmallFont = HUDFont.Create("SMALLFONT",1,False);
 		mNewSmallFont = HUDFont.Create("NEWSMALLFONT");
 		mStatusFont = HUDFont.Create("BIGFONT");
-
 		mRE_StatusFont = HUDFont.Create("RE_StatusFont");
-		
 		diparms = InventoryBarState.Create();
 	}
 
@@ -42,28 +36,27 @@ class RE2StatusBar : BaseStatusBar
 	{
 		Super.Draw (state, TicFrac);
 
-		BeginStatusBar(True); // Forcescaled
-		if(!automapactive)
-        {
-			if (state == HUD_StatusBar)
-				{ DrawFullScreenStuff(); }
-			else if (state == HUD_Fullscreen)
-				{ DrawFullScreenStuff(); }
-		}
+		BeginHUD();
+		if(!automapactive) { if (state == HUD_StatusBar || state == HUD_Fullscreen) { DrawFullScreenStuff(); } }
 	}
 
-	protected void DrawFullScreenStuff()
+	protected void DrawFullScreenStuff ()
 	{
-		DrawReSurvivorHud();
-		DrawKriegsland2Inventory();	
-		DrawKeyBar(3, 10, 188, 2);
+		Bool OverHealth = CPlayer.Mo.CountInv("PowerInvulnerable");
+		Bool Fine = CPlayer.Health > 60;
+		Bool Caution = CPlayer.Health > 30;
+		Bool Danger = CPlayer.Health > 0;
+		//Bool Poison = ;
+
+		DrawBar("HUD_ECG_1", "HUD_ECG", GetArmorAmount(), 100, (10, -32), 0, SHADER_HORZ, DI_ITEM_OFFSETS);
+		DrawImage(OverHealth ? "RELINE50" : Fine ? "RELINE10" : Caution ? "RELINE20" : Danger ? "RELINE30" : "RELINE00", (12, -30), DI_ITEM_OFFSETS);
 
 		Inventory AmmoType1, AmmoType2;
 		[AmmoType1, AmmoType2] = GetCurrentAmmo();
 
-		Int Ammo1_X = 358; // X = max - 10 / Y = max - 20
-		Int Ammo3_X = 356;
-		Int Ammo5_X = 350;
+		Int Ammo1_X = -13; // X = max - 10 / Y = max - 20
+		Int Ammo3_X = -15;
+		Int Ammo5_X = -21;
 
 		Let Ammo_1a = CPlayer.mo.FindInventory("HandgunAmmo");
 		Let Ammo_1b = CPlayer.mo.FindInventory("E_HandgunAmmo");
@@ -90,8 +83,7 @@ class RE2StatusBar : BaseStatusBar
   		{
 			Bool infAmmo = (sv_infiniteammo || CPlayer.mo.FindInventory('PowerInfiniteAmmo'));
 
-			If(CheckWeaponSelected('CombatKnife')) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
-
+			If(CheckWeaponSelected('CombatKnife')) { DrawImage("REFNUMX", (-21, -18), DI_ITEM_OFFSETS); }
 			If(CheckWeaponSelected('Matilda'))
 			{
 				Let ptr = Matilda(CPlayer.mo.FindInventory('Matilda'));
@@ -99,28 +91,27 @@ class RE2StatusBar : BaseStatusBar
 				{
 					For(int i = CPlayer.Mo.CountInv("WP1AmmoB"); i > 0; i--)
 					{
-						DrawImage("AMMO_1", (Ammo1_X, 180), DI_ITEM_OFFSETS);
-						Ammo1_X = Ammo1_X - 4;
-						// int AmmoMag = GetAmount("HandgunAmmo") / AmmoType1.MaxAmount;
+						DrawImage("AMMO_1", (Ammo1_X, -29), DI_ITEM_OFFSETS);
+						Ammo1_X = Ammo1_X - 4; // int AmmoMag = GetAmount("HandgunAmmo") / AmmoType1.MaxAmount;
 					}
 				}
 				Else
 				{
 					For(int i = CPlayer.Mo.CountInv("WP1Ammo"); i > 0; i--)
 					{
-						DrawImage("AMMO_1", (Ammo1_X, 180), DI_ITEM_OFFSETS);
+						DrawImage("AMMO_1", (Ammo1_X, -29), DI_ITEM_OFFSETS);
 						Ammo1_X = Ammo1_X - 4;
 					}
 				}
-				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
-				Else If(ptr.altammo) { DrawString(mRE_StatusFont, FormatNumber(Ammo_1b.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_1a.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+				If(infAmmo) { DrawImage("REFNUMX", (-21, -18), DI_ITEM_OFFSETS); }
+				Else If(ptr.altammo) { DrawString(mRE_StatusFont, FormatNumber(Ammo_1b.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_1a.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
 			}
 			If(CheckWeaponSelected('LightningHawk'))
 			{
-				for(int i = CPlayer.Mo.CountInv("WP2Ammo"); i > 0; i--)
+				For(int i = CPlayer.Mo.CountInv("WP2Ammo"); i > 0; i--)
 				{
-					DrawImage("AMMO_2", (Ammo1_X, 179), DI_ITEM_OFFSETS);
+					DrawImage("AMMO_2", (Ammo1_X, -30), DI_ITEM_OFFSETS);
 					Ammo1_X = Ammo1_X - 4;
 				}
 			}
@@ -131,7 +122,7 @@ class RE2StatusBar : BaseStatusBar
 				{
 					For(int i = CPlayer.Mo.CountInv("WP3AmmoB"); i > 0; i--)
 					{
-						DrawImage("AMMO_3B", (Ammo3_X, 175), DI_ITEM_OFFSETS);
+						DrawImage("AMMO_3B", (Ammo3_X, -34), DI_ITEM_OFFSETS);
 						Ammo3_X = Ammo3_X - 6;
 					}
 				}
@@ -139,19 +130,19 @@ class RE2StatusBar : BaseStatusBar
 				{
 					For(int i = CPlayer.Mo.CountInv("WP3Ammo"); i > 0; i--)
 					{
-						DrawImage("AMMO_3A", (Ammo3_X, 175), DI_ITEM_OFFSETS);
+						DrawImage("AMMO_3A", (Ammo3_X, -34), DI_ITEM_OFFSETS);
 						Ammo3_X = Ammo3_X - 6;
 					}
 				}
-				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
-				Else If(ptr.altammo) { DrawString(mRE_StatusFont, FormatNumber(Ammo_3b.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_3a.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+				If(infAmmo) { DrawImage("REFNUMX", (-21, -18), DI_ITEM_OFFSETS); }
+				Else If(ptr.altammo) { DrawString(mRE_StatusFont, FormatNumber(Ammo_3b.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_3a.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
 			}
 			If(CheckWeaponSelected('MQ11'))// { DrawAmmoBar(16, Ammo1_X, 182, 2); }
 			{
 				for(int i = CPlayer.Mo.CountInv("WP4Ammo"); i > 0; i--)
 				{
-					DrawImage("AMMO_4", (Ammo1_X, 180), DI_ITEM_OFFSETS);
+					DrawImage("AMMO_4", (Ammo1_X, -29), DI_ITEM_OFFSETS);
 					Ammo1_X = Ammo1_X - 4;
 				}
 			}
@@ -160,157 +151,79 @@ class RE2StatusBar : BaseStatusBar
 				Let ptr = GM79(CPlayer.mo.FindInventory('GM79'));
 
 				If(CPlayer.ReadyWeapon.AmmoType2 is "GrenadeRounds" && CPlayer.Mo.CountInv("WP5Ammo"))
-					{ DrawImage("AMMO_5A", (Ammo5_X - 100, 170), DI_ITEM_OFFSETS); }
-
+					{ DrawImage("AMMO_5A", (Ammo5_X - 80, -38), DI_ITEM_OFFSETS); }
 				If(CPlayer.ReadyWeapon.AmmoType2 is "FlameRounds" && CPlayer.Mo.CountInv("WP5AmmoB"))
-					{ DrawImage("AMMO_5B", (Ammo5_X - 80, 170), DI_ITEM_OFFSETS); }
-
+					{ DrawImage("AMMO_5B", (Ammo5_X - 60, -38), DI_ITEM_OFFSETS); }
 				If(CPlayer.ReadyWeapon.AmmoType2 is "AcidRounds" && CPlayer.Mo.CountInv("WP5AmmoC"))
-					{ DrawImage("AMMO_5C", (Ammo5_X - 60, 170), DI_ITEM_OFFSETS); }
-
+					{ DrawImage("AMMO_5C", (Ammo5_X - 40, -38), DI_ITEM_OFFSETS); }
 				If(CPlayer.ReadyWeapon.AmmoType2 is "FreezeRounds" && CPlayer.Mo.CountInv("WP5AmmoD"))
-					{ DrawImage("AMMO_5D", (Ammo5_X - 40, 170), DI_ITEM_OFFSETS); }
-
+					{ DrawImage("AMMO_5D", (Ammo5_X - 20, -38), DI_ITEM_OFFSETS); }
 				//If(CPlayer.ReadyWeapon.AmmoType1 is "MineRounds" && Grenade_E && !ptr.noammo || CPlayer.ReadyWeapon.AmmoType1 is "MineRounds" && infAmmo && !ptr.noammo)
-					//{ DrawImage("AMMO_5E", (Ammo5_X - 20, 170), DI_ITEM_OFFSETS); }
-
+					//{ DrawImage("AMMO_5E", (Ammo5_X - 20, -38), DI_ITEM_OFFSETS); }
 				If(CPlayer.ReadyWeapon.AmmoType2 is "GasRounds" && CPlayer.Mo.CountInv("WP5AmmoE"))
-					{ DrawImage("AMMO_5F", (Ammo5_X - 20, 170), DI_ITEM_OFFSETS); }
+					{ DrawImage("AMMO_5F", (Ammo5_X, -38), DI_ITEM_OFFSETS); }
 
-				If(infAmmo) { DrawImage("REFNUMX", (250, 190), DI_ITEM_OFFSETS); }
-					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (260, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
-				If(infAmmo) { DrawImage("REFNUMX", (270, 190), DI_ITEM_OFFSETS); }
-					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (280, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
-				If(infAmmo) { DrawImage("REFNUMX", (290, 190), DI_ITEM_OFFSETS); }
-					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (300, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
-				If(infAmmo) { DrawImage("REFNUMX", (310, 190), DI_ITEM_OFFSETS); }
-					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (320, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
+				If(infAmmo) { DrawImage("REFNUMX", (-101, -18), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5a.Amount, 3), (-91, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_WHITE); }
+				If(infAmmo) { DrawImage("REFNUMX", (-81, -18), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5b.Amount, 3), (-71, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_RED); }
+				If(infAmmo) { DrawImage("REFNUMX", (-61, -18), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5c.Amount, 3), (-51, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_YELLOW); }
+				If(infAmmo) { DrawImage("REFNUMX", (-41, -18), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5d.Amount, 3), (-31, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_LIGHTBLUE); }
 				//If(infAmmo) { DrawImage("REFNUMX", (330, 190), DI_ITEM_OFFSETS); }
 					//Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5e.Amount, 3), (340, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_BLACK); }
-				If(infAmmo) { DrawImage("REFNUMX", (330, 190), DI_ITEM_OFFSETS); }
-					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5f.Amount, 3), (340, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_GREEN); }
+				If(infAmmo) { DrawImage("REFNUMX", (-21, -18), DI_ITEM_OFFSETS); }
+					Else { DrawString(mRE_StatusFont, FormatNumber(Ammo_5f.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_GREEN); }
 			}
 			If(CheckWeaponSelected('ChemicalFlameThrower'))
-			{
-				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WP6Ammo") / 4), (371, 181), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
-			}
+				{ DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WP6Ammo") / 4), (-1, -28), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
 			If(CheckWeaponSelected('SparkShot'))
-			{
-				DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WPAAmmo") * 5), (371, 181), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED);
-			}
+				{ DrawString(mRE_StatusFont, String.Format("%d%%", CPlayer.Mo.CountInv("WPAAmmo") * 5), (-1, -28), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
 			If(CheckWeaponSelected('ATRL'))
 			{
 				int amt = CPlayer.Mo.CountInv("WP7Ammo");
 				String im = "AMMO_8_" .. amt;
 
-				DrawImage(/*infAmmo ? "AMMO_8_4" :*/ im, (316, 167), DI_ITEM_OFFSETS);
+				DrawImage(/*infAmmo ? "AMMO_8_4" :*/ im, (-55, -42), DI_ITEM_OFFSETS);
 
 				//DrawAmmoBar(2, Ammo1_X, 175, 2);
 			}
 
 			If(CheckWeaponSelected('LightningHawk') || CheckWeaponSelected('MQ11') || CheckWeaponSelected('ChemicalFlameThrower') || CheckWeaponSelected('SparkShot') || CheckWeaponSelected('ATRL'))
 			{
-				If(infAmmo) { DrawImage("REFNUMX", (350, 190), DI_ITEM_OFFSETS); }
-				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (360, 190), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
+				If(infAmmo) { DrawImage("REFNUMX", (-21, -18), DI_ITEM_OFFSETS); }
+				Else { DrawString(mRE_StatusFont, FormatNumber(AmmoType2.Amount, 3), (-11, -18), DI_TEXT_ALIGN_RIGHT, Font.CR_UNTRANSLATED); }
 			}
 		}
-	}
+
+		If(!isInventoryBarVisible() && !level.NoInventoryBar && CPlayer.mo.InvSel != null)
+		{
+			DrawInventoryIcon(CPlayer.mo.InvSel, (124, -3), DI_DIMDEPLETED);
+			If(CPlayer.mo.InvSel.Amount > 1) { DrawString(mAmountFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (139, -7), DI_TEXT_ALIGN_RIGHT, Font.CR_GOLD); }
+		}
+		If(isInventoryBarVisible()) { DrawInventoryBar(diparms, (0, 0), 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW); }
 	
-	void DrawReSurvivorHud()
-	{
-		Bool OverHealth = CPlayer.Mo.CountInv("PowerInvulnerable");
-		Bool Fine = CPlayer.Health > 60;
-		Bool Caution = CPlayer.Health > 30;
-		Bool Danger = CPlayer.Health > 0;
-		//Bool Poison = ;
-
-		DrawBar("HUD_ECG_1", "HUD_ECG", GetArmorAmount(), 100, (-33, 173), 0, SHADER_HORZ, DI_ITEM_OFFSETS);
-		DrawImage(OverHealth ? "RELINE50" : Fine ? "RELINE10" : Caution ? "RELINE20" : Danger ? "RELINE30" : "RELINE00", (-31, 175), DI_ITEM_OFFSETS);
-
-		//DrawString(mRE_StatusFont, String.Format("%d%%",CPlayer.Health, 3), (330, 185), DI_TEXT_ALIGN_RIGHT, FONT.CR_UNTRANSLATED);
+		//DrawBarKeys()
+		bool locks[6];
+		String image;
+		for(int i = 0; i < 6; i++) locks[i] = CPlayer.mo.CheckKeys(i + 1, false, true);
+		// key 1 Blue
+		if (locks[1] && locks[4]) image = "STKEYS6";
+		else if (locks[1]) image = "STKEYS0";
+		else if (locks[4]) image = "STKEYS3";
+		DrawImage(image, (15, -40), DI_ITEM_OFFSETS);
+		// key 2 Yellow
+		if (locks[2] && locks[5]) image = "STKEYS7";
+		else if (locks[2]) image = "STKEYS1";
+		else if (locks[5]) image = "STKEYS4";
+		else image = "";
+		DrawImage(image, (25, -40), DI_ITEM_OFFSETS);
+		// key 3 Red
+		if (locks[0] && locks[3]) image = "STKEYS8";
+		else if (locks[0]) image = "STKEYS2";
+		else if (locks[3]) image = "STKEYS5";
+		else image = "";
+		DrawImage(image, (35, -40), DI_ITEM_OFFSETS);
 	}
-
-	void DrawKriegsland2Inventory()
-	{
-		If(CPlayer.mo.InvSel != null && !Level.NoInventoryBar)
-		{
-			DrawInventoryIcon(CPlayer.mo.InvSel, (50, 197));
-			If(CPlayer.mo.InvSel.Amount > 1)
-			{
-				DrawString(mAmountFont, FormatNumber(CPlayer.mo.InvSel.Amount), (50+15, 197-mIndexFont.mFont.GetHeight()), DI_TEXT_ALIGN_RIGHT, Font.CR_GOLD);
-			}
-		}
-		If(isInventoryBarVisible())
-		{
-			DrawInventoryBar(diparms, (260, 30), 7, DI_SCREEN_RIGHT_TOP, HX_SHADOW);
-		}
-	}
-
-    void DrawAmmoBar(int rowsize, int x, int y, int rowspacing)
-    {
-        Vector2 ammopos = (x, y);
-        int rowc = 0;
-        double roww = 0;
-
-		If(CheckWeaponSelected('MQ11'))
-		{
-			for(int i = CPlayer.Mo.CountInv("WP4Ammo"); i > 0; i--)
-			{
-				DrawImage("AMMO_4", ammopos, DI_ITEM_OFFSETS);
-				ammopos.X -= 8 - rowspacing;
-				roww = max(roww, 5);
-				if (++rowc == rowsize)
-				{
-					ammopos.X = x;
-					ammopos.Y += roww - 18; // - is up / + is down
-					roww = 0;
-					rowc = 0;
-				}
-			}
-		}
-
-		If(CheckWeaponSelected('ATRL'))
-		{		
-			for(int i = CPlayer.Mo.CountInv("WP7Ammo"); i > 0; i--)
-			{
-				DrawImage("AMMO_8", ammopos, DI_ITEM_OFFSETS, 1.0, (-1, -1), (0.6, 0.6));
-				ammopos.X += 60 + rowspacing;
-				roww = max(roww, 5);
-				if (++rowc == rowsize)
-				{
-					ammopos.X = x;
-					ammopos.Y -= roww - 16;
-					roww = 0;
-					rowc = 0;
-				}
-			}
-		}
-    }
-
-
-
-	void DrawKeyBar(int rowsize, int x, int y, int rowspacing)
-	{
-        Vector2 keypos = (x, y);
-        int rowc = 0;
-        double roww = 0;
-
-        for(let i = CPlayer.mo.Inv; i != null; i = i.Inv)
-        {
-            if (i is "Key" && i.Icon.IsValid())
-            {
-                DrawTexture(i.Icon, keypos, DI_ITEM_OFFSETS | DI_SCREEN_RIGHT);
-                Vector2 size = TexMan.GetScaledSize(i.Icon);
-                keypos.X += size.X + rowspacing;
-                roww = max(roww, size.Y);
-                if (++rowc == rowsize)
-                {
-                    keypos.X = x;
-                    keypos.Y -= roww + 2;
-                    roww = 0;
-                    rowc = 0;
-                }
-            }
-        }
-    }
 }
