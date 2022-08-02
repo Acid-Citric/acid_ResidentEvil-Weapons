@@ -29,6 +29,24 @@ Class Matilda : REWeapon
 		}
 			Return Super.TryPickup(toucher);
 	}
+	Override Bool HandlePickup(Inventory i)
+	{
+		//save ammo
+		let old_ammo2 = ammo2;
+		let old_ammotype2 = ammotype2;
+
+		//set ammo to pickup ammo type
+		ammo2 = Ammo(owner.FindInventory("HandgunAmmo"));
+		ammotype2 = "HandgunAmmo";
+
+		bool ok = super.HandlePickup(i);
+
+		//restore ammo
+		ammo2 = old_ammo2;
+		ammotype2 = old_ammotype2;
+
+		return ok;
+	}
 	Override Void PostBeginPlay()
 	{
 		flashlight = False;
