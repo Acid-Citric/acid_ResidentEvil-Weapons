@@ -45,6 +45,7 @@ Class GM79 : REWeapon
 		return ok;
 	}
 	Bool Flame, Acid, Freeze, Gas, Empty;
+	Int spareammo;
 	States
 	{
 	Spawn:
@@ -77,10 +78,8 @@ Class GM79 : REWeapon
 		TNT1 A 0;
 		Goto Ready;
 	ReloadWork:
-		//TNT1 A 0 A_JumpIf(Invoker.Sticky, "ReloadMine");
 		WP5R A 3;
 		#### B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		//#### X 3;
 		#### CDEFGHI 3;
 		#### J 12 { If(Invoker.Empty == True) A_FireProjectile("RE_GrenadeCasing",3,False,5); }
 		#### KLMN 3;
@@ -93,32 +92,8 @@ Class GM79 : REWeapon
 		}
 		#### PQ 3;
 		#### R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
-		//#### Y 3;
 		#### S 3;
 		Goto Ready;
-	SwitchAmmo:
-		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == 0, "Reload");
-		WP5R A 3;
-		#### B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		#### CDE 3;
-		#### N 3; // no ammo
-		#### MLK 3;
-		#### J 12;
-		#### KLMN 3;
-		#### O 3 A_StartSound("weapons/sshotl", CHAN_WEAPON); // load
-		#### PQ 3;
-		#### R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
-		#### S 3;
-		Goto Ready;
-	/*ReloadMine:
-		WP5G A 3;
-		WP5R S 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
-		#### ZJKLMN 3;
-		#### O 3 { A_StartSound("weapons/sshotl", CHAN_WEAPON); Invoker.noammo = False; }
-		#### PQ 3;
-		#### R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
-		#### YS 3;
-		Goto Ready;*/
 
 	Empty:
 		WP5G A 0 A_StartSound("Weapons/M79/Dry", CHAN_WEAPON);
@@ -126,97 +101,83 @@ Class GM79 : REWeapon
 		Goto Ready;
 
 	User1:
-		#### A 0 A_JumpIf(CountInv("PowerInfiniteAmmo"), 2);
-		#### A 0 A_JumpIf(!CountInv("FlameRounds"), "Empty");
-		#### # 2
+		#### # 1
 		{
-			A_WeaponOffset(1,33,WOF_INTERPOLATE);
-
-			If(Invoker.Flame == False)
-			{
-				SetAmmoType1(True, "WP5AmmoB");
-				SetAmmoType2(True, "FlameRounds");
-				Invoker.Flame = True; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[Red]Incendiary rounds selected\c-");
-			}
-			Else If(Invoker.Flame == True)
-			{
-				SetAmmoType1(True, "WP5Ammo");
-				SetAmmoType2(True, "GrenadeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[White]Grenade rounds selected\c-");
-			}
+			If(Invoker.Flame == True) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False; }
+			Else If(Invoker.Flame == False) { Invoker.Flame = True; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False; }
 		}
-		Goto SwitchAmmo;
+		#### # 0 A_JumpIf((CountInv("GrenadeRounds") > 0 && CountInv("FlameRounds") > 0) || CountInv("PowerInfiniteAmmo"), "SwitchAmmo");
+		Goto Empty;
 	User2:
-		#### A 0 A_JumpIf(CountInv("PowerInfiniteAmmo"), 2);
-		#### A 0 A_JumpIf(!CountInv("AcidRounds"), "Empty");
-		#### # 2
+		#### # 1
 		{
-			A_WeaponOffset(1,33,WOF_INTERPOLATE);
-
-			If(Invoker.Acid == False)
-			{
-				SetAmmoType1(True, "WP5AmmoC");
-				SetAmmoType2(True, "AcidRounds");
-				Invoker.Flame = False; Invoker.Acid = True; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[Yellow]Acid rounds selected\c-");
-			}
-			Else If(Invoker.Acid == True)
-			{
-				SetAmmoType1(True, "WP5Ammo");
-				SetAmmoType2(True, "GrenadeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[White]Grenade rounds selected\c-");
-			}
+			If(Invoker.Acid == True) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False; }
+			Else If(Invoker.Acid == False) { Invoker.Flame = False; Invoker.Acid = True; Invoker.Freeze = False; Invoker.Gas = False; }
 		}
-		Goto SwitchAmmo;
+		#### # 0 A_JumpIf((CountInv("GrenadeRounds") > 0 && CountInv("AcidRounds") > 0) || CountInv("PowerInfiniteAmmo"), "SwitchAmmo");
+		Goto Empty;
 	User3:
-		#### A 0 A_JumpIf(CountInv("PowerInfiniteAmmo"), 2);
-		#### A 0 A_JumpIf(!CountInv("FreezeRounds"), "Empty");
-		#### # 2
+		#### # 1
 		{
-			A_WeaponOffset(1,33,WOF_INTERPOLATE);
-
-			If(Invoker.Freeze == False)
-			{
-				SetAmmoType1(True, "WP5AmmoD");
-				SetAmmoType2(True, "FreezeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = True; Invoker.Gas = False;
-				A_Log("\c[Blue]Freeze rounds selected\c-");
-			}
-			Else If(Invoker.Freeze == True)
-			{
-				SetAmmoType1(True, "WP5Ammo");
-				SetAmmoType2(True, "GrenadeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[White]Grenade rounds selected\c-");
-			}
+			If(Invoker.Freeze == True) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False; }
+			Else If(Invoker.Freeze == False) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = True; Invoker.Gas = False; }
 		}
-		Goto SwitchAmmo;
+		#### # 0 A_JumpIf((CountInv("GrenadeRounds") > 0 && CountInv("FreezeRounds") > 0) || CountInv("PowerInfiniteAmmo"), "SwitchAmmo");
+		Goto Empty;
 	User4:
-		#### A 0 A_JumpIf(CountInv("PowerInfiniteAmmo"), 2);
-		#### A 0 A_JumpIf(!CountInv("GasRounds"), "Empty"); // MineRounds
-		#### # 2
+		#### # 1
 		{
-			A_WeaponOffset(1,33,WOF_INTERPOLATE);
+			If(Invoker.Gas == True) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False; }
+			Else If(Invoker.Gas == False) { Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = True; }
+		}
+		#### # 0 A_JumpIf((CountInv("GrenadeRounds") > 0 && CountInv("GasRounds") > 0) || CountInv("PowerInfiniteAmmo"), "SwitchAmmo"); // MineRounds
+		Goto Empty;
 
-			If(Invoker.Gas == False)
+	SwitchAmmo:
+		WP5R A 3;
+		#### B 3 A_StartSound("Weapons/M79/Open", CHAN_WEAPON);
+		#### CDE 3;
+		#### N 3; // no ammo
+		#### MLK 3;
+		#### J 12
+		{
+			int final_ammo = invoker.ammo2.amount + invoker.ammo1.amount;
+
+			if(final_ammo > invoker.ammo2.maxamount)
 			{
-				SetAmmoType1(True, "WP5AmmoE");
-				SetAmmoType2(True, "GasRounds"); // MineRounds
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = True;
-				A_Log("\c[Green]B.O.W Gas rounds selected\c-");
+				int leftover = final_ammo - invoker.ammo2.maxamount;
+
+				invoker.ammo2.amount = invoker.ammo2.maxamount;
+				invoker.ammo1.amount = 0;
+
+				A_DropItem(invoker.ammotype2, leftover);
 			}
-			Else If(Invoker.Gas == True)
+			else
 			{
-				SetAmmoType1(True, "WP5Ammo");
-				SetAmmoType2(True, "GrenadeRounds");
-				Invoker.Flame = False; Invoker.Acid = False; Invoker.Freeze = False; Invoker.Gas = False;
-				A_Log("\c[White]Grenade rounds selected\c-");
+				invoker.ammo2.amount = final_ammo;
+				invoker.ammo1.amount = 0;
 			}
 		}
-		Goto SwitchAmmo;
+		#### K 3
+		{
+			If(Invoker.Flame == True) { SetAmmoType1(True, "WP5AmmoB"); SetAmmoType2(True, "FlameRounds"); A_Log("\c[Red]Incendiary rounds selected\c-"); }
+			Else If(Invoker.Acid == True) { SetAmmoType1(True, "WP5AmmoC"); SetAmmoType2(True, "AcidRounds"); A_Log("\c[Yellow]Acid rounds selected\c-"); }
+			Else If(Invoker.Freeze == True) { SetAmmoType1(True, "WP5AmmoD"); SetAmmoType2(True, "FreezeRounds"); A_Log("\c[Blue]Freeze rounds selected\c-"); }
+			Else If(Invoker.Gas == True) { SetAmmoType1(True, "WP5AmmoE"); SetAmmoType2(True, "GasRounds"); A_Log("\c[Green]Gas rounds selected\c-"); }
+			Else If(Invoker.Flame == False || Invoker.Acid == False || Invoker.Freeze == False || Invoker.Gas == False)
+			{ SetAmmoType1(True, "WP5Ammo"); SetAmmoType2(True, "GrenadeRounds"); A_Log("\c[White]Grenade rounds selected\c-"); }
+		}
+		#### LMN 3;
+		#### O 3
+		{
+			A_StartSound("weapons/sshotl", CHAN_WEAPON);
+			If(!CountInv("PowerInfiniteAmmo")) { TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); }
+			GiveInventory(Invoker.ammo1.GetClass(), 1);
+		}
+		#### PQ 3;
+		#### R 3 A_StartSound("Weapons/M79/Close", CHAN_WEAPON);
+		#### S 3;
+		Goto Ready;
 	}
 
 	Action Void FireRE2GL()
