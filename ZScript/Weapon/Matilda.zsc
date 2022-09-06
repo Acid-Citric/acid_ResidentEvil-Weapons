@@ -67,7 +67,7 @@ Class Matilda : REWeapon
 		WP1G A 0;
 		#### # 1
 		{
-			A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
+			A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWUSER1);
 			
 			If(Invoker.flashlight == False) { A_ClearOverlays(3,3); }
 			Else { A_Overlay(3,"FlashLight"); }
@@ -126,11 +126,13 @@ Class Matilda : REWeapon
 		WP1R DEFG 2;
 		WP1R H 2 A_StartSound("Weapons/VP70/Reload", CHAN_WEAPON);
 		WP1R IJKLMNOPQ 2;
-		WP1G A 1;
+		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
+		WP1G A 0;
+		#### # 1;
 	ReloadLoop:
 		TNT1 A 0
 		{
-			If(!CountInv("PowerInfiniteAmmo")) { TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); } //take 1 of AmmoType2
+			TakeInventory(Invoker.ammo2.GetClass(), 1, False, True); //take 1 of AmmoType2
 			GiveInventory(Invoker.ammo1.GetClass(), 1); //give 1 of AmmoType1
 		}
 		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_VP70, 2);
@@ -138,10 +140,33 @@ Class Matilda : REWeapon
 		TNT1 A 0;
 		Goto Ready;
 	
-	Zoom:
+	User1:
 		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
 		WP1G A 0;
-		#### # 2;
+		#### # 1;
+		#### # 0 A_JumpIf((CountInv("HandgunAmmo") > 0 && CountInv("E_HandgunAmmo") > 0) || CountInv("PowerInfiniteAmmo"), 1);
+		Goto Ready;
+		#### # 2
+		{
+			// Credits goes to RicardoLuis0#1862, said it's basic math, but I rather give to Ceasar what's belong to Ceasar.
+			int final_ammo = invoker.ammo2.amount + invoker.ammo1.amount;
+
+			if(final_ammo > invoker.ammo2.maxamount)
+			{
+				int leftover = final_ammo - invoker.ammo2.maxamount;
+
+				invoker.ammo2.amount = invoker.ammo2.maxamount;
+				invoker.ammo1.amount = 0;
+
+				A_DropItem(invoker.ammotype2, leftover);
+				//RE_SpawnSpareAmmo(invoker.ammotype2, leftover, 0,0,30,frandom(8,12),0,0,frandom(-22,22));
+			}
+			else
+			{
+				invoker.ammo2.amount = final_ammo;
+				invoker.ammo1.amount = 0;
+			}
+		}
 		#### # 2
 		{
 			If(Invoker.altammo == True)
@@ -160,8 +185,7 @@ Class Matilda : REWeapon
 		WP1G B 0 A_JumpIf(Invoker.flashlight, 2);
 		WP1G A 0;
 		#### # 2;
-		Goto Ready;
-
+		Goto Reload;
 	FlashLight:
 		TNT1 A 1 BRIGHT A_FireBullets(0,0,0,0,"FlashLightPuff",FBF_NOFLASH|FBF_NORANDOMPUFFZ);
 		Loop;
