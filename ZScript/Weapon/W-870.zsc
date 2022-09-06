@@ -55,10 +55,10 @@ Class W870 : REWeapon
 		#### # 1 Bright;
 		Loop;
 	Select:
-		WP3G A 0;
+		WP3G A 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
 		Goto Raise;
 	Ready:
-		WP3G A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
+		WP3G A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWUSER1);
 		Loop;
 	Deselect:
 		#### # 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
@@ -98,7 +98,7 @@ Class W870 : REWeapon
 	
 	Reload:
 		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == MAG_W870, "Ready");
-		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount > 0, "ReloadWork");
+		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount >= 1, "ReloadWork");
 		TNT1 A 0 { Invoker.shotgunempty++; } // 1
 	ReloadWork:
 		TNT1 A 0 A_JumpIf(invoker.ammo2.amount > 0 || CountInv("PowerInfiniteAmmo"), "ReloadWork_2");
@@ -159,8 +159,29 @@ Class W870 : REWeapon
 		WP3R OPQ 2;
 		Goto ReloadLoop;
 
-	Zoom:
-		WP3G A 2;
+	User1:
+		WP3G A 1;
+		TNT1 A 0 A_JumpIf((CountInv("ShotgunShells") > 0 && CountInv("E_ShotgunShells") > 0) || CountInv("PowerInfiniteAmmo"), 1);
+		Goto Ready;
+		#### # 2
+		{
+			int final_ammo = invoker.ammo2.amount + invoker.ammo1.amount;
+
+			if(final_ammo > invoker.ammo2.maxamount)
+			{
+				int leftover = final_ammo - invoker.ammo2.maxamount;
+
+				invoker.ammo2.amount = invoker.ammo2.maxamount;
+				invoker.ammo1.amount = 0;
+
+				A_DropItem(invoker.ammotype2, leftover);
+			}
+			else
+			{
+				invoker.ammo2.amount = final_ammo;
+				invoker.ammo1.amount = 0;
+			}
+		}
 		#### # 2
 		{
 			If(Invoker.altammo == True)
@@ -176,9 +197,7 @@ Class W870 : REWeapon
 				SetAmmoType2(True, "E_ShotgunShells");
 			}
 		}
-		#### # 2;
-		Goto Ready;
-
+		Goto Reload;
 	Reset:
 		TNT1 A 0 { Invoker.shotgunempty = 0; }
         Goto Ready;
