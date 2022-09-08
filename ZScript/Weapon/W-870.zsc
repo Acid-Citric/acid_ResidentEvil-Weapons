@@ -55,13 +55,13 @@ Class W870 : REWeapon
 		#### # 1 Bright;
 		Loop;
 	Select:
-		WP3G A 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
+		WP3G A 0;
 		Goto Raise;
 	Ready:
 		WP3G A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWUSER1);
 		Loop;
 	Deselect:
-		#### # 0 { Invoker.shotgunempty = 0; Invoker.shotgunreload = False; }
+		#### # 0 { Invoker.shotgunreload = False; }
 		Goto Lower;
 	Fire:
 		TNT1 A 0 A_JumpIf(Invoker.ammo1.amount == 0, "Reload");
